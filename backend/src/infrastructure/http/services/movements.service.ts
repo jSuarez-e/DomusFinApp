@@ -9,7 +9,7 @@ import { CreditCardDbEntity } from '../../database/entities/credit-card.entity';
 import { CategoryDbEntity } from '../../database/entities/category.entity';
 import { PaymentMethodDbEntity } from '../../database/entities/payment-method.entity';
 import { CreateMovementDto } from '../dtos/create-movement.dto';
-import { User } from '@shared/index';
+import { User, CategoryType } from '@shared/index';
 
 @Injectable()
 export class MovementsService {
@@ -278,7 +278,7 @@ export class MovementsService {
 
       // 4. Buscar o crear la categoría por defecto "Por clasificar"
       let category = await manager.findOne(CategoryDbEntity, {
-        where: { name: 'Por clasificar', householdId: user.householdId },
+        where: { name: 'Por clasificar', householdId: user.householdId ?? undefined },
       });
 
       if (!category) {
@@ -287,7 +287,7 @@ export class MovementsService {
           icon: 'help-circle-outline',
           isGlobal: false,
           householdId: user.householdId,
-          type: 'Gasto',
+          type: CategoryType.EXPENSE,
         });
         category = await manager.save(CategoryDbEntity, category);
       }

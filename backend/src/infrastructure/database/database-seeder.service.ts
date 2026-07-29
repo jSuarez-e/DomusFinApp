@@ -27,9 +27,9 @@ export class DatabaseSeederService implements OnApplicationBootstrap {
 
   async onApplicationBootstrap(): Promise<void> {
     // await this.clearFinancialData();
-    // await this.seedGlobalCategories();
-    // await this.seedGlobalPaymentMethods();
-    // await this.ensureHouseholdAdmins();
+    await this.seedGlobalCategories();
+    await this.seedGlobalPaymentMethods();
+    await this.ensureHouseholdAdmins();
   }
 
   /**

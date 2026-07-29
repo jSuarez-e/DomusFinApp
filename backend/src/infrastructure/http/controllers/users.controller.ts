@@ -3,7 +3,6 @@ import { Controller, Get, Post, Patch, Delete, Param, ParseIntPipe, UseGuards, R
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import * as nodemailer from 'nodemailer';
 
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { UserDbEntity } from '../../database/entities/user.entity';
@@ -352,35 +351,46 @@ export class UsersController {
     let errorMsg = '';
 
     if (host && user && pass) {
+      let nodemailerLib: any;
       try {
-        const transporter = nodemailer.createTransport({
-          host,
-          port,
-          secure: port === 465,
-          auth: { user, pass },
-        });
-
-        // Validate the real SMTP connection
-        await transporter.verify();
-
-        await transporter.sendMail({
-          from,
-          to: email,
-          subject: '¡Te han invitado a unirte a DomusFinApp!',
-          text: `Registra tu cuenta ingresando el código: ${inviteCode}\nEnlace Mágico: ${magicLink}`,
-          html: `<div style="font-family: sans-serif; padding: 20px; color: #333;">
-            <h2>¡Hola!</h2>
-            <p>Te han invitado a unirte a un hogar en <strong>DomusFinApp</strong>.</p>
-            <p>Para registrarte, haz clic en el siguiente enlace:</p>
-            <p><a href="${magicLink}" style="display: inline-block; padding: 10px 20px; background-color: #5c2e7e; color: white; text-decoration: none; border-radius: 5px;">Unirse al Hogar</a></p>
-            <p>O ingresa el código de invitación manualmente: <code>${inviteCode}</code></p>
-          </div>`,
-        });
-
-        emailSent = true;
+        const nodemailerPackageName = 'nodemailer';
+        nodemailerLib = require(nodemailerPackageName);
       } catch (err: any) {
-        console.error('Real SMTP delivery failed, falling back to simulated output.', err);
-        errorMsg = err.message;
+        console.warn('nodemailer is not installed. SMTP delivery failed.', err);
+        errorMsg = 'Nodemailer package is not installed in the system dependencies.';
+      }
+
+      if (nodemailerLib) {
+        try {
+          const transporter = nodemailerLib.createTransport({
+            host,
+            port,
+            secure: port === 465,
+            auth: { user, pass },
+          });
+
+          // Validate the real SMTP connection
+          await transporter.verify();
+
+          await transporter.sendMail({
+            from,
+            to: email,
+            subject: '¡Te han invitado a unirte a DomusFinApp!',
+            text: `Registra tu cuenta ingresando el código: ${inviteCode}\nEnlace Mágico: ${magicLink}`,
+            html: `<div style="font-family: sans-serif; padding: 20px; color: #333;">
+              <h2>¡Hola!</h2>
+              <p>Te han invitado a unirte a un hogar en <strong>DomusFinApp</strong>.</p>
+              <p>Para registrarte, haz clic en el siguiente enlace:</p>
+              <p><a href="${magicLink}" style="display: inline-block; padding: 10px 20px; background-color: #5c2e7e; color: white; text-decoration: none; border-radius: 5px;">Unirse al Hogar</a></p>
+              <p>O ingresa el código de invitación manualmente: <code>${inviteCode}</code></p>
+            </div>`,
+          });
+
+          emailSent = true;
+        } catch (err: any) {
+          console.error('Real SMTP delivery failed, falling back to simulated output.', err);
+          errorMsg = err.message;
+        }
       }
     }
 

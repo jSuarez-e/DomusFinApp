@@ -59,8 +59,8 @@ class AppNotificationListener : NotificationListenerService() {
                     put("body", body)
                 }
 
-                // Send POST request to Railway deployed backends
-                val url = URL("https://domusfinapp-production.up.railway.app/api/v1/webhooks/auto-capture")
+                // Send POST request (use loopback IP 10.0.2.2 for local development on Android emulator)
+                val url = URL("http://10.0.2.2:3000/api/v1/webhooks/auto-capture")
                 
                 val conn = url.openConnection() as HttpURLConnection
                 conn.requestMethod = "POST"
