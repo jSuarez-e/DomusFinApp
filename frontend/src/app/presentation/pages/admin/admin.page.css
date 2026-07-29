@@ -1,0 +1,460 @@
+/* frontend/src/app/presentation/pages/admin/admin.page.css */
+.premium-content {
+  --background: #09090b;
+  font-family: 'Outfit', 'Inter', sans-serif;
+  color: #ffffff;
+}
+
+.glass-toolbar {
+  --background: rgba(9, 9, 11, 0.8);
+  --border-color: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.back-btn {
+  --color: #ffffff;
+}
+
+.content-container {
+  padding: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.glow-bg {
+  position: absolute;
+  top: -150px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 500px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(92, 46, 126, 0.2) 0%, rgba(136, 220, 204, 0.04) 50%, rgba(9, 9, 11, 0) 70%);
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Tab Segment Styling */
+.tab-segment {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  padding: 4px;
+  margin-bottom: 24px;
+}
+
+.tab-segment ion-segment-button {
+  --background-checked: rgba(255, 255, 255, 0.08);
+  --color-checked: #88dccc;
+  --color: #a1a1aa;
+  --indicator-color: transparent;
+  font-weight: 600;
+  font-size: 0.82rem;
+  border-radius: 10px;
+  min-height: 38px;
+}
+
+/* Pane & Lists */
+.tab-pane {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.pane-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding: 0 4px;
+}
+
+.pane-header h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.add-btn {
+  --background: linear-gradient(135deg, #4c6793 0%, #5c2e7e 100%);
+  --border-radius: 8px;
+  font-weight: 600;
+}
+
+.admin-list {
+  background: transparent;
+  padding: 0;
+}
+
+.admin-item {
+  --background: rgba(18, 18, 22, 0.45);
+  --border-radius: 14px;
+  --padding-start: 12px;
+  --padding-end: 12px;
+  --padding-top: 6px;
+  --padding-bottom: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: 8px;
+  border-radius: 14px;
+}
+
+.category-icon-wrapper, .payment-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  margin-right: 12px;
+}
+
+.cat-icon, .pm-icon {
+  font-size: 1.15rem;
+  color: #88dccc;
+}
+
+.item-name {
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
+.global-badge {
+  font-size: 0.7rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  color: #a1a1aa;
+  padding: 2px 6px;
+  border-radius: 6px;
+  margin-left: 8px;
+  font-weight: 500;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 4px;
+}
+
+.edit-action-btn {
+  --color: #a1a1aa;
+  --padding-start: 8px;
+  --padding-end: 8px;
+}
+
+.delete-action-btn {
+  --color: #ef4444;
+  --padding-start: 8px;
+  --padding-end: 8px;
+}
+
+/* Forms & Cards */
+.admin-card {
+  background: rgba(18, 18, 22, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  margin: 0;
+}
+
+.admin-card ion-card-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.section-desc {
+  font-size: 0.85rem;
+  color: #a1a1aa;
+  line-height: 1.5;
+  margin-bottom: 20px;
+  margin-top: 0;
+}
+
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.input-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #a1a1aa;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.input-field {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  height: 48px;
+  padding: 0 14px;
+  transition: all 0.3s ease;
+}
+
+.input-field:focus-within {
+  border-color: #88dccc;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.field-icon {
+  font-size: 1.25rem;
+  color: #a1a1aa;
+  margin-right: 12px;
+}
+
+.premium-input {
+  --padding-start: 0;
+  --color: #ffffff;
+  font-size: 0.95rem;
+}
+
+.save-budget-btn {
+  --background: linear-gradient(135deg, #4c6793 0%, #88dccc 100%);
+  --border-radius: 12px;
+  font-weight: 600;
+  height: 46px;
+  margin-top: 8px;
+}
+
+/* Security / Danger Block */
+.danger-card {
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+.danger-title {
+  color: #f87171 !important;
+}
+
+.danger-warning {
+  display: flex;
+  gap: 12px;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.15);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 24px;
+}
+
+.warning-icon {
+  font-size: 1.5rem;
+  color: #f87171;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.danger-warning p {
+  font-size: 0.82rem;
+  color: #fca5a5;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.delete-btn {
+  --background: #ef4444;
+  --background-hover: #dc2626;
+  --border-radius: 12px;
+  font-weight: 600;
+  height: 46px;
+  margin-top: 8px;
+}
+
+/* Modal styling */
+.admin-modal {
+  --background: rgba(18, 18, 22, 0.9);
+  --backdrop-opacity: 0.55;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.modal-toolbar {
+  --background: rgba(24, 24, 28, 0.95);
+  --border-color: rgba(255, 255, 255, 0.08);
+}
+
+.modal-content {
+  --background: #09090b;
+}
+
+.modal-form {
+  padding: 20px;
+}
+
+.icon-selection-wrapper {
+  margin-bottom: 24px;
+}
+
+.icon-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.icon-grid-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.icon-grid-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.icon-grid-item.selected {
+  background: rgba(136, 220, 204, 0.15);
+  border-color: #88dccc;
+}
+
+.grid-icon {
+  font-size: 1.3rem;
+  color: #ffffff;
+}
+
+.icon-grid-item.selected .grid-icon {
+  color: #88dccc;
+}
+
+.modal-save-btn {
+  --background: linear-gradient(135deg, #4c6793 0%, #88dccc 100%);
+  --border-radius: 12px;
+  font-weight: 600;
+  height: 48px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Custom styling for Member Suspension select dropdown & button */
+.select-full-width {
+  width: 100%;
+  --placeholder-color: #a1a1aa;
+}
+
+.suspend-btn {
+  --background: #ef4444;
+  --background-hover: #dc2626;
+  --background-activated: #b91c1c;
+  --color: #ffffff;
+  font-weight: 700;
+  height: 46px;
+  --border-radius: 12px;
+  margin-top: 16px;
+}
+
+/* Invitation Hub Premium Styles */
+.magic-link-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 12px;
+  margin-top: 16px;
+  margin-bottom: 20px;
+}
+
+.magic-link-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  overflow: hidden;
+  flex: 1;
+}
+
+.magic-icon {
+  font-size: 1.4rem;
+  color: #88dccc;
+}
+
+.magic-details {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.magic-label {
+  font-size: 0.72rem;
+  color: #a1a1aa;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.magic-url {
+  font-size: 0.85rem;
+  color: #ffffff;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.copy-link-btn {
+  --color: #88dccc;
+  margin: 0;
+  --padding-start: 8px;
+  --padding-end: 8px;
+}
+
+.invite-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #71717a;
+}
+
+.invite-divider::before,
+.invite-divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.invite-divider:not(:empty)::before {
+  margin-right: 12px;
+}
+
+.invite-divider:not(:empty)::after {
+  margin-left: 12px;
+}
+
+.invite-divider span {
+  font-size: 0.8rem;
+}
+
+.invite-form-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.invite-submit-btn {
+  --background: linear-gradient(135deg, #4c6793 0%, #88dccc 100%);
+  --color: #ffffff;
+  --border-radius: 8px;
+  font-weight: 600;
+  height: 44px;
+  margin: 0;
+}

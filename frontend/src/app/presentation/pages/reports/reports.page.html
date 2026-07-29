@@ -1,0 +1,193 @@
+<!-- frontend/src/app/presentation/pages/reports/reports.page.html -->
+<ion-header [translucent]="true">
+  <ion-toolbar class="glass-toolbar">
+    <ion-title>Reportes</ion-title>
+
+    <ion-buttons slot="end" class="filters-buttons-row">
+      <!-- Member Filter -->
+      <ion-select 
+        [value]="selectedMemberId()" 
+        (ionChange)="onMemberChange($event)" 
+        interface="popover" 
+        placeholder="Todos" 
+        class="filter-select member-select">
+        <ion-select-option [value]="null">Todos</ion-select-option>
+        @for (m of members(); track m.id) {
+          <ion-select-option [value]="m.id">{{ m.name }}</ion-select-option>
+        }
+      </ion-select>
+
+      <!-- Month Filter -->
+      <ion-select 
+        [value]="selectedMonth()" 
+        (ionChange)="onMonthChange($event)" 
+        interface="popover" 
+        class="filter-select">
+        @for (m of availableMonths; track m.value) {
+          <ion-select-option [value]="m.value">{{ m.label }}</ion-select-option>
+        }
+      </ion-select>
+
+      <!-- Year Filter -->
+      <ion-select 
+        [value]="selectedYear()" 
+        (ionChange)="onYearChange($event)" 
+        interface="popover" 
+        class="filter-select">
+        @for (y of availableYears; track y) {
+          <ion-select-option [value]="y">{{ y }}</ion-select-option>
+        }
+      </ion-select>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="premium-content">
+  <div class="glow-bg"></div>
+
+  <div class="content-container">
+    <!-- Reports Segments -->
+    <ion-segment [value]="activeType()" (ionChange)="onTypeChange($event)" class="tab-segment">
+      <ion-segment-button value="General">
+        <ion-label>General</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="Gasto">
+        <ion-label>Gastos</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="Ingreso">
+        <ion-label>Ingresos</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="Privado">
+        <ion-label>Mis Privados</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+
+    <!-- Capital Movements Toggle Filter -->
+    <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 12px; margin: 16px 0; display: flex; justify-content: space-between; align-items: center;">
+      <div style="display: flex; flex-direction: column; gap: 4px;">
+        <span style="font-size: 13px; font-weight: 700; color: #ffffff;">Excluir Movimientos de Capital</span>
+        <span style="font-size: 11px; color: #9ca3af; line-height: 1.3;">Oculta abonos a metas de ahorro y pagos de deudas para ver solo gastos operativos reales.</span>
+      </div>
+      <ion-toggle [checked]="excludeCapitalMovements()" (ionChange)="excludeCapitalMovements.set($event.detail.checked)" color="primary"></ion-toggle>
+    </div>
+
+    <!-- Consolidated KPI Grid -->
+    <div class="metrics-grid">
+      <div class="metric-card income">
+        <div class="metric-icon-bg">
+          <ion-icon name="trending-up-outline"></ion-icon>
+        </div>
+        <div class="metric-data">
+          <span class="metric-label">Ingresos</span>
+          <span class="metric-value">{{ summary().totalIncome | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+        </div>
+      </div>
+
+      <div class="metric-card expense">
+        <div class="metric-icon-bg">
+          <ion-icon name="trending-down-outline"></ion-icon>
+        </div>
+        <div class="metric-data">
+          <span class="metric-label">Gastos</span>
+          <span class="metric-value">{{ summary().totalSpent | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+        </div>
+      </div>
+
+      <div class="metric-card savings" [class.negative]="summary().netSavings < 0">
+        <div class="metric-icon-bg">
+          <ion-icon name="wallet-outline"></ion-icon>
+        </div>
+        <div class="metric-data">
+          <span class="metric-label">Balance</span>
+          <span class="metric-value">{{ summary().netSavings | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Category Distribution Visualization Card -->
+    @if (activeType() === 'General' || activeType() === 'Gasto') {
+      <ion-card class="chart-card">
+        <ion-card-header>
+          <ion-card-title>Distribución de Gastos</ion-card-title>
+        </ion-card-header>
+        <ion-card-content class="chart-content">
+          <div class="canvas-wrapper">
+            <canvas #donutCanvas></canvas>
+          </div>
+
+          <div class="chart-legend">
+            @for (cat of byCategory(); track cat.categoryId; let idx = $index) {
+              @if (cat.categoryId !== 0 && cat.amount > 0) {
+                <div class="legend-item">
+                  <span class="legend-color-dot" [style.background-color]="getCategoryColor(idx)"></span>
+                  <span class="legend-label">{{ cat.categoryName }}</span>
+                  <span class="legend-percentage">{{ cat.percentage }}%</span>
+                  <span class="legend-value">{{ cat.amount | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+                </div>
+              }
+            }
+          </div>
+        </ion-card-content>
+      </ion-card>
+    }
+
+    <!-- Movements Listing -->
+    <div class="list-section-header">
+      <h3>Detalle de Transacciones</h3>
+      <ion-badge color="dark" class="count-badge">{{ movements().length }} items</ion-badge>
+    </div>
+
+    <ion-list class="movements-list" lines="none">
+      @if (movements().length === 0) {
+        <div class="empty-state">
+          <ion-icon name="analytics-outline" class="empty-icon"></ion-icon>
+          <h4>Sin Transacciones</h4>
+          <p>No se encontraron movimientos registrados en base a los filtros seleccionados.</p>
+        </div>
+      }
+
+      @for (m of movements(); track m.id) {
+        <ion-item class="movement-item">
+          <!-- Icon Column -->
+          <div 
+            class="icon-wrapper" 
+            [class.private]="m.description === 'Gasto Privado' || m.description?.startsWith('Movimiento de')">
+            @if (m.description === 'Gasto Privado' || m.description?.startsWith('Movimiento de')) {
+              <ion-icon name="lock-closed-outline" class="item-icon"></ion-icon>
+            } @else {
+              <ion-icon [name]="getMovementIcon(m)" class="item-icon"></ion-icon>
+            }
+          </div>
+
+          <!-- Description and Date -->
+          <ion-label class="item-label">
+            <div class="item-title-row">
+              <span class="item-title" [class.private-text]="m.description === 'Gasto Privado' || m.description?.startsWith('Movimiento de')">
+                {{ m.description }}
+              </span>
+              @if (m.is_auto_captured) {
+                <span class="auto-lightning" title="Captura Automática (⚡)">⚡</span>
+              }
+            </div>
+            <div class="item-metadata">
+              <span class="meta-member">{{ m.userName }}</span>
+              <span class="meta-dot">•</span>
+              <span class="meta-date">{{ m.transactionDate | date:(currentUser()?.dateFormat === 'MM/DD/YYYY' ? 'MM/dd/yyyy, h:mm a' : 'dd/MM/yyyy, h:mm a') }}</span>
+            </div>
+          </ion-label>
+
+          <!-- Amount -->
+          <div slot="end" class="amount-wrapper">
+            <span 
+              class="item-amount" 
+              [class.income]="m.type === 'Ingreso'" 
+              [class.expense]="m.type === 'Gasto'"
+              [class.transfer]="m.type === 'Ahorro' || m.type === 'Pago Crédito' || m.type === 'Pago TC'">
+              {{ m.type === 'Ingreso' ? '+' : '-' }}{{ m.amount | currency:'COP':'symbol-narrow':'1.0-0' }}
+            </span>
+          </div>
+        </ion-item>
+      }
+    </ion-list>
+  </div>
+</ion-content>

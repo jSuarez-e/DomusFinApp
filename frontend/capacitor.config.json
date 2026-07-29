@@ -1,0 +1,6 @@
+{
+  "appId": "com.domusfin.app",
+  "appName": "DomusFinApp",
+  "webDir": "dist/app/browser",
+  "bundledWebRuntime": false
+}

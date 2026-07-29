@@ -1,0 +1,36 @@
+# ---------------------------------------------------
+# DOMUSFINAPP - ROOT .GITIGNORE
+# ---------------------------------------------------
+
+# 1. Dependencias (Se ignoran en todas las subcarpetas)
+node_modules/
+npm-debug.log*
+yarn-error.log*
+yarn-debug.log*
+
+# 2. Variables de Entorno y Secretos (CRÍTICO)
+.env
+.env.*
+!.env.example
+
+# 3. Base de Datos Docker (Archivos binarios pesados)
+mysql-data/
+
+# 4. Archivos de Inteligencia Artificial (Antigravity)
+.agents/
+.antigravityignore
+financial-home-agent.md
+
+# 5. Compilados y Caché Backend (NestJS)
+dist/
+coverage/
+.nest/
+
+# 6. Compilados y Caché Frontend (Angular / Ionic)
+www/
+.angular/
+.ionic/
+
+# 7. Archivos de Sistema Operativo
+.DS_Store
+Thumbs.db

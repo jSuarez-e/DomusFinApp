@@ -1,0 +1,224 @@
+/* Core Ionic structure */
+@import "@ionic/angular/css/core.css";
+
+/* Basic Ionic requirements */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+
+/* Core Ionic theme variables */
+@import "./theme/variables.css";
+
+/* Optional Ionic Utility CSS styles */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+@import "@ionic/angular/css/display.css";
+
+/* Custom modern fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+/* Global variables and styles */
+:root {
+  --ion-font-family: 'Outfit', 'Inter', sans-serif;
+}
+
+body {
+  margin: 0;
+  font-family: var(--ion-font-family);
+  background-color: var(--ion-background-color);
+  color: var(--ion-text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Force Light/Dark toolbar backgrounds and correct contrast text colors */
+ion-toolbar {
+  --background: var(--ion-toolbar-background) !important;
+  --color: var(--ion-text-color) !important;
+  color: var(--ion-text-color) !important;
+  border-bottom: 1px solid var(--ion-border-color) !important;
+}
+
+ion-title {
+  color: var(--ion-text-color) !important;
+}
+
+/* Homogeneidad de Botones - Pastel Flat styles, no gradients with solid borders (Shadow DOM safe) */
+ion-button, .add-btn, .save-budget-btn, .settings-button, .cc-form__submit, .accounts-form__submit, .savings-card__btn, .loans-card__btn, .invite-submit-btn, .avatar-upload-btn, .savings-empty-state__btn {
+  --background: var(--ion-color-primary) !important;
+  --background-activated: var(--ion-color-primary-shade) !important;
+  --background-hover: var(--ion-color-primary-tint) !important;
+  --color: var(--ion-color-primary-contrast) !important;
+  --border-radius: 10px !important;
+  --box-shadow: none !important;
+  --border-style: solid !important;
+  --border-width: 1.5px !important;
+  --border-color: var(--ion-color-primary-shade) !important;
+  
+  /* Remove host element backgrounds and borders to avoid the double border issue */
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  
+  font-weight: 600 !important;
+  letter-spacing: 0.3px;
+  text-transform: none !important;
+}
+
+/* Force correct color for clear fill buttons in lists */
+ion-button[fill="clear"] {
+  --background: transparent !important;
+  --border-width: 0px !important;
+  --border-style: none !important;
+  background: transparent !important;
+  --color: var(--ion-color-primary) !important;
+  border: none !important;
+}
+
+ion-button[color="success"] {
+  --background: var(--ion-color-success) !important;
+  --color: var(--ion-color-success-contrast) !important;
+  --border-color: var(--ion-color-success-shade) !important;
+  --border-style: solid !important;
+  --border-width: 1.5px !important;
+  border: none !important;
+}
+
+ion-button[color="danger"], .settings-button--danger {
+  --background: var(--ion-color-danger) !important;
+  --color: var(--ion-color-danger-contrast) !important;
+  --border-color: var(--ion-color-danger-shade) !important;
+  --border-style: solid !important;
+  --border-width: 1.5px !important;
+  border: none !important;
+}
+
+/* Homogeneidad de Segmentos */
+ion-segment {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  padding: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+body.dark ion-segment {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+ion-segment-button {
+  --border-radius: 8px !important;
+  --indicator-box-shadow: none !important;
+  --color-checked: #ffffff !important;
+  --indicator-color: var(--ion-color-primary) !important;
+  font-weight: 600 !important;
+  text-transform: none !important;
+  min-height: 38px;
+}
+
+body.dark ion-segment-button {
+  --color: #a1a1aa;
+}
+
+/* Core Premium Content theme adaptivity */
+.premium-content {
+  --background: var(--ion-background-color) !important;
+  background-color: var(--ion-background-color) !important;
+  color: var(--ion-text-color) !important;
+}
+
+/* Card overrides for global uniformity */
+ion-card, .admin-card, .settings-card, .cc-sim-card, .loans-sim-card, .kpi-card, .chart-card, .invite-card, .danger-card, .featured-goal-card {
+  --background: var(--ion-card-background) !important;
+  background: var(--ion-card-background) !important;
+  color: var(--ion-text-color) !important;
+  border: 1px solid var(--ion-border-color) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+  border-radius: 16px !important;
+  margin-top: 8px !important;
+  margin-bottom: 16px !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+body.dark ion-card, body.dark .admin-card, body.dark .settings-card, body.dark .cc-sim-card, body.dark .loans-sim-card, body.dark .kpi-card, body.dark .chart-card, body.dark .invite-card, body.dark .danger-card {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* List Item overrides */
+ion-item, .admin-item, .settings-item, .movement-item, .accounts-item {
+  --background: var(--ion-item-background) !important;
+  background: var(--ion-item-background) !important;
+  --color: var(--ion-text-color) !important;
+  color: var(--ion-text-color) !important;
+  border-bottom: 1px solid var(--ion-border-color) !important;
+  --border-color: var(--ion-border-color) !important;
+}
+
+/* Modal form adjustments */
+ion-modal, .cc-modal, .accounts-modal {
+  --background: var(--ion-background-color) !important;
+}
+
+.cc-modal__toolbar, .accounts-modal__toolbar {
+  --background: var(--ion-toolbar-background) !important;
+  --color: var(--ion-text-color) !important;
+}
+
+/* Text color contrast adjustments */
+h1, h2, h3, h4, h5, h6, span, p, label {
+  color: var(--ion-text-color);
+}
+
+.item-name, .pane-header h3, .settings-card__title, .user-greeting-wrapper h2 {
+  color: var(--ion-text-color) !important;
+}
+
+/* Text and details subtext colors for proper contrast */
+p, .section-desc, .settings-item__label, .input-label, .cc-form__label, .accounts-form__label, .savings-card__creator, .loans-card__progress-text, .meta-member, .meta-date, .empty-state p {
+  color: var(--ion-color-step-300) !important;
+}
+
+body.dark p, body.dark .section-desc, body.dark .settings-item__label, body.dark .input-label, body.dark .cc-form__label, body.dark .accounts-form__label, body.dark .savings-card__creator, body.dark .loans-card__progress-text, body.dark .meta-member, body.dark .meta-date, body.dark .empty-state p {
+  color: #a1a1aa !important;
+}
+
+/* Glow adjustments */
+.glow-bg {
+  display: none !important; /* disable glowing backdrops that break dark/light contrast balance */
+}
+
+body.dark .glow-bg {
+  display: block !important;
+  opacity: 0.15;
+}
+
+/* Custom premium-alert adjustments */
+.premium-alert {
+  --background: var(--ion-card-background) !important;
+  --backdrop-opacity: 0.6 !important;
+}
+
+.premium-alert .alert-title {
+  color: var(--ion-text-color) !important;
+  font-family: var(--ion-font-family) !important;
+  font-weight: 700 !important;
+}
+
+.premium-alert .alert-message {
+  color: var(--ion-text-color) !important;
+  opacity: 0.8;
+}
+
+.premium-alert .alert-button {
+  color: var(--ion-color-primary) !important;
+  font-weight: 600 !important;
+}
+
+.premium-alert .alert-button-role-destructive {
+  color: var(--ion-color-danger) !important;
+}

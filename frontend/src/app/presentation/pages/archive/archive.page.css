@@ -1,0 +1,68 @@
+/* frontend/src/app/presentation/pages/archive/archive.page.css */
+
+.premium-content {
+  --background: #0d0d0e;
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #f3f4f6;
+  position: relative;
+}
+
+.glow-bg {
+  position: fixed;
+  top: -10%;
+  left: -20%;
+  width: 140%;
+  height: 60%;
+  background: radial-gradient(circle, rgba(136, 220, 204, 0.08) 0%, rgba(92, 46, 126, 0.04) 50%, rgba(13, 13, 14, 0) 100%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.glass-toolbar {
+  --background: #0d0d0e;
+  --color: #ffffff;
+  --border-style: none;
+}
+
+.content-container {
+  position: relative;
+  z-index: 1;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Tab Segment styling */
+.tab-segment {
+  --background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 4px;
+}
+
+.tab-segment ion-segment-button {
+  --color: #9ca3af;
+  --color-checked: #ffffff;
+  --background-hover: rgba(255, 255, 255, 0.02);
+  --indicator-color: #5c2e7e;
+  font-weight: 600;
+  font-size: 13px;
+  border-radius: 8px;
+}
+
+.tab-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

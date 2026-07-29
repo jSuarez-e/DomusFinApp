@@ -1,0 +1,179 @@
+<!-- frontend/src/app/presentation/pages/accounts/accounts.page.html -->
+<ion-header [translucent]="true">
+  <ion-toolbar class="accounts-toolbar">
+    <ion-title>Mis Cuentas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="premium-content">
+  <div class="accounts-glow-bg"></div>
+
+  <div class="accounts-container">
+    <!-- Total Balance Summary Card -->
+    <ion-card class="accounts-summary-card">
+      <ion-card-content>
+        <div class="accounts-summary__label">Balance Total</div>
+        <div class="accounts-summary__value">{{ totalBalance() | currency:'COP':'symbol-narrow':'1.0-0' }}</div>
+        <div class="accounts-summary__subtitle">Saldo combinado de todas tus cuentas</div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Accounts List -->
+    <div class="accounts-section-header">
+      <h2>Cuentas del Hogar</h2>
+      <ion-badge color="tertiary" class="accounts-section-badge">{{ accounts().length }}</ion-badge>
+    </div>
+
+    <ion-list class="accounts-list" lines="none">
+      @if (accounts().length === 0) {
+        <div class="accounts-empty-state">
+          <div class="accounts-empty-state__icon-bg">
+            <ion-icon name="wallet-outline" class="accounts-empty-state__icon"></ion-icon>
+          </div>
+          <h3>Sin cuentas</h3>
+          <p>Crea tu primera cuenta bancaria, de efectivo o billetera digital.</p>
+        </div>
+      }
+
+      @for (account of accounts(); track account.id) {
+        <ion-item-sliding>
+          <ion-item class="accounts-item">
+            <div class="accounts-item__icon-wrapper" slot="start">
+              <ion-icon [name]="getAccountTypeIcon(account.type)" class="accounts-item__icon"></ion-icon>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 4px 0;">
+              <div>
+                <div class="accounts-item__name" style="font-size: 15px; font-weight: 600; color: #ffffff;">{{ account.name }}</div>
+                <div class="accounts-item__balance" style="font-size: 18px; font-weight: 700; color: #88DCCC; margin-top: 4px;">
+                  {{ account.currentBalance | currency:'COP':'symbol-narrow':'1.0-0' }}
+                </div>
+              </div>
+              <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
+                <ion-badge class="accounts-item__type-badge" color="medium" style="font-size: 9px; padding: 3px 6px; border-radius: 6px; text-transform: uppercase;">
+                  {{ getAccountTypeLabel(account.type) }}
+                </ion-badge>
+                @if (account.isPrivate) {
+                  <ion-badge style="--background: rgba(92, 46, 126, 0.15); --color: #a78bfa; font-size: 10px; padding: 3px 6px; border-radius: 6px; display: flex; align-items: center; justify-content: center; width: fit-content;">
+                    🔒 Privada
+                  </ion-badge>
+                } @else {
+                  <ion-badge style="--background: rgba(136, 220, 204, 0.12); --color: #88dccc; font-size: 10px; padding: 3px 6px; border-radius: 6px; display: flex; align-items: center; justify-content: center; width: fit-content;">
+                    <ion-icon name="people-outline" style="font-size: 11px;"></ion-icon>
+                  </ion-badge>
+                }
+              </div>
+            </div>
+          </ion-item>
+
+          <ion-item-options side="end">
+            <ion-item-option color="danger" (click)="handleDelete(account)">
+              <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+            </ion-item-option>
+          </ion-item-options>
+        </ion-item-sliding>
+      }
+    </ion-list>
+  </div>
+
+  <!-- FAB: Add New Account -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button class="accounts-fab" (click)="openModal()">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>
+
+<!-- Create Account Modal -->
+<ion-modal [isOpen]="isModalOpen()" (didDismiss)="closeModal()" class="accounts-modal">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar class="accounts-modal__toolbar">
+        <ion-title>Nueva Cuenta</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="closeModal()">
+            <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="accounts-modal__content">
+      <div class="accounts-modal__form-container">
+        <form [formGroup]="accountForm" (ngSubmit)="handleCreate()">
+          <!-- Account Name -->
+          <div class="accounts-form__field">
+            <label class="accounts-form__label">Nombre de la Cuenta</label>
+            <div class="accounts-form__input-wrapper">
+              <ion-icon name="wallet-outline" class="accounts-form__icon"></ion-icon>
+              <ion-input
+                type="text"
+                placeholder="Ej. Bancolombia Ahorros"
+                formControlName="name"
+                class="accounts-form__input">
+              </ion-input>
+            </div>
+            @if (accountForm.get('name')?.invalid && accountForm.get('name')?.touched) {
+              <div class="accounts-form__error">El nombre es obligatorio (mín. 2 caracteres).</div>
+            }
+          </div>
+
+          <!-- Account Type -->
+          <div class="accounts-form__field">
+            <label class="accounts-form__label">Tipo de Cuenta</label>
+            <div class="accounts-form__input-wrapper">
+              <ion-icon name="card-outline" class="accounts-form__icon"></ion-icon>
+              <ion-select
+                interface="popover"
+                placeholder="Seleccionar Tipo"
+                formControlName="type"
+                class="accounts-form__select">
+                <ion-select-option [value]="AccountType.BANK">🏦 Banco</ion-select-option>
+                <ion-select-option [value]="AccountType.CASH">💵 Efectivo</ion-select-option>
+                <ion-select-option [value]="AccountType.WALLET">📱 Billetera Digital</ion-select-option>
+              </ion-select>
+            </div>
+          </div>
+
+          <!-- Initial Balance -->
+          <div class="accounts-form__field">
+            <label class="accounts-form__label">Saldo Inicial ($)</label>
+            <div class="accounts-form__input-wrapper">
+              <ion-icon name="cash-outline" class="accounts-form__icon"></ion-icon>
+              <ion-input
+                type="text"
+                placeholder="0.00"
+                formControlName="initialBalance"
+                appMoneyMask
+                class="accounts-form__input">
+              </ion-input>
+            </div>
+            @if (accountForm.get('initialBalance')?.invalid && accountForm.get('initialBalance')?.touched) {
+              <div class="accounts-form__error">El saldo inicial debe ser mayor o igual a 0.</div>
+            }
+          </div>
+
+          <!-- Private Toggle -->
+          <div class="accounts-form__field" style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 12px; margin-bottom: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div style="display: flex; flex-direction: column; gap: 4px; padding-right: 12px;">
+                <span style="font-size: 13px; font-weight: 700; color: #ffffff;">Cuenta Privada</span>
+                <span style="font-size: 11px; color: #9ca3af; line-height: 1.3;">Si se activa, el dinero de esta cuenta no se sumará a la liquidez vista por otros miembros del hogar.</span>
+              </div>
+              <ion-toggle formControlName="isPrivate" color="primary"></ion-toggle>
+            </div>
+          </div>
+
+          <!-- Submit -->
+          <ion-button
+            type="submit"
+            expand="block"
+            class="accounts-form__submit"
+            [disabled]="accountForm.invalid || isSubmitting()">
+            <ion-icon name="checkmark-outline" slot="start"></ion-icon>
+            Crear Cuenta
+          </ion-button>
+        </form>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>

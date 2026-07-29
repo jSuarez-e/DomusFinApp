@@ -1,0 +1,291 @@
+/* frontend/src/app/presentation/pages/accounts/accounts.page.css */
+
+/* --- Toolbar --- */
+.accounts-toolbar {
+  --background: #121212;
+  --border-color: rgba(255, 255, 255, 0.08);
+  --color: #ffffff;
+}
+
+/* --- Content --- */
+.accounts-content {
+  --background: #000000;
+  color: #ffffff;
+}
+
+.accounts-glow-bg {
+  position: absolute;
+  top: -80px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(136, 220, 204, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.accounts-container {
+  position: relative;
+  z-index: 1;
+  padding: 16px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* --- Summary Card --- */
+.accounts-summary-card {
+  --background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border-radius: 20px;
+  border: 1px solid rgba(136, 220, 204, 0.15);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  margin-bottom: 24px;
+}
+
+.accounts-summary__label {
+  font-size: 0.8rem;
+  color: #a6a6a6;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.accounts-summary__value {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #88DCCC;
+  letter-spacing: -0.5px;
+}
+
+.accounts-summary__subtitle {
+  font-size: 0.75rem;
+  color: #666;
+  margin-top: 8px;
+}
+
+/* --- Section Header --- */
+.accounts-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding: 0 4px;
+}
+
+.accounts-section-header h2 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+.accounts-section-badge {
+  --background: rgba(92, 46, 126, 0.3);
+  --color: #c4a0e8;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
+/* --- Accounts List --- */
+.accounts-list {
+  background: transparent;
+  padding: 0;
+}
+
+.accounts-item {
+  --background: #121212;
+  --border-color: rgba(255, 255, 255, 0.06);
+  --padding-start: 16px;
+  --inner-padding-end: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  margin-bottom: 10px;
+  transition: border-color 0.2s ease;
+}
+
+.accounts-item:hover {
+  border-color: rgba(136, 220, 204, 0.2);
+}
+
+.accounts-item__icon-wrapper {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: rgba(76, 103, 147, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 14px;
+}
+
+.accounts-item__icon {
+  font-size: 1.3rem;
+  color: #4C6793;
+}
+
+.accounts-item__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.accounts-item__name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.accounts-item__type-badge {
+  font-size: 0.65rem;
+  font-weight: 600;
+  --background: rgba(255, 255, 255, 0.08);
+  --color: #a6a6a6;
+  padding: 2px 8px;
+  border-radius: 8px;
+}
+
+.accounts-item__balance {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #88DCCC;
+}
+
+/* --- Empty State --- */
+.accounts-empty-state {
+  text-align: center;
+  padding: 48px 24px;
+}
+
+.accounts-empty-state__icon-bg {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(76, 103, 147, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+
+.accounts-empty-state__icon {
+  font-size: 2.2rem;
+  color: #4C6793;
+}
+
+.accounts-empty-state h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 8px;
+}
+
+.accounts-empty-state p {
+  font-size: 0.85rem;
+  color: #a6a6a6;
+  margin: 0;
+}
+
+/* --- FAB --- */
+.accounts-fab {
+  --background: #88DCCC;
+  --background-hover: #78c2b4;
+  --background-activated: #78c2b4;
+  --color: #121212;
+  box-shadow: 0 6px 24px rgba(136, 220, 204, 0.3);
+}
+
+/* --- Modal --- */
+.accounts-modal__toolbar {
+  --background: #121212;
+  --border-color: rgba(255, 255, 255, 0.08);
+  --color: #ffffff;
+}
+
+.accounts-modal__content {
+  --background: #000000;
+  color: #ffffff;
+}
+
+.accounts-modal__form-container {
+  padding: 24px 16px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* --- Form Fields --- */
+.accounts-form__field {
+  margin-bottom: 20px;
+}
+
+.accounts-form__label {
+  display: block;
+  font-size: 0.78rem;
+  color: #a6a6a6;
+  font-weight: 600;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.accounts-form__input-wrapper {
+  display: flex;
+  align-items: center;
+  background: #121212;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 0 16px;
+  height: 48px;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.accounts-form__input-wrapper:focus-within {
+  border-color: #88DCCC;
+  box-shadow: 0 0 8px rgba(136, 220, 204, 0.2);
+}
+
+.accounts-form__icon {
+  font-size: 1.2rem;
+  color: #4C6793;
+  margin-right: 12px;
+}
+
+.accounts-form__input {
+  --background: transparent;
+  --color: #ffffff;
+  --placeholder-color: #595959;
+  --padding-start: 0;
+  font-size: 0.95rem;
+  width: 100%;
+}
+
+.accounts-form__select {
+  --placeholder-color: #595959;
+  --padding-start: 0;
+  --padding-end: 0;
+  color: #ffffff;
+  font-size: 0.95rem;
+  width: 100%;
+}
+
+.accounts-form__error {
+  color: var(--ion-color-danger, #eb445a);
+  font-size: 0.75rem;
+  margin-top: 6px;
+  font-weight: 500;
+}
+
+.accounts-form__submit {
+  --background: #88DCCC;
+  --background-hover: #78c2b4;
+  --background-activated: #78c2b4;
+  --color: #121212;
+  font-weight: 700;
+  --border-radius: 12px;
+  margin-top: 32px;
+  box-shadow: 0 6px 20px rgba(136, 220, 204, 0.25);
+  height: 48px;
+}

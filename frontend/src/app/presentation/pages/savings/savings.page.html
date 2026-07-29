@@ -1,0 +1,288 @@
+<!-- frontend/src/app/presentation/pages/savings/savings.page.html -->
+<ion-header [translucent]="true">
+  <ion-toolbar class="savings-toolbar">
+    <ion-title>Ahorros por Propósito</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="premium-content">
+  <div class="savings-glow-bg"></div>
+
+  <div class="savings-container">
+    <!-- Summary Stats Card -->
+    <ion-card class="savings-summary-card">
+      <ion-card-content class="savings-summary-content">
+        <div class="savings-summary__grid">
+          <div class="savings-summary__item">
+            <span class="savings-summary__label">Ahorrado Consolidado</span>
+            <span class="savings-summary__value">{{ totalSaved() | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+          </div>
+          <div class="savings-summary__item">
+            <span class="savings-summary__label">Meta Consolidada</span>
+            <span class="savings-summary__value">{{ totalTarget() | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+          </div>
+        </div>
+
+        <div class="savings-summary__progress-container">
+          <div class="savings-summary__progress-header">
+            <span>Progreso General</span>
+            <span>{{ globalProgress() | number:'1.0-1' }}%</span>
+          </div>
+          <div class="savings-progress-bar">
+            <div class="savings-progress-bar__fill" [style.width.%]="globalProgress()"></div>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Savings Goals Section -->
+    <div class="savings-section-header">
+      <h2>Mis Metas de Ahorro</h2>
+      <ion-badge color="tertiary" class="savings-section-badge">{{ activeSavingsGoals().length }}</ion-badge>
+    </div>
+
+    @if (activeSavingsGoals().length === 0) {
+      <div class="savings-empty-state">
+        <div class="savings-empty-state__icon-bg">
+          <ion-icon name="trending-up-outline" class="savings-empty-state__icon"></ion-icon>
+        </div>
+        <h3>Sin Metas Activas</h3>
+        <p>Crea tu primera meta de ahorro (por ejemplo: Vacaciones, Fondo de Emergencias, Pago de Deudas) y comienza a aportar de forma inteligente.</p>
+        <ion-button fill="outline" color="primary" class="savings-empty-state__btn" (click)="openCreateModal()">
+          Crear Meta de Ahorro
+        </ion-button>
+      </div>
+    } @else {
+      <div class="savings-goals-grid">
+        @for (goal of activeSavingsGoals(); track goal.id) {
+          <ion-card class="savings-card" [class.savings-card--private]="goal.isPrivate">
+            <div class="savings-card__glass"></div>
+            <ion-card-content class="savings-card__content">
+              
+              <!-- Card Header -->
+              <div class="savings-card__header">
+                <div class="savings-card__title-area">
+                  <div class="savings-card__icon-wrapper" [class.savings-card__icon-wrapper--private]="goal.isPrivate">
+                    @if (goal.isPrivate) {
+                      <ion-icon name="lock-closed-outline"></ion-icon>
+                    } @else {
+                      <ion-icon name="people-outline"></ion-icon>
+                    }
+                  </div>
+                  <div>
+                    <h3 class="savings-card__title">{{ goal.title }}</h3>
+                    <p class="savings-card__creator">Creado por {{ goal.creatorId === currentUser()?.id ? 'ti' : (goal.creator?.name || 'Miembro') }}</p>
+                  </div>
+                </div>
+
+                <div class="savings-card__badge-area">
+                  @if (getProgressPercentage(goal) >= 100) {
+                    <ion-badge color="success" class="savings-badge">Completado</ion-badge>
+                  } @else {
+                    <ion-badge color="primary" class="savings-badge">En Curso</ion-badge>
+                  }
+                </div>
+              </div>
+
+              <!-- Card Description -->
+              @if (goal.description) {
+                <p class="savings-card__description">{{ goal.description }}</p>
+              }
+
+              <!-- Card Amounts -->
+              <div class="savings-card__amounts">
+                <div>
+                  <span class="savings-card__amount-label">AHORRADO</span>
+                  <span class="savings-card__amount-value">{{ Number(goal.currentAmount) | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+                </div>
+                <div class="savings-card__amount-align-right">
+                  <span class="savings-card__amount-label">META</span>
+                  <span class="savings-card__amount-value">{{ Number(goal.targetAmount) | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+                </div>
+              </div>
+
+              <!-- Card Progress Bar -->
+              <div class="savings-card__progress-container">
+                <div class="savings-progress-bar">
+                  <div class="savings-progress-bar__fill" [style.width.%]="getProgressPercentage(goal)"></div>
+                </div>
+                <div class="savings-card__progress-text">
+                  <span>Progreso: {{ getProgressPercentage(goal) | number:'1.0-1' }}%</span>
+                  @if (!goal.isPrivate && goal.participants && goal.participants.length > 0) {
+                    <div class="savings-card__participants-list" style="display: flex; gap: 4px; align-items: center; flex-wrap: wrap; margin-top: 6px;">
+                      <span style="font-size: 9px; color: #a1a1aa; text-transform: uppercase; font-weight: 700;">Compartido:</span>
+                      @for (p of goal.participants; track p.id) {
+                        <ion-badge color="tertiary" style="font-size: 9px; padding: 2px 6px; border-radius: 6px;">👤 {{ p.name }}</ion-badge>
+                      }
+                    </div>
+                  }
+                </div>
+              </div>
+
+              <!-- Card Actions -->
+              <div class="savings-card__actions">
+                <ion-button expand="block" size="small" class="savings-card__btn" (click)="openDepositModal(goal)" [disabled]="getProgressPercentage(goal) >= 100">
+                  <ion-icon name="cash-outline" slot="start"></ion-icon>
+                  Aportar Fondos
+                </ion-button>
+              </div>
+
+            </ion-card-content>
+          </ion-card>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Floating Action Button -->
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end" class="savings-fab">
+    <ion-fab-button (click)="openCreateModal()">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <!-- Modal: Create Savings Goal -->
+  <ion-modal [isOpen]="isCreateModalOpen()" (didDismiss)="closeCreateModal()" class="savings-modal">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar class="savings-modal__toolbar">
+          <ion-title>Nueva Meta de Ahorro</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="closeCreateModal()">
+              <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content class="savings-modal__content">
+        <div class="savings-modal__form-container">
+          <form [formGroup]="savingsForm" (ngSubmit)="handleCreateSavingsGoal()">
+            
+            <div class="savings-form__field">
+              <label class="savings-form__label">Título de la Meta</label>
+              <div class="savings-form__input-wrapper">
+                <ion-icon name="information-circle-outline" class="savings-form__icon"></ion-icon>
+                <ion-input type="text" placeholder="Ej. Viaje de Fin de Año" formControlName="title" class="savings-form__input"></ion-input>
+              </div>
+              @if (savingsForm.get('title')?.invalid && savingsForm.get('title')?.touched) {
+                <div class="savings-form__error">El título es requerido (máx. 100 caracteres).</div>
+              }
+            </div>
+
+            <div class="savings-form__field">
+              <label class="savings-form__label">Monto Meta ($)</label>
+              <div class="savings-form__input-wrapper">
+                <ion-icon name="cash-outline" class="savings-form__icon"></ion-icon>
+                <ion-input type="text" placeholder="0.00" formControlName="targetAmount" appMoneyMask class="savings-form__input"></ion-input>
+              </div>
+              @if (savingsForm.get('targetAmount')?.invalid && savingsForm.get('targetAmount')?.touched) {
+                <div class="savings-form__error">Debe especificar un monto meta válido y mayor a cero.</div>
+              }
+            </div>
+
+            <div class="savings-form__field">
+              <label class="savings-form__label">Descripción (Opcional)</label>
+              <div class="savings-form__input-wrapper">
+                <ion-textarea placeholder="Detalles de la meta de ahorro..." formControlName="description" class="savings-form__textarea"></ion-textarea>
+              </div>
+            </div>
+
+            <div class="savings-form__field savings-form__field--toggle">
+              <div class="savings-form__toggle-wrapper">
+                <div class="savings-form__toggle-info">
+                  <span class="savings-form__toggle-title">Meta de Ahorro Privada</span>
+                  <span class="savings-form__toggle-desc">Si se activa, solo tú podrás verla y realizar aportes.</span>
+                </div>
+                <ion-toggle formControlName="isPrivate" color="primary"></ion-toggle>
+              </div>
+            </div>
+
+            @if (!savingsForm.get('isPrivate')?.value) {
+              <div class="savings-form__field">
+                <label class="savings-form__label">Invitar Miembros del Hogar</label>
+                <div class="savings-form__input-wrapper">
+                  <ion-icon name="people-outline" class="savings-form__icon"></ion-icon>
+                  <ion-select interface="popover" placeholder="Seleccionar Participantes" formControlName="participantIds" multiple="true" class="savings-form__select">
+                    @for (member of householdMembers(); track member.id) {
+                      <ion-select-option [value]="member.id">{{ member.name }}</ion-select-option>
+                    }
+                  </ion-select>
+                </div>
+                <p class="savings-form__help-text">Los participantes podrán ver esta meta en su lista y aportar fondos a ella.</p>
+              </div>
+            }
+
+            <ion-button type="submit" expand="block" class="savings-form__submit" [disabled]="savingsForm.invalid || isSubmitting()">
+              <ion-icon name="checkmark-outline" slot="start"></ion-icon>
+              Crear Meta
+            </ion-button>
+          </form>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <!-- Modal: Deposit funds into Savings Goal -->
+  <ion-modal [isOpen]="isDepositModalOpen()" (didDismiss)="closeDepositModal()" class="savings-modal">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar class="savings-modal__toolbar">
+          <ion-title>Aportar a Meta</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="closeDepositModal()">
+              <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content class="savings-modal__content">
+        <div class="savings-modal__form-container">
+          <form [formGroup]="depositForm" (ngSubmit)="handleDeposit()">
+            
+            @if (selectedGoal(); as goal) {
+              <!-- Changed from *ngIf to modern @if to fix micro-syntax parsing issues -->
+              <div class="savings-deposit-info">
+                <p>Meta: <strong>{{ goal.title }}</strong></p>
+                <p>Falta para la meta: <strong>{{ Math.max(0, Number(goal.targetAmount) - Number(goal.currentAmount)) | currency:'COP':'symbol-narrow':'1.0-0' }}</strong></p>
+              </div>
+            }
+
+            <div class="savings-form__field">
+              <label class="savings-form__label">Cuenta de Origen</label>
+              <div class="savings-form__input-wrapper">
+                <ion-icon name="wallet-outline" class="savings-form__icon"></ion-icon>
+                <ion-select interface="popover" placeholder="Seleccionar Cuenta" formControlName="accountId" class="savings-form__select">
+                  @for (acc of accounts(); track acc.id) {
+                    <ion-select-option [value]="acc.id">{{ acc.name }} (Saldo: {{ acc.currentBalance | currency:'COP':'symbol-narrow':'1.0-0' }})</ion-select-option>
+                  }
+                </ion-select>
+              </div>
+              @if (depositForm.get('accountId')?.invalid && depositForm.get('accountId')?.touched) {
+                <div class="savings-form__error">Debe seleccionar una cuenta origen de donde debitar el dinero.</div>
+              }
+            </div>
+
+            <div class="savings-form__field">
+              <label class="savings-form__label">Monto a Aportar ($)</label>
+              <div class="savings-form__input-wrapper">
+                <ion-icon name="cash-outline" class="savings-form__icon"></ion-icon>
+                <ion-input type="text" placeholder="0.00" formControlName="amount" appMoneyMask class="savings-form__input"></ion-input>
+              </div>
+              @if (depositForm.get('amount')?.invalid && depositForm.get('amount')?.touched) {
+                <div class="savings-form__error">Debe especificar un monto a aportar válido (mayor a cero).</div>
+              }
+            </div>
+
+            <ion-button type="submit" expand="block" class="savings-form__submit" [disabled]="depositForm.invalid || isSubmitting()">
+              <ion-icon name="checkmark-outline" slot="start"></ion-icon>
+              Registrar Aporte
+            </ion-button>
+          </form>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+</ion-content>

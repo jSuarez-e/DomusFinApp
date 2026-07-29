@@ -1,0 +1,376 @@
+<!-- frontend/src/app/presentation/pages/credit-cards/credit-cards.page.html -->
+<ion-header [translucent]="true">
+  <ion-toolbar class="cc-toolbar">
+    <ion-title>Tarjetas de Crédito</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="premium-content">
+  <div class="cc-glow-bg"></div>
+
+  <div class="cc-container">
+    <!-- Deuda Total Card -->
+    <ion-card class="cc-summary-card">
+      <ion-card-content>
+        <div class="cc-summary__label">Deuda Consolidada</div>
+        <div class="cc-summary__value">{{ totalDebt() | currency:'COP':'symbol-narrow':'1.0-0' }}</div>
+        <div class="cc-summary__subtitle">Total adeudado en todas las tarjetas de crédito del hogar</div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Tarjetas Carousel/List Horizontal -->
+    <div class="cc-section-header">
+      <h2>Tus Tarjetas</h2>
+      <ion-badge color="tertiary" class="cc-section-badge">{{ creditCards().length }}</ion-badge>
+    </div>
+
+    @if (creditCards().length === 0) {
+      <div class="cc-empty-state">
+        <div class="cc-empty-state__icon-bg">
+          <ion-icon name="card-outline" class="cc-empty-state__icon"></ion-icon>
+        </div>
+        <h3>Sin Tarjetas</h3>
+        <p>Añade una tarjeta de crédito para empezar a gestionar tus diferidos y simular cuotas.</p>
+        <ion-button fill="outline" color="primary" class="cc-empty-state__btn" (click)="openCreateModal()">
+          Registrar Tarjeta
+        </ion-button>
+      </div>
+    } @else {
+      <!-- Tarjetas físicas horizontal scroll -->
+      <div class="cc-cards-scroll">
+        @for (card of creditCards(); track card.id) {
+          <div 
+            class="cc-physical-card" 
+            [class.cc-physical-card--active]="selectedCard()?.id === card.id"
+            (click)="selectCard(card)">
+            <div class="cc-physical-card__glass"></div>
+            <div class="cc-physical-card__header">
+              <span class="cc-physical-card__bank">DOMUSFIN PREMIUM <span style="font-size: 9px; opacity: 0.9; color: #88DCCC; margin-left: 8px;">🔒 Privada y Segura</span></span>
+              <ion-icon name="card-outline" class="cc-physical-card__logo"></ion-icon>
+            </div>
+            <div class="cc-physical-card__chip"></div>
+            <div class="cc-physical-card__number">•••• •••• •••• {{ card.lastFourDigits }}</div>
+            <div class="cc-physical-card__footer">
+              <div>
+                <div class="cc-physical-card__label">TARJETA</div>
+                <div class="cc-physical-card__val">{{ card.aliasName }}</div>
+              </div>
+              <div class="cc-physical-card__align-right">
+                <div class="cc-physical-card__label">DEUDA ACTUAL</div>
+                <div class="cc-physical-card__debt">{{ card.currentDebt | currency:'COP':'symbol-narrow':'1.0-0' }}</div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Segment control for Selected Card details -->
+      @if (selectedCard(); as card) {
+        <ion-segment [value]="activeTab()" (ionChange)="onSegmentChange($event)" class="cc-segment">
+          <ion-segment-button value="details">
+            <ion-label>Detalles y Pago</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="simulator">
+            <ion-label>Simulador de Cuotas</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+
+        <!-- Segment Content 1: Details and Pay -->
+        @if (activeTab() === 'details') {
+          <div class="cc-tab-content">
+            <ion-card class="cc-detail-card">
+              <ion-card-content>
+                <div class="cc-detail-row" style="border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 12px; margin-bottom: 12px;">
+                  <span class="cc-detail-label" style="color: #88DCCC; font-weight: bold; display: flex; align-items: center; gap: 4px;">
+                    <ion-icon name="lock-closed-outline"></ion-icon> Privacidad de Tarjeta
+                  </span>
+                  <span class="cc-detail-val" style="background: rgba(136, 220, 204, 0.1); color: #88DCCC; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: bold;">
+                    Privada y Segura
+                  </span>
+                </div>
+
+                <div class="cc-detail-row">
+                  <span class="cc-detail-label">Tasa de Interés Mensual</span>
+                  <span class="cc-detail-val">{{ card.interestRate }}% E.M.</span>
+                </div>
+                <div class="cc-detail-row">
+                  <span class="cc-detail-label">Interés de Mora</span>
+                  <span class="cc-detail-val">{{ card.lateFeeRate }}% E.M.</span>
+                </div>
+                <div class="cc-detail-row">
+                  <span class="cc-detail-label">Cuota de Manejo</span>
+                  <span class="cc-detail-val">{{ card.handlingFee | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+                </div>
+                <div class="cc-detail-row">
+                  <span class="cc-detail-label">Día de Corte</span>
+                  <span class="cc-detail-val">Día {{ card.cutDate }} de cada mes</span>
+                </div>
+                <div class="cc-detail-row">
+                  <span class="cc-detail-label">Día Límite de Pago</span>
+                  <span class="cc-detail-val">Día {{ card.paymentDueDate }} de cada mes</span>
+                </div>
+
+                @if (card.currentDebt > 0) {
+                  <ion-button expand="block" class="cc-pay-btn" (click)="openPayModal()">
+                    <ion-icon name="cash-outline" slot="start"></ion-icon>
+                    Abonar o Pagar Deuda
+                  </ion-button>
+                } @else {
+                  <div class="cc-no-debt-message">
+                    <ion-icon name="checkmark-outline" class="cc-no-debt-icon"></ion-icon>
+                    <span>Sin deudas pendientes en esta tarjeta.</span>
+                  </div>
+                }
+              </ion-card-content>
+            </ion-card>
+          </div>
+        }
+
+        <!-- Segment Content 2: Amortization Simulator -->
+        @if (activeTab() === 'simulator') {
+          <div class="cc-tab-content">
+            <ion-card class="cc-sim-inputs-card">
+              <ion-card-content>
+                <h3>Simular una compra con esta tarjeta</h3>
+                <p class="cc-sim-help">Aplica la tasa de interés mensual de la tarjeta de crédito seleccionada ({{ card.interestRate }}%).</p>
+                
+                <div class="cc-sim-input-grid">
+                  <div class="cc-sim-field">
+                    <label>Valor de la compra ($)</label>
+                    <ion-input 
+                      type="number" 
+                      [value]="simAmount()" 
+                      (ionInput)="onSimAmountChange($event)" 
+                      class="cc-sim-input">
+                    </ion-input>
+                  </div>
+                  <div class="cc-sim-field">
+                    <label>Número de cuotas</label>
+                    <ion-select 
+                      interface="popover" 
+                      [value]="simInstallments()" 
+                      (ionChange)="onSimInstallmentsChange($event)" 
+                      class="cc-sim-select">
+                      <ion-select-option [value]="1">1 cuota</ion-select-option>
+                      <ion-select-option [value]="3">3 cuotas</ion-select-option>
+                      <ion-select-option [value]="6">6 cuotas</ion-select-option>
+                      <ion-select-option [value]="12">12 cuotas</ion-select-option>
+                      <ion-select-option [value]="18">18 cuotas</ion-select-option>
+                      <ion-select-option [value]="24">24 cuotas</ion-select-option>
+                      <ion-select-option [value]="36">36 cuotas</ion-select-option>
+                    </ion-select>
+                  </div>
+                </div>
+              </ion-card-content>
+            </ion-card>
+
+            <!-- Sim plan table -->
+            <div class="cc-sim-plan-section">
+              <div class="cc-sim-plan-header">
+                <span>Cuota</span>
+                <span>Abono Capital</span>
+                <span>Intereses</span>
+                <span>Cuota Total</span>
+              </div>
+              <ion-list class="cc-sim-plan-list" lines="none">
+                @for (period of amortizationPlan(); track period.period) {
+                  <ion-item class="cc-sim-plan-item">
+                    <div class="cc-sim-plan-row">
+                      <div class="cc-sim-col">
+                        <span class="cc-sim-period">#{{ period.period }}</span>
+                        <span class="cc-sim-date">{{ period.dueDate | date:'dd/MM/yyyy' }}</span>
+                      </div>
+                      <div class="cc-sim-col cc-align-right">
+                        {{ period.capital | currency:'COP':'symbol-narrow':'1.0-0' }}
+                      </div>
+                      <div class="cc-sim-col cc-align-right">
+                        {{ period.interest | currency:'COP':'symbol-narrow':'1.0-0' }}
+                      </div>
+                      <div class="cc-sim-col cc-align-right cc-sim-total">
+                        {{ period.totalFee | currency:'COP':'symbol-narrow':'1.0-0' }}
+                      </div>
+                    </div>
+                  </ion-item>
+                }
+              </ion-list>
+            </div>
+          </div>
+        }
+      }
+    }
+  </div>
+
+  <!-- FAB for new credit card -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button class="cc-fab" (click)="openCreateModal()">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>
+
+<!-- Modal: Create credit card -->
+<ion-modal [isOpen]="isCreateModalOpen()" (didDismiss)="closeCreateModal()" class="cc-modal">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar class="cc-modal__toolbar">
+        <ion-title>Nueva Tarjeta</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="closeCreateModal()">
+            <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="cc-modal__content">
+      <div class="cc-modal__form-container">
+        <form [formGroup]="cardForm" (ngSubmit)="handleCreateCard()">
+          
+          <div class="cc-form__field">
+            <label class="cc-form__label">Nombre / Alias de Tarjeta</label>
+            <div class="cc-form__input-wrapper">
+              <ion-icon name="card-outline" class="cc-form__icon"></ion-icon>
+              <ion-input type="text" placeholder="Ej. Visa Oro Bancolombia" formControlName="aliasName" class="cc-form__input"></ion-input>
+            </div>
+            @if (cardForm.get('aliasName')?.invalid && cardForm.get('aliasName')?.touched) {
+              <div class="cc-form__error">El nombre es obligatorio (mín. 2 caracteres).</div>
+            }
+          </div>
+
+          <div class="cc-form__field">
+            <label class="cc-form__label">Últimos 4 dígitos</label>
+            <div class="cc-form__input-wrapper">
+              <ion-icon name="information-circle-outline" class="cc-form__icon"></ion-icon>
+              <ion-input type="text" placeholder="Ej. 9876" formControlName="lastFourDigits" class="cc-form__input" maxlength="4"></ion-input>
+            </div>
+            @if (cardForm.get('lastFourDigits')?.invalid && cardForm.get('lastFourDigits')?.touched) {
+              <div class="cc-form__error">Debe ingresar exactamente 4 números.</div>
+            }
+          </div>
+
+          <div class="cc-form__grid">
+            <div class="cc-form__field">
+              <label class="cc-form__label">Tasa Interés (%)</label>
+              <div class="cc-form__input-wrapper">
+                <ion-input type="number" step="0.01" formControlName="interestRate" class="cc-form__input"></ion-input>
+              </div>
+            </div>
+            <div class="cc-form__field">
+              <label class="cc-form__label">Tasa Mora (%)</label>
+              <div class="cc-form__input-wrapper">
+                <ion-input type="number" step="0.01" formControlName="lateFeeRate" class="cc-form__input"></ion-input>
+              </div>
+            </div>
+          </div>
+
+          <div class="cc-form__field">
+            <label class="cc-form__label">Cuota de Manejo ($)</label>
+            <div class="cc-form__input-wrapper">
+              <ion-icon name="cash-outline" class="cc-form__icon"></ion-icon>
+              <ion-input type="text" placeholder="0.00" formControlName="handlingFee" appMoneyMask class="cc-form__input"></ion-input>
+            </div>
+          </div>
+
+          <div class="cc-form__grid">
+            <div class="cc-form__field">
+              <label class="cc-form__label">Seguro de Vida ($)</label>
+              <div class="cc-form__input-wrapper">
+                <ion-icon name="cash-outline" class="cc-form__icon"></ion-icon>
+                <ion-input type="text" placeholder="0.00" formControlName="lifeInsurance" appMoneyMask class="cc-form__input"></ion-input>
+              </div>
+            </div>
+            <div class="cc-form__field">
+              <label class="cc-form__label">Otros Cargos ($)</label>
+              <div class="cc-form__input-wrapper">
+                <ion-icon name="cash-outline" class="cc-form__icon"></ion-icon>
+                <ion-input type="text" placeholder="0.00" formControlName="otherCharges" appMoneyMask class="cc-form__input"></ion-input>
+              </div>
+            </div>
+          </div>
+
+          <div class="cc-form__grid">
+            <div class="cc-form__field">
+              <label class="cc-form__label">Día de Corte</label>
+              <div class="cc-form__input-wrapper">
+                <ion-input type="number" formControlName="cutDate" class="cc-form__input" min="1" max="31"></ion-input>
+              </div>
+            </div>
+            <div class="cc-form__field">
+              <label class="cc-form__label">Día Límite de Pago</label>
+              <div class="cc-form__input-wrapper">
+                <ion-input type="number" formControlName="paymentDueDate" class="cc-form__input" min="1" max="31"></ion-input>
+              </div>
+            </div>
+          </div>
+
+
+
+          <ion-button type="submit" expand="block" class="cc-form__submit" [disabled]="cardForm.invalid || isSubmitting()">
+            <ion-icon name="checkmark-outline" slot="start"></ion-icon>
+            Registrar Tarjeta
+          </ion-button>
+        </form>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>
+
+<!-- Modal: Pay Credit Card -->
+<ion-modal [isOpen]="isPayModalOpen()" (didDismiss)="closePayModal()" class="cc-modal">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar class="cc-modal__toolbar">
+        <ion-title>Pagar Tarjeta</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="closePayModal()">
+            <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="cc-modal__content">
+      <div class="cc-modal__form-container">
+        <form [formGroup]="payForm" (ngSubmit)="handlePayDebt()">
+          @if (selectedCard(); as card) {
+            <!-- Changed *ngIf to modern @if to resolve template variable parsing error -->
+            <div class="cc-payment-info">
+              <p>Deuda actual: <strong>{{ card.currentDebt | currency:'COP':'symbol-narrow':'1.0-0' }}</strong></p>
+            </div>
+          }
+
+          <div class="cc-form__field">
+            <label class="cc-form__label">Cuenta de Origen</label>
+            <div class="cc-form__input-wrapper">
+              <ion-icon name="wallet-outline" class="cc-form__icon"></ion-icon>
+              <ion-select interface="popover" placeholder="Seleccionar Cuenta" formControlName="accountId" class="cc-form__select">
+                @for (acc of accounts(); track acc.id) {
+                  <ion-select-option [value]="acc.id">{{ acc.name }} (Saldo: {{ acc.currentBalance | currency:'COP':'symbol-narrow':'1.0-0' }})</ion-select-option>
+                }
+              </ion-select>
+            </div>
+            @if (payForm.get('accountId')?.invalid && payForm.get('accountId')?.touched) {
+              <div class="cc-form__error">Debe seleccionar una cuenta origen.</div>
+            }
+          </div>
+
+          <div class="cc-form__field">
+            <label class="cc-form__label">Monto a Pagar ($)</label>
+            <div class="cc-form__input-wrapper">
+              <ion-icon name="cash-outline" class="cc-form__icon"></ion-icon>
+              <ion-input type="text" placeholder="0.00" formControlName="amount" appMoneyMask class="cc-form__input"></ion-input>
+            </div>
+            @if (payForm.get('amount')?.invalid && payForm.get('amount')?.touched) {
+              <div class="cc-form__error">El monto debe ser mayor a 0.</div>
+            }
+          </div>
+
+          <ion-button type="submit" expand="block" class="cc-form__submit" [disabled]="payForm.invalid || isSubmitting()">
+            <ion-icon name="checkmark-outline" slot="start"></ion-icon>
+            Registrar Pago
+          </ion-button>
+        </form>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>

@@ -1,0 +1,100 @@
+<!-- frontend/src/app/presentation/pages/capture-settings/capture-settings.page.html -->
+<ion-header [translucent]="true">
+  <ion-toolbar class="glass-toolbar">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Captura Automática (Android)</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="premium-content">
+  <div class="glow-bg"></div>
+
+  <div class="content-container">
+    <ion-card class="capture-card">
+      <ion-card-header>
+        <div class="capture-card__icon-wrapper">
+          <ion-icon name="flash-outline" class="capture-card__icon"></ion-icon>
+        </div>
+        <ion-card-title class="capture-card__title">Servicio de Captura Móvil</ion-card-title>
+      </ion-card-header>
+      <ion-card-content class="capture-card__content">
+        <p>
+          Configura los canales de escucha del plugin nativo de Android. El sistema procesará mensajes de texto y notificaciones push bancarias para crear gastos en tiempo real de forma segura.
+        </p>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card class="capture-card">
+      <ion-card-header>
+        <div class="capture-card__icon-wrapper capture-card__icon-wrapper--config">
+          <ion-icon name="settings-outline" class="capture-card__icon"></ion-icon>
+        </div>
+        <ion-card-title class="capture-card__title">Canales de Escucha</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list class="capture-list" lines="none">
+          <ion-item class="capture-item">
+            <ion-icon name="chatbubble-ellipses-outline" slot="start" class="capture-item__icon"></ion-icon>
+            <ion-label class="capture-item__label">
+              <h3>Monitoreo de SMS</h3>
+              <p>Detectar transacciones vía mensajes de texto</p>
+            </ion-label>
+            <ion-toggle 
+              [checked]="isSmsEnabled()" 
+              (ionChange)="toggleSms($event)" 
+              slot="end" 
+              class="premium-toggle">
+            </ion-toggle>
+          </ion-item>
+
+          <ion-item class="capture-item">
+            <ion-icon name="notifications-outline" slot="start" class="capture-item__icon"></ion-icon>
+            <ion-label class="capture-item__label">
+              <h3>Notificaciones Push</h3>
+              <p>Escanear notificaciones de aplicaciones bancarias</p>
+            </ion-label>
+            <ion-toggle 
+              [checked]="isPushEnabled()" 
+              (ionChange)="togglePush($event)" 
+              slot="end" 
+              class="premium-toggle">
+            </ion-toggle>
+          </ion-item>
+
+          <ion-item class="capture-item">
+            <ion-icon name="shield-checkmark-outline" slot="start" class="capture-item__icon"></ion-icon>
+            <ion-label class="capture-item__label">
+              <h3>Sincronización en Segundo Plano</h3>
+              <p>Permitir ejecución persistente del daemon</p>
+            </ion-label>
+            <ion-toggle 
+              [checked]="isBackgroundSyncEnabled()" 
+              (ionChange)="toggleBgSync($event)" 
+              slot="end" 
+              class="premium-toggle">
+            </ion-toggle>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card class="capture-card">
+      <ion-card-header>
+        <div class="capture-card__icon-wrapper capture-card__icon-wrapper--config" style="background: rgba(136, 220, 204, 0.1); color: #88DCCC;">
+          <ion-icon name="shield-checkmark-outline" class="capture-card__icon" style="color: #88DCCC;"></ion-icon>
+        </div>
+        <ion-card-title class="capture-card__title">Permisos Requeridos</ion-card-title>
+      </ion-card-header>
+      <ion-card-content class="capture-card__content">
+        <p style="margin-bottom: 16px; font-size: 13px; color: #9ca3af; line-height: 1.4;">
+          Para que la captura en segundo plano funcione correctamente en Android, debes habilitar el acceso a las notificaciones para esta aplicación en los ajustes del sistema.
+        </p>
+        <ion-button expand="block" color="primary" style="--border-radius: 12px; font-weight: bold; margin-top: 8px;" (click)="requestNotificationPermission()">
+          Habilitar Acceso Nativo
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

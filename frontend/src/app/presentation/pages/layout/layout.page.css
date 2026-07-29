@@ -1,0 +1,318 @@
+/* frontend/src/app/presentation/pages/layout/layout.page.css */
+
+/* Side Menu Styles */
+.menu-toolbar {
+  --background: #0d0d0e !important;
+  --border-color: rgba(255, 255, 255, 0.05) !important;
+  color: #ffffff;
+}
+
+.menu-content {
+  --background: #0d0d0e !important;
+  background-color: #0d0d0e !important;
+  color: #ffffff;
+}
+
+.menu-header-section {
+  padding: 24px 16px;
+  background: linear-gradient(180deg, rgba(92, 46, 126, 0.12) 0%, rgba(13, 13, 14, 0) 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* User Card inside Header */
+.menu-profile-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 14px;
+  margin-bottom: 16px;
+}
+
+.menu-profile-avatar {
+  width: 48px;
+  height: 48px;
+  border: 2px solid #88DCCC;
+  border-radius: 50%;
+  padding: 2px;
+  box-shadow: 0 4px 12px rgba(136, 220, 204, 0.15);
+  flex-shrink: 0;
+}
+
+.menu-profile-info {
+  text-align: left;
+  overflow: hidden;
+  flex-grow: 1;
+}
+
+.menu-user-name {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0;
+  color: #ffffff !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.menu-user-email {
+  font-size: 0.75rem;
+  color: #a1a1aa !important;
+  margin: 2px 0 0 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Tenant Selector inside menu */
+.tenant-selector-wrapper {
+  width: 100%;
+}
+
+.tenant-label {
+  display: block;
+  font-size: 0.65rem;
+  color: #71717a !important;
+  font-weight: 700;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.tenant-select-container {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 0 12px;
+  transition: all 0.25s ease;
+  height: 40px;
+}
+
+.tenant-select-container:focus-within {
+  border-color: #88DCCC;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.tenant-icon {
+  font-size: 1.1rem;
+  color: #88DCCC;
+  margin-right: 8px;
+}
+
+.tenant-select {
+  --placeholder-color: #a1a1aa;
+  --padding-start: 0;
+  --padding-end: 0;
+  color: #ffffff !important;
+  font-size: 0.85rem;
+  font-weight: 600;
+  width: 100%;
+}
+
+/* Menu Options List */
+.menu-options-list {
+  background: transparent !important;
+  padding: 12px 8px !important;
+}
+
+.menu-option-item {
+  --background: transparent !important;
+  background: transparent !important;
+  --color: #a1a1aa !important;
+  color: #a1a1aa !important;
+  --padding-start: 12px !important;
+  --inner-padding-end: 12px !important;
+  --border-radius: 12px !important;
+  margin: 4px 6px !important;
+  font-weight: 500 !important;
+  font-size: 0.9rem !important;
+  border-bottom: none !important;
+  border: none !important;
+  --border-style: none !important;
+  --border-width: 0 !important;
+  transition: all 0.25s ease !important;
+  --min-height: 44px !important;
+}
+
+.menu-option-item::part(native) {
+  border-radius: 12px;
+  border: none !important;
+  background: transparent !important;
+}
+
+.menu-option-item:hover {
+  --background: rgba(255, 255, 255, 0.03) !important;
+  color: #ffffff !important;
+  --color: #ffffff !important;
+}
+
+.menu-option-item:hover .option-icon {
+  color: #88DCCC !important;
+}
+
+.menu-option-item.active-item {
+  --background: rgba(136, 220, 204, 0.08) !important;
+  background: rgba(136, 220, 204, 0.08) !important;
+  --color: #88DCCC !important;
+  color: #88DCCC !important;
+  font-weight: 700 !important;
+}
+
+.menu-option-item.active-item .option-icon {
+  color: #88DCCC !important;
+}
+
+.option-icon {
+  font-size: 1.15rem;
+  color: #71717a !important;
+  margin-right: 12px;
+  transition: color 0.25s ease;
+}
+
+.menu-separator {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.05);
+  margin: 12px 16px;
+}
+
+.menu-option-item--logout {
+  --color: #ff6b6b !important;
+  color: #ff6b6b !important;
+  font-weight: 600 !important;
+}
+
+.menu-option-item--logout:hover {
+  --background: rgba(255, 107, 107, 0.08) !important;
+  color: #ff6b6b !important;
+}
+
+.option-icon--logout {
+  color: #ff6b6b !important;
+}
+
+/* Bottom Tab Bar */
+.glass-tab-bar {
+  --background: rgba(18, 18, 18, 0.85);
+  --border-color: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  height: 64px;
+}
+
+ion-tab-button {
+  --color: #4C6793;
+  --color-selected: #88DCCC;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+ion-tab-button ion-icon {
+  font-size: 1.45rem;
+  margin-bottom: 3px;
+}
+
+/* About Modal Styling */
+.about-modal {
+  --background: #000000;
+  --height: 85%;
+  --border-radius: 20px 20px 0 0;
+}
+
+.about-toolbar {
+  --background: #121212;
+  --border-color: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.about-content {
+  --background: #000000;
+}
+
+.about-container {
+  padding: 32px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.about-logo {
+  width: 72px;
+  height: 72px;
+  background: rgba(92, 46, 126, 0.1);
+  border: 1px solid rgba(92, 46, 126, 0.2);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  box-shadow: 0 8px 32px rgba(92, 46, 126, 0.2);
+}
+
+.about-logo-icon {
+  font-size: 2.2rem;
+  color: #5C2E7E;
+}
+
+.about-container h2 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin: 0 0 6px 0;
+}
+
+.about-version {
+  font-size: 0.8rem;
+  color: #4C6793;
+  margin: 0 0 32px 0;
+  font-weight: 600;
+}
+
+.about-card {
+  background: #121212;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 20px;
+  width: 100%;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.about-card h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 10px 0;
+  color: #88DCCC;
+}
+
+.about-card p {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: #a6a6a6;
+  margin: 0;
+}
+
+.about-contact-item {
+  font-size: 0.85rem;
+  color: #ffffff;
+  margin-top: 10px;
+}
+
+.about-contact-item strong {
+  color: #4C6793;
+}
+
+.about-copy {
+  font-size: 0.75rem;
+  color: #595959;
+  margin-top: 24px;
+}

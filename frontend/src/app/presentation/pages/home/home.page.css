@@ -1,0 +1,141 @@
+/* frontend/src/app/presentation/pages/home/home.page.css */
+
+.premium-content {
+  --background: var(--ion-background-color) !important;
+  font-family: 'Outfit', 'Inter', sans-serif;
+  color: var(--ion-text-color) !important;
+}
+
+.glass-toolbar {
+  --background: var(--ion-toolbar-background) !important;
+  --border-color: var(--ion-border-color) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.premium-month-select {
+  --background: rgba(0, 0, 0, 0.03);
+  --border-color: var(--ion-border-color);
+  --border-radius: 8px;
+  --placeholder-color: var(--ion-color-step-300);
+  color: var(--ion-text-color);
+  font-weight: 600;
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid var(--ion-border-color);
+  transition: all 0.2s ease;
+}
+
+body.dark .premium-month-select {
+  --background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.premium-month-select:hover {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: var(--ion-color-primary);
+}
+
+body.dark .premium-month-select:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.content-container {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* 2. Hero KPI Card Styling */
+.kpi-card {
+  border: 1px solid var(--ion-border-color);
+  border-radius: 18px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04) !important;
+}
+
+.premium-content ion-card {
+  margin-bottom: 24px !important;
+}
+
+body.dark .kpi-card {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+}
+
+.kpi-header-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  background: rgba(0, 0, 0, 0.02);
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid var(--ion-border-color);
+}
+
+body.dark .kpi-header-stats {
+  background: rgba(255, 255, 255, 0.01);
+}
+
+.kpi-header-stat {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Horizontal Accounts Slider */
+.quick-accounts-slider::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
+.quick-accounts-slider {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Movement item layout styling */
+.movement-item {
+  --border-radius: 12px;
+  --padding-start: 10px;
+  --padding-end: 10px;
+  margin-bottom: 8px;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.movement-item:hover {
+  transform: translateY(-1px);
+  border-color: var(--ion-color-primary-tint) !important;
+}
+
+/* Amount colors */
+.item-amount.income {
+  color: var(--ion-color-success) !important;
+}
+
+.item-amount.expense {
+  color: var(--ion-text-color) !important;
+}
+
+.item-amount.transfer {
+  color: #AF7AC5 !important; /* Neutral beautiful purple for assets transfers */
+}
+
+/* Alertas & Featured Card styles */
+.urgent-payment-alert {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Pulse animation for auto captured transactions */
+.auto-captured-lightning {
+  animation: pulse 2.5s infinite;
+  display: inline-flex;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 0.7; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.7; }
+}

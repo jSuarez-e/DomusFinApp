@@ -1,0 +1,239 @@
+<!-- frontend/src/app/presentation/components/transaction-form/transaction-form.component.html -->
+@if (isModal) {
+  <ion-header>
+    <ion-toolbar class="form-toolbar">
+      <ion-title>Nuevo Movimiento</ion-title>
+      <ion-buttons slot="end">
+        <ion-button (click)="handleCancel()">
+          <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+}
+
+<ion-content class="form-content">
+  <div class="form-container">
+    <form [formGroup]="transactionForm" (ngSubmit)="handleSubmit()">
+      <!-- Type Select -->
+      <div class="input-wrapper">
+        <label class="input-label">Tipo de Movimiento</label>
+        <div class="input-field">
+          <ion-icon name="swap-horizontal-outline" class="field-icon"></ion-icon>
+          <ion-select 
+            interface="popover" 
+            placeholder="Seleccionar Tipo"
+            formControlName="type"
+            class="premium-select">
+            <ion-select-option [value]="TransactionType.EXPENSE">Gasto</ion-select-option>
+            <ion-select-option [value]="TransactionType.INCOME">Ingreso</ion-select-option>
+            <ion-select-option [value]="TransactionType.SAVINGS_DEPOSIT">Ahorro</ion-select-option>
+            <ion-select-option [value]="TransactionType.CREDIT_PAYMENT">Pago Crédito</ion-select-option>
+            <ion-select-option [value]="TransactionType.CC_PAYMENT">Pago TC</ion-select-option>
+            <ion-select-option [value]="TransactionType.TRANSFER">Transferencia</ion-select-option>
+          </ion-select>
+        </div>
+      </div>
+
+      <!-- Amount Input -->
+      <div class="input-wrapper">
+        <label class="input-label">Monto ($)</label>
+        <div class="input-field">
+          <ion-icon name="cash-outline" class="field-icon"></ion-icon>
+          <ion-input 
+            type="text"
+            placeholder="0.00"
+            formControlName="amount"
+            appMoneyMask
+            class="premium-input"
+            required>
+          </ion-input>
+        </div>
+        @if (transactionForm.get('amount')?.invalid && transactionForm.get('amount')?.touched) {
+          <div class="error-text">El monto es obligatorio y debe ser mayor a 0.</div>
+        }
+      </div>
+
+      <!-- Account Select (Dynamic label) -->
+      @if (!isCreditCardPayment()) {
+        <div class="input-wrapper">
+          <label class="input-label">{{ getAccountLabel() }}</label>
+          <div class="input-field">
+            <ion-icon name="wallet-outline" class="field-icon"></ion-icon>
+            <ion-select 
+              interface="popover" 
+              placeholder="Seleccionar Cuenta"
+              formControlName="accountId"
+              class="premium-select">
+              @for (acc of accounts(); track acc.id) {
+                <ion-select-option [value]="acc.id">{{ acc.name }}</ion-select-option>
+              }
+            </ion-select>
+          </div>
+          @if (transactionForm.get('accountId')?.invalid && transactionForm.get('accountId')?.touched) {
+            <div class="error-text">La cuenta es obligatoria.</div>
+          }
+        </div>
+      }
+
+      <!-- Destination Account Select (Only for Transfer type) -->
+      @if (transactionForm.get('type')?.value === TransactionType.TRANSFER) {
+        <div class="input-wrapper">
+          <label class="input-label">Cuenta de Destino</label>
+          <div class="input-field">
+            <ion-icon name="wallet-outline" class="field-icon"></ion-icon>
+            <ion-select 
+              interface="popover" 
+              placeholder="Seleccionar Cuenta Destino"
+              formControlName="destinationAccountId"
+              class="premium-select">
+              @for (acc of accounts(); track acc.id) {
+                @if (acc.id !== Number(transactionForm.get('accountId')?.value)) {
+                  <ion-select-option [value]="acc.id">{{ acc.name }}</ion-select-option>
+                }
+              }
+            </ion-select>
+          </div>
+          @if (transactionForm.get('destinationAccountId')?.invalid && transactionForm.get('destinationAccountId')?.touched) {
+            <div class="error-text">La cuenta de destino es obligatoria.</div>
+          }
+        </div>
+      }
+
+      <!-- Credit Card Select (Only if payment method is TC) -->
+      @if (isCreditCardPayment()) {
+        <div class="input-wrapper">
+          <label class="input-label">Tarjeta de Crédito</label>
+          <div class="input-field">
+            <ion-icon name="card-outline" class="field-icon"></ion-icon>
+            <ion-select 
+              interface="popover" 
+              placeholder="Seleccionar Tarjeta"
+              formControlName="creditCardId"
+              class="premium-select">
+              @for (card of creditCards(); track card.id) {
+                <ion-select-option [value]="card.id">{{ card.aliasName }} (•••• {{ card.lastFourDigits }})</ion-select-option>
+              }
+            </ion-select>
+          </div>
+          @if (transactionForm.get('creditCardId')?.invalid && transactionForm.get('creditCardId')?.touched) {
+            <div class="error-text">La tarjeta de crédito es obligatoria.</div>
+          }
+        </div>
+
+        <!-- Installments Input -->
+        <div class="input-wrapper">
+          <label class="input-label">Número de Cuotas</label>
+          <div class="input-field">
+            <ion-icon name="calculator-outline" class="field-icon"></ion-icon>
+            <ion-input 
+              type="number"
+              placeholder="1"
+              formControlName="installments"
+              class="premium-input"
+              min="1">
+            </ion-input>
+          </div>
+          @if (transactionForm.get('installments')?.invalid && transactionForm.get('installments')?.touched) {
+            <div class="error-text">El número de cuotas es obligatorio y debe ser de mínimo 1.</div>
+          }
+        </div>
+      }
+
+      <!-- Category Select -->
+      <div class="input-wrapper">
+        <label class="input-label">Categoría</label>
+        <div class="input-field">
+          <ion-icon name="list-outline" class="field-icon"></ion-icon>
+          <ion-select 
+            interface="popover" 
+            placeholder="Seleccionar Categoría"
+            formControlName="categoryId"
+            class="premium-select">
+            @for (cat of filteredCategories(); track cat.id) {
+              <ion-select-option [value]="cat.id">{{ cat.name }}</ion-select-option>
+            }
+          </ion-select>
+        </div>
+        @if (transactionForm.get('categoryId')?.invalid && transactionForm.get('categoryId')?.touched) {
+          <div class="error-text">La categoría es obligatoria.</div>
+        }
+      </div>
+
+      <!-- Payment Method Select -->
+      <div class="input-wrapper">
+        <label class="input-label">Medio de Pago</label>
+        <div class="input-field">
+          <ion-icon name="card-outline" class="field-icon"></ion-icon>
+          <ion-select 
+            interface="popover" 
+            placeholder="Seleccionar Pago"
+            formControlName="paymentMethodId"
+            class="premium-select">
+            @for (pm of paymentMethods(); track pm.id) {
+              <ion-select-option [value]="pm.id">{{ pm.name }}</ion-select-option>
+            }
+          </ion-select>
+        </div>
+        @if (transactionForm.get('paymentMethodId')?.invalid && transactionForm.get('paymentMethodId')?.touched) {
+          <div class="error-text">El medio de pago es obligatorio.</div>
+        }
+      </div>
+
+      <!-- Bank / Source App Select -->
+      <div class="input-wrapper">
+        <label class="input-label">Banco / Origen de Captura (App)</label>
+        <div class="input-field">
+          <ion-icon name="flash-outline" class="field-icon"></ion-icon>
+          <ion-select 
+            interface="popover" 
+            placeholder="Seleccionar Banco/App"
+            formControlName="sourceApp"
+            class="premium-select">
+            <ion-select-option value="Webapp">Manual (Webapp)</ion-select-option>
+            <ion-select-option value="Bancolombia">Bancolombia</ion-select-option>
+            <ion-select-option value="Davivienda">Davivienda</ion-select-option>
+            <ion-select-option value="Nequi">Nequi</ion-select-option>
+            <ion-select-option value="Daviplata">Daviplata</ion-select-option>
+          </ion-select>
+        </div>
+        @if (transactionForm.get('sourceApp')?.invalid && transactionForm.get('sourceApp')?.touched) {
+          <div class="error-text">El origen es obligatorio.</div>
+        }
+      </div>
+
+      <!-- Private Movement Toggle -->
+      <ion-item class="toggle-item" lines="none">
+        <ion-icon name="eye-off-outline" slot="start" class="toggle-icon"></ion-icon>
+        <ion-label class="toggle-label">
+          <h3>Movimiento Privado</h3>
+          <p>Ocultar descripción a otros miembros</p>
+        </ion-label>
+        <ion-toggle formControlName="isPrivate" slot="end" class="premium-toggle"></ion-toggle>
+      </ion-item>
+
+      <!-- Description Input -->
+      <div class="input-wrapper">
+        <label class="input-label">Descripción</label>
+        <div class="input-field input-field--textarea">
+          <ion-icon name="document-text-outline" class="field-icon"></ion-icon>
+          <ion-input 
+            type="text"
+            placeholder="Ej. Compras de mercado, pago nómina (Opcional)"
+            formControlName="description"
+            class="premium-input">
+          </ion-input>
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <ion-button 
+        type="submit"
+        expand="block" 
+        class="submit-button"
+        [disabled]="transactionForm.invalid">
+        Registrar Movimiento
+      </ion-button>
+    </form>
+  </div>
+</ion-content>

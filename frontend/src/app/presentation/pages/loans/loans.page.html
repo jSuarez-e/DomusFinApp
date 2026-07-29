@@ -1,0 +1,385 @@
+<!-- frontend/src/app/presentation/pages/loans/loans.page.html -->
+<ion-header [translucent]="true">
+  <ion-toolbar class="loans-toolbar">
+    <ion-title>Créditos y Deudas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="premium-content">
+  <div class="loans-glow-bg"></div>
+
+  <div class="loans-container">
+    <!-- Segment Selection -->
+    <ion-segment [value]="activeSegment()" (ionChange)="onSegmentChange($event)" class="loans-segment">
+      <ion-segment-button value="debts">
+        <ion-label>Mis Deudas</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="simulator">
+        <ion-label>Simulador</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+
+    <!-- CONTENT 1: DEBTS LIST -->
+    @if (activeSegment() === 'debts') {
+      <div class="loans-tab-content">
+        <!-- Summary Card -->
+        <ion-card class="loans-summary-card">
+          <ion-card-content class="loans-summary-content">
+            <div class="loans-summary__grid">
+              <div class="loans-summary__item">
+                <span class="loans-summary__label">Saldo Pendiente</span>
+                <span class="loans-summary__value">{{ totalDebt() | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+              </div>
+              <div class="loans-summary__item">
+                <span class="loans-summary__label">Principal Inicial</span>
+                <span class="loans-summary__value">{{ totalInitial() | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+              </div>
+            </div>
+
+            <div class="loans-summary__progress-container">
+              <div class="loans-summary__progress-header">
+                <span>Total Amortizado (Pagado)</span>
+                <span>{{ debtPaidPercent() | number:'1.0-1' }}%</span>
+              </div>
+              <div class="loans-progress-bar">
+                <div class="loans-progress-bar__fill" [style.width.%]="debtPaidPercent()"></div>
+              </div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <!-- Section Header -->
+        <div class="loans-section-header">
+          <h2>Créditos Activos</h2>
+          <ion-badge color="tertiary" class="loans-section-badge">{{ activeLoans().length }}</ion-badge>
+        </div>
+
+        @if (activeLoans().length === 0) {
+          <div class="loans-empty-state">
+            <div class="loans-empty-state__icon-bg">
+              <ion-icon name="calculator-outline" class="loans-empty-state__icon"></ion-icon>
+            </div>
+            <h3>Sin Créditos Registrados</h3>
+            <p>Aquí verás tus préstamos y deudas. Registra una nueva deuda para proyectar sus cuotas y abonar capital.</p>
+            <ion-button fill="outline" color="primary" class="loans-empty-state__btn" (click)="openCreateModal()">
+              Registrar Deuda
+            </ion-button>
+          </div>
+        } @else {
+          <div class="loans-grid">
+            @for (loan of activeLoans(); track loan.id) {
+              <div class="loans-card-wrapper" style="margin-bottom: 24px;">
+                <!-- Physical style card -->
+                <div class="loans-physical-card" [style.border-color]="loan.isPrivate ? '#5c2e7e' : 'rgba(255,255,255,0.08)'">
+                  <div class="loans-physical-card__glass"></div>
+                  <div class="loans-physical-card__header">
+                    <span class="loans-physical-card__bank">DOMUSFIN LOAN 
+                      @if (loan.isPrivate) {
+                        <span style="font-size: 9px; opacity: 0.9; color: #a78bfa; margin-left: 8px;">🔒 Privada</span>
+                      } @else {
+                        <span style="font-size: 9px; opacity: 0.9; color: #88DCCC; margin-left: 8px;">👥 Compartida</span>
+                      }
+                    </span>
+                    <ion-icon name="calculator-outline" class="loans-physical-card__logo"></ion-icon>
+                  </div>
+                  <div class="loans-physical-card__chip"></div>
+                  <div class="loans-physical-card__number">{{ loan.purposeDescription }}</div>
+                  <div class="loans-physical-card__footer">
+                    <div>
+                      <div class="loans-physical-card__label">TASA MENSUAL</div>
+                      <div class="loans-physical-card__val">{{ loan.interestRate }}% E.M.</div>
+                    </div>
+                    <div class="loans-physical-card__align-right">
+                      <div class="loans-physical-card__label">SALDO PENDIENTE</div>
+                      <div class="loans-physical-card__debt">{{ Number(loan.currentBalance) | currency:'COP':'symbol-narrow':'1.0-0' }}</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Progress Bar & Actions beneath it -->
+                <div class="loans-card__progress-container" style="padding: 0 8px; margin-top: -4px;">
+                  <div class="loans-progress-bar" style="height: 6px; border-radius: 3px; background: rgba(255,255,255,0.05); overflow: hidden;">
+                    <div class="loans-progress-bar__fill" [style.width.%]="getPaidPercentage(loan)" style="height: 100%; background: #88DCCC; border-radius: 3px;"></div>
+                  </div>
+                  <div class="loans-card__progress-text" style="display: flex; justify-content: space-between; font-size: 11px; color: #a1a1aa; margin-top: 6px;">
+                    <span>Inicial: {{ Number(loan.initialPrincipal) | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+                    <span>Pagado: {{ getPaidPercentage(loan) | number:'1.0-1' }}%</span>
+                  </div>
+                  
+                  @if (!loan.isPrivate && loan.participants && loan.participants.length > 0) {
+                    <div class="loans-card__participants-list" style="display: flex; gap: 4px; align-items: center; flex-wrap: wrap; margin-top: 8px;">
+                      <span style="font-size: 9px; color: #71717a; text-transform: uppercase; font-weight: 700;">Participantes:</span>
+                      @for (p of loan.participants; track p.id) {
+                        <ion-badge color="tertiary" style="font-size: 9px; padding: 2px 6px; border-radius: 6px;">👤 {{ p.name }}</ion-badge>
+                      }
+                    </div>
+                  }
+                </div>
+
+                <!-- Pay Button -->
+                <div class="loans-card__actions" style="margin-top: 12px; padding: 0 8px;">
+                  <ion-button expand="block" size="small" class="loans-card__btn" style="--border-radius: 12px; font-weight: bold;" (click)="openPayModal(loan)">
+                    <ion-icon name="cash-outline" slot="start"></ion-icon>
+                    Registrar Pago / Abono
+                  </ion-button>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+
+    <!-- CONTENT 2: SIMULATOR -->
+    @if (activeSegment() === 'simulator') {
+      <div class="loans-tab-content">
+        <ion-card class="loans-sim-card">
+          <ion-card-content class="loans-sim-content">
+            <form [formGroup]="simForm" (ngSubmit)="handleSimulate()">
+              <div class="loans-sim__grid">
+                <div class="loans-form__field">
+                  <label class="loans-form__label">Monto de la Deuda ($)</label>
+                  <div class="loans-form__input-wrapper">
+                    <ion-input type="text" formControlName="simAmount" appMoneyMask class="loans-form__input"></ion-input>
+                  </div>
+                </div>
+
+                <div class="loans-form__field">
+                  <label class="loans-form__label">Tasa de Interés Mensual (%)</label>
+                  <div class="loans-form__input-wrapper">
+                    <ion-input type="number" step="0.1" formControlName="simRate" class="loans-form__input"></ion-input>
+                  </div>
+                </div>
+
+                <div class="loans-form__field">
+                  <label class="loans-form__label">Plazo (Meses)</label>
+                  <div class="loans-form__input-wrapper">
+                    <ion-input type="number" formControlName="simInstallments" class="loans-form__input"></ion-input>
+                  </div>
+                </div>
+              </div>
+
+              <ion-button type="submit" expand="block" class="loans-sim__submit" [disabled]="simForm.invalid">
+                <ion-icon name="calculator-outline" slot="start"></ion-icon>
+                Calcular Amortización
+              </ion-button>
+            </form>
+          </ion-card-content>
+        </ion-card>
+
+        <!-- Simulation Results Table -->
+        @if (amortizationPlan().length > 0) {
+          <div class="loans-sim-results">
+            <h3>Plan de Pagos Proyectado (Sistema Francés)</h3>
+            <div class="loans-table-wrapper">
+              <table class="loans-sim-table">
+                <thead>
+                  <tr>
+                    <th>Mes</th>
+                    <th>Cuota Total</th>
+                    <th>Abono Capital</th>
+                    <th>Intereses</th>
+                    <th>Saldo Restante</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (period of amortizationPlan(); track period.period) {
+                    <tr>
+                      <td class="td-center">{{ period.period }}</td>
+                      <td>{{ period.totalFee | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
+                      <td>{{ period.capital | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
+                      <td>{{ period.interest | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
+                      <td>{{ period.remainingBalance | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Floating Action Button for active debts view -->
+  @if (activeSegment() === 'debts') {
+    <ion-fab slot="fixed" vertical="bottom" horizontal="end" class="loans-fab">
+      <ion-fab-button (click)="openCreateModal()">
+        <ion-icon name="add-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+  }
+
+  <!-- Modal: Create Loan/Debt -->
+  <ion-modal [isOpen]="isCreateModalOpen()" (didDismiss)="closeCreateModal()" class="loans-modal">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar class="loans-modal__toolbar">
+          <ion-title>Registrar Crédito / Deuda</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="closeCreateModal()">
+              <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content class="loans-modal__content">
+        <div class="loans-modal__form-container">
+          <form [formGroup]="loanForm" (ngSubmit)="handleCreateLoan()">
+            
+            <div class="loans-form__field">
+              <label class="loans-form__label">Descripción o Propósito del Crédito</label>
+              <div class="loans-form__input-wrapper">
+                <ion-icon name="information-circle-outline" class="loans-form__icon"></ion-icon>
+                <ion-input type="text" placeholder="Ej. Crédito de Libre Inversión Vehículo" formControlName="purposeDescription" class="loans-form__input"></ion-input>
+              </div>
+              @if (loanForm.get('purposeDescription')?.invalid && loanForm.get('purposeDescription')?.touched) {
+                <div class="loans-form__error">La descripción es requerida (máx. 255 caracteres).</div>
+              }
+            </div>
+
+            <div class="loans-form__field">
+              <label class="loans-form__label">Monto del Préstamo (Capital Inicial)</label>
+              <div class="loans-form__input-wrapper">
+                <ion-icon name="cash-outline" class="loans-form__icon"></ion-icon>
+                <ion-input type="text" placeholder="0.00" formControlName="initialPrincipal" appMoneyMask class="loans-form__input"></ion-input>
+              </div>
+              @if (loanForm.get('initialPrincipal')?.invalid && loanForm.get('initialPrincipal')?.touched) {
+                <div class="loans-form__error">Debe especificar un monto inicial válido y mayor a cero.</div>
+              }
+            </div>
+
+            <div class="loans-form__field">
+              <label class="loans-form__label">Tasa de Interés Efectiva Mensual (%)</label>
+              <div class="loans-form__input-wrapper">
+                <ion-icon name="calculator-outline" class="loans-form__icon"></ion-icon>
+                <ion-input type="number" step="0.1" placeholder="Ej. 1.8" formControlName="interestRate" class="loans-form__input"></ion-input>
+              </div>
+              @if (loanForm.get('interestRate')?.invalid && loanForm.get('interestRate')?.touched) {
+                <div class="loans-form__error">La tasa de interés mensual es obligatoria.</div>
+              }
+            </div>
+
+            <div class="loans-form__field">
+              <label class="loans-form__label">Cuota de Manejo ($)</label>
+              <div class="loans-form__input-wrapper">
+                <ion-icon name="cash-outline" class="loans-form__icon"></ion-icon>
+                <ion-input type="text" placeholder="0.00" formControlName="handlingFee" appMoneyMask class="loans-form__input"></ion-input>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 16px;">
+              <div class="loans-form__field" style="flex: 1;">
+                <label class="loans-form__label">Seguro de Vida ($)</label>
+                <div class="loans-form__input-wrapper">
+                  <ion-icon name="cash-outline" class="loans-form__icon"></ion-icon>
+                  <ion-input type="text" placeholder="0.00" formControlName="lifeInsurance" appMoneyMask class="loans-form__input"></ion-input>
+                </div>
+              </div>
+              <div class="loans-form__field" style="flex: 1;">
+                <label class="loans-form__label">Otros Cargos ($)</label>
+                <div class="loans-form__input-wrapper">
+                  <ion-icon name="cash-outline" class="loans-form__icon"></ion-icon>
+                  <ion-input type="text" placeholder="0.00" formControlName="otherCharges" appMoneyMask class="loans-form__input"></ion-input>
+                </div>
+              </div>
+            </div>
+
+            <div class="loans-form__field loans-form__field--toggle">
+              <div class="loans-form__toggle-wrapper">
+                <div class="loans-form__toggle-info">
+                  <span class="loans-form__toggle-title">Crédito Privado</span>
+                  <span class="loans-form__toggle-desc">Si se activa, solo tú podrás verlo e ingresar abonos.</span>
+                </div>
+                <ion-toggle formControlName="isPrivate" color="primary"></ion-toggle>
+              </div>
+            </div>
+
+            @if (!loanForm.get('isPrivate')?.value) {
+              <div class="loans-form__field">
+                <label class="loans-form__label">Participantes Compartidos (Hogar)</label>
+                <div class="loans-form__input-wrapper">
+                  <ion-icon name="people-outline" class="loans-form__icon"></ion-icon>
+                  <ion-select interface="popover" placeholder="Seleccionar Participantes" formControlName="participantIds" multiple="true" class="loans-form__select">
+                    @for (member of householdMembers(); track member.id) {
+                      <ion-select-option [value]="member.id">{{ member.name }}</ion-select-option>
+                    }
+                  </ion-select>
+                </div>
+                <p class="loans-form__help-text">Los participantes podrán ver la deuda y registrar pagos de forma consolidada.</p>
+              </div>
+            }
+
+            <ion-button type="submit" expand="block" class="loans-form__submit" [disabled]="loanForm.invalid || isSubmitting()">
+              <ion-icon name="checkmark-outline" slot="start"></ion-icon>
+              Registrar Préstamo
+            </ion-button>
+          </form>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <!-- Modal: Pay portion of Loan -->
+  <ion-modal [isOpen]="isPayModalOpen()" (didDismiss)="closePayModal()" class="loans-modal">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar class="loans-modal__toolbar">
+          <ion-title>Registrar Pago a Crédito</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="closePayModal()">
+              <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content class="loans-modal__content">
+        <div class="loans-modal__form-container">
+          <form [formGroup]="payForm" (ngSubmit)="handlePayLoan()">
+            
+            @if (selectedLoan(); as selected) {
+              <div class="loans-pay-info">
+                <p>Crédito: <strong>{{ selected.purposeDescription }}</strong></p>
+                <p>Saldo Pendiente a Capital: <strong>{{ Number(selected.currentBalance) | currency:'COP':'symbol-narrow':'1.0-0' }}</strong></p>
+              </div>
+            }
+
+            <div class="loans-form__field">
+              <label class="loans-form__label">Cuenta de Origen</label>
+              <div class="loans-form__input-wrapper">
+                <ion-icon name="wallet-outline" class="loans-form__icon"></ion-icon>
+                <ion-select interface="popover" placeholder="Seleccionar Cuenta" formControlName="accountId" class="loans-form__select">
+                  @for (acc of accounts(); track acc.id) {
+                    <ion-select-option [value]="acc.id">{{ acc.name }} (Saldo: {{ acc.currentBalance | currency:'COP':'symbol-narrow':'1.0-0' }})</ion-select-option>
+                  }
+                </ion-select>
+              </div>
+              @if (payForm.get('accountId')?.invalid && payForm.get('accountId')?.touched) {
+                <div class="loans-form__error">Debe seleccionar una cuenta de donde saldrán los fondos.</div>
+              }
+            </div>
+
+            <div class="loans-form__field">
+              <label class="loans-form__label">Monto a Pagar ($)</label>
+              <div class="loans-form__input-wrapper">
+                <ion-icon name="cash-outline" class="loans-form__icon"></ion-icon>
+                <ion-input type="text" placeholder="0.00" formControlName="amount" appMoneyMask class="loans-form__input"></ion-input>
+              </div>
+              @if (payForm.get('amount')?.invalid && payForm.get('amount')?.touched) {
+                <div class="loans-form__error">Ingrese un valor de pago válido.</div>
+              }
+            </div>
+
+            <ion-button type="submit" expand="block" class="loans-form__submit" [disabled]="payForm.invalid || isSubmitting()">
+              <ion-icon name="checkmark-outline" slot="start"></ion-icon>
+              Registrar Abono
+            </ion-button>
+          </form>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+</ion-content>

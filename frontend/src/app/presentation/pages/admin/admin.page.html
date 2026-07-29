@@ -1,0 +1,452 @@
+<!-- frontend/src/app/presentation/pages/admin/admin.page.html -->
+<ion-header [translucent]="true">
+  <ion-toolbar class="glass-toolbar">
+    <ion-buttons slot="start">
+      <ion-button routerLink="/dashboard" class="back-btn">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Administración</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="premium-content">
+  <div class="glow-bg"></div>
+
+  <div class="content-container">
+    <ion-segment scrollable="true" [value]="activeTab()" (ionChange)="onTabChange($event)" class="tab-segment">
+      <ion-segment-button value="categories">
+        <ion-label>Categorías</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="payments">
+        <ion-label>Pagos</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="members">
+        <ion-label>Miembros</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="budget">
+        <ion-label>Presupuesto</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="account">
+        <ion-label>Seguridad</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+
+    <!-- TAB: CATEGORIES -->
+    @if (activeTab() === 'categories') {
+      <div class="tab-pane">
+        <!-- Search bar -->
+        <ion-searchbar 
+          placeholder="Buscar categorías..." 
+          [value]="searchTerm()"
+          (ionInput)="onSearch($event)"
+          class="premium-searchbar"
+          style="--background: rgba(255,255,255,0.05); --color: #fff; --placeholder-color: #a1a1aa; --border-radius: 12px; margin-bottom: 16px;">
+        </ion-searchbar>
+
+        <!-- Card: Categorías de Gastos -->
+        <ion-card class="admin-card" style="margin-bottom: 20px;">
+          <ion-card-content>
+            <div class="pane-header">
+              <h3>Categorías de Gastos</h3>
+              <ion-button (click)="openAddCategory(CategoryType.EXPENSE)" class="add-btn" size="small">
+                <ion-icon name="add-outline" slot="start"></ion-icon>
+                Agregar Gasto
+              </ion-button>
+            </div>
+
+            <ion-list class="admin-list" lines="none">
+              @for (cat of filteredExpenseCategories(); track cat.id) {
+                <ion-item class="admin-item">
+                  <div class="category-icon-wrapper">
+                    <ion-icon [name]="cat.icon || 'list-outline'" class="cat-icon"></ion-icon>
+                  </div>
+                  <ion-label>
+                    <span class="item-name">{{ cat.name }}</span>
+                    @if (cat.isGlobal) {
+                      <span class="global-badge">Global</span>
+                    }
+                  </ion-label>
+
+                  @if (!cat.isGlobal) {
+                    <div slot="end" class="action-buttons">
+                      <ion-button fill="clear" (click)="openEditCategory(cat)" class="edit-action-btn">
+                        <ion-icon name="pencil-outline"></ion-icon>
+                      </ion-button>
+                      <ion-button fill="clear" (click)="deleteCategory(cat)" class="delete-action-btn">
+                        <ion-icon name="trash-outline"></ion-icon>
+                      </ion-button>
+                    </div>
+                  }
+                </ion-item>
+              }
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+
+        <!-- Card: Categorías de Ingresos -->
+        <ion-card class="admin-card">
+          <ion-card-content>
+            <div class="pane-header">
+              <h3>Categorías de Ingresos</h3>
+              <ion-button (click)="openAddCategory(CategoryType.INCOME)" class="add-btn" size="small">
+                <ion-icon name="add-outline" slot="start"></ion-icon>
+                Agregar Ingreso
+              </ion-button>
+            </div>
+
+            <ion-list class="admin-list" lines="none">
+              @for (cat of filteredIncomeCategories(); track cat.id) {
+                <ion-item class="admin-item">
+                  <div class="category-icon-wrapper">
+                    <ion-icon [name]="cat.icon || 'list-outline'" class="cat-icon"></ion-icon>
+                  </div>
+                  <ion-label>
+                    <span class="item-name">{{ cat.name }}</span>
+                    @if (cat.isGlobal) {
+                      <span class="global-badge">Global</span>
+                    }
+                  </ion-label>
+
+                  @if (!cat.isGlobal) {
+                    <div slot="end" class="action-buttons">
+                      <ion-button fill="clear" (click)="openEditCategory(cat)" class="edit-action-btn">
+                        <ion-icon name="pencil-outline"></ion-icon>
+                      </ion-button>
+                      <ion-button fill="clear" (click)="deleteCategory(cat)" class="delete-action-btn">
+                        <ion-icon name="trash-outline"></ion-icon>
+                      </ion-button>
+                    </div>
+                  }
+                </ion-item>
+              }
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    }
+
+    <!-- TAB: PAYMENT METHODS -->
+    @if (activeTab() === 'payments') {
+      <div class="tab-pane">
+        <!-- Search bar -->
+        <ion-searchbar 
+          placeholder="Buscar medios de pago..." 
+          [value]="searchTerm()"
+          (ionInput)="onSearch($event)"
+          class="premium-searchbar"
+          style="--background: rgba(255,255,255,0.05); --color: #fff; --placeholder-color: #a1a1aa; --border-radius: 12px; margin-bottom: 16px;">
+        </ion-searchbar>
+
+        <ion-card class="admin-card">
+          <ion-card-content>
+            <div class="pane-header">
+              <h3>Medios de Pago</h3>
+              <ion-button (click)="openAddPayment()" class="add-btn" size="small">
+                <ion-icon name="add-outline" slot="start"></ion-icon>
+                Agregar
+              </ion-button>
+            </div>
+
+            <ion-list class="admin-list" lines="none">
+              @for (pm of filteredPaymentMethods(); track pm.id) {
+                <ion-item class="admin-item">
+                  <div class="payment-icon-wrapper">
+                    <ion-icon name="card-outline" class="pm-icon"></ion-icon>
+                  </div>
+                  <ion-label>
+                    <span class="item-name">{{ pm.name }}</span>
+                  </ion-label>
+
+                  @if (pm.householdId !== null) {
+                    <div slot="end" class="action-buttons">
+                      <ion-button fill="clear" (click)="openEditPayment(pm)" class="edit-action-btn">
+                        <ion-icon name="pencil-outline"></ion-icon>
+                      </ion-button>
+                      <ion-button fill="clear" (click)="deletePayment(pm)" class="delete-action-btn">
+                        <ion-icon name="trash-outline"></ion-icon>
+                      </ion-button>
+                    </div>
+                  }
+                </ion-item>
+              }
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    }
+
+    <!-- TAB: MEMBERS -->
+    @if (activeTab() === 'members') {
+      <div class="tab-pane">
+        <!-- Search bar -->
+        <ion-searchbar 
+          placeholder="Buscar miembros..." 
+          [value]="searchTerm()"
+          (ionInput)="onSearch($event)"
+          class="premium-searchbar"
+          style="--background: rgba(255,255,255,0.05); --color: #fff; --placeholder-color: #a1a1aa; --border-radius: 12px; margin-bottom: 16px;">
+        </ion-searchbar>
+
+        <ion-card class="admin-card">
+          <ion-card-content>
+            <div class="pane-header">
+              <h3>Miembros del Hogar</h3>
+            </div>
+
+            <ion-list class="admin-list" lines="none">
+              @for (m of filteredMembers(); track m.id) {
+                <ion-item class="admin-item">
+                  <div class="category-icon-wrapper">
+                    <ion-icon name="person-outline" class="cat-icon"></ion-icon>
+                  </div>
+                  <ion-label>
+                    <span class="item-name">{{ m.name }}</span>
+                    <p style="margin: 4px 0 0 0; color: #a1a1aa; font-size: 0.8rem;">
+                      {{ m.email }} • Rol: <strong style="color: #88DCCC;">{{ m.role | uppercase }}</strong>
+                    </p>
+                  </ion-label>
+
+                  @if (m.id !== currentUser()?.id) {
+                    <div slot="end" class="action-buttons">
+                      <ion-button fill="clear" (click)="toggleMemberRole(m)" class="edit-action-btn" title="Cambiar Rol">
+                        <ion-icon name="swap-horizontal-outline"></ion-icon>
+                      </ion-button>
+                      <ion-button fill="clear" (click)="confirmDeleteMember(m)" class="delete-action-btn" title="Eliminar Miembro">
+                        <ion-icon name="trash-outline"></ion-icon>
+                      </ion-button>
+                    </div>
+                  }
+                </ion-item>
+              }
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+
+        <!-- INVITATION HUB -->
+        <ion-card class="admin-card invite-card" style="margin-top: 24px;">
+          <ion-card-header>
+            <ion-card-title>Invitar Miembros al Hogar</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p class="section-desc">
+              Comparte el enlace mágico con los miembros de tu familia para que se registren e ingresen automáticamente a tu hogar.
+            </p>
+
+            <!-- Magic Link Copy Box -->
+            <div class="magic-link-box">
+              <div class="magic-link-content">
+                <ion-icon name="share-social-outline" class="magic-icon"></ion-icon>
+                <div class="magic-details">
+                  <span class="magic-label">Enlace de Registro</span>
+                  <span class="magic-url">{{ getInvitationLink() }}</span>
+                </div>
+              </div>
+              <ion-button fill="clear" (click)="copyToClipboard(getInvitationLink())" class="copy-link-btn" title="Copiar Enlace">
+                <ion-icon name="copy-outline" slot="icon-only"></ion-icon>
+              </ion-button>
+            </div>
+
+            <!-- Email Invitation Form -->
+            <div class="invite-divider">
+              <span>O envía una invitación por correo</span>
+            </div>
+
+            <form [formGroup]="inviteForm" (ngSubmit)="sendInvitation()">
+              <div class="input-wrapper">
+                <label class="input-label">Correo Electrónico del Invitado</label>
+                <div class="invite-form-row">
+                  <div class="input-field" style="flex: 1; margin-bottom: 0;">
+                    <ion-icon name="mail-outline" class="field-icon"></ion-icon>
+                    <ion-input 
+                      type="email" 
+                      placeholder="correo@ejemplo.com" 
+                      formControlName="email"
+                      class="premium-input">
+                    </ion-input>
+                  </div>
+                  <ion-button type="submit" [disabled]="inviteForm.invalid" class="invite-submit-btn">
+                    Enviar
+                  </ion-button>
+                </div>
+              </div>
+            </form>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    }
+
+    <!-- TAB: BUDGET -->
+    @if (activeTab() === 'budget') {
+      <div class="tab-pane">
+        <ion-card class="admin-card">
+          <ion-card-header>
+            <ion-card-title>Límite de Gasto Mensual</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p class="section-desc">
+              Define el presupuesto máximo de gastos del hogar. El dashboard mostrará una barra de progreso basada en esta meta.
+            </p>
+
+            <form [formGroup]="budgetForm" (ngSubmit)="saveBudgetGoal()">
+              <div class="input-wrapper">
+                <label class="input-label">Meta de Presupuesto ($)</label>
+                <div class="input-field">
+                  <ion-icon name="cash-outline" class="field-icon"></ion-icon>
+                  <ion-input 
+                    type="text" 
+                    placeholder="Ej. 1.000" 
+                    formControlName="monthlyBudget"
+                    appMoneyMask
+                    class="premium-input">
+                  </ion-input>
+                </div>
+              </div>
+
+              <ion-button type="submit" expand="block" [disabled]="budgetForm.invalid" class="save-budget-btn">
+                Actualizar Presupuesto
+              </ion-button>
+            </form>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    }
+
+    <!-- TAB: SAFETY/SUSPEND MEMBER -->
+    @if (activeTab() === 'account') {
+      <div class="tab-pane">
+        <ion-card class="admin-card danger-card">
+          <ion-card-header>
+            <ion-card-title class="danger-title">Suspender Cuenta de Miembro</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="danger-warning">
+              <ion-icon name="alert-circle-outline" class="warning-icon"></ion-icon>
+              <p>
+                <strong>Atención:</strong> Esta acción desactivará de forma lógica la cuenta del miembro seleccionado del hogar. El usuario perderá el acceso inmediatamente, pero sus datos y gastos históricos se conservarán para fines de reportes.
+              </p>
+            </div>
+
+            <form [formGroup]="suspendMemberForm" (ngSubmit)="submitSuspendMember()">
+              <div class="input-wrapper">
+                <label class="input-label">Seleccionar Miembro a Suspender</label>
+                <div class="input-field">
+                  <ion-icon name="person-outline" class="field-icon"></ion-icon>
+                  <ion-select 
+                    interface="popover" 
+                    placeholder="Seleccionar Miembro"
+                    formControlName="memberId"
+                    [disabled]="getOtherMembers().length === 0"
+                    class="premium-input select-full-width">
+                    @for (m of getOtherMembers(); track m.id) {
+                      <ion-select-option [value]="m.id">{{ m.name }} ({{ m.email }})</ion-select-option>
+                    }
+                  </ion-select>
+                </div>
+                @if (getOtherMembers().length === 0) {
+                  <p style="color: #ef4444; font-size: 0.8rem; margin-top: 8px; margin-bottom: 0;">
+                    ⚠️ No hay otros miembros activos en el hogar para suspender.
+                  </p>
+                }
+              </div>
+
+              <ion-button type="submit" expand="block" [disabled]="suspendMemberForm.invalid || getOtherMembers().length === 0" class="suspend-btn">
+                <ion-icon name="trash-outline" slot="start"></ion-icon>
+                Suspender Cuenta
+              </ion-button>
+            </form>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    }
+  </div>
+
+  <!-- MODAL: ADD/EDIT CATEGORY -->
+  <ion-modal [isOpen]="isCategoryModalOpen()" (didDismiss)="closeCategoryModal()" class="admin-modal">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar class="modal-toolbar">
+          <ion-title>{{ isCategoryEdit() ? 'Editar Categoría' : 'Nueva Categoría' }}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="closeCategoryModal()">
+              <ion-icon name="close-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content class="modal-content">
+        <form [formGroup]="categoryForm" (ngSubmit)="saveCategory()" class="modal-form">
+          <div class="input-wrapper">
+            <label class="input-label">Nombre de Categoría</label>
+            <div class="input-field">
+              <ion-icon name="list-outline" class="field-icon"></ion-icon>
+              <ion-input type="text" placeholder="Ej. Entretenimiento" formControlName="name" class="premium-input"></ion-input>
+            </div>
+          </div>
+
+          <div class="input-wrapper">
+            <label class="input-label">Tipo de Categoría</label>
+            <div class="input-field">
+              <ion-icon name="swap-horizontal-outline" class="field-icon"></ion-icon>
+              <ion-select interface="popover" formControlName="type" class="premium-select">
+                <ion-select-option value="EXPENSE">Gasto</ion-select-option>
+                <ion-select-option value="INCOME">Ingreso</ion-select-option>
+              </ion-select>
+            </div>
+          </div>
+
+          <div class="icon-selection-wrapper">
+            <label class="input-label">Seleccionar Icono</label>
+            <div class="icon-grid">
+              @for (iconName of availableIcons; track iconName) {
+                <div 
+                  class="icon-grid-item" 
+                  [class.selected]="categoryForm.get('icon')?.value === iconName"
+                  (click)="categoryForm.patchValue({ icon: iconName })">
+                  <ion-icon [name]="iconName" class="grid-icon"></ion-icon>
+                </div>
+              }
+            </div>
+          </div>
+
+          <ion-button type="submit" expand="block" [disabled]="categoryForm.invalid" class="modal-save-btn">
+            Guardar Categoría
+          </ion-button>
+        </form>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <!-- MODAL: ADD/EDIT PAYMENT METHOD -->
+  <ion-modal [isOpen]="isPaymentModalOpen()" (didDismiss)="closePaymentModal()" class="admin-modal">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar class="modal-toolbar">
+          <ion-title>{{ isPaymentEdit() ? 'Editar Medio' : 'Nuevo Medio de Pago' }}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="closePaymentModal()">
+              <ion-icon name="close-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content class="modal-content">
+        <form [formGroup]="paymentForm" (ngSubmit)="savePayment()" class="modal-form">
+          <div class="input-wrapper">
+            <label class="input-label">Nombre del Medio de Pago</label>
+            <div class="input-field">
+              <ion-icon name="card-outline" class="field-icon"></ion-icon>
+              <ion-input type="text" placeholder="Ej. Tarjeta de Débito" formControlName="name" class="premium-input"></ion-input>
+            </div>
+          </div>
+
+          <ion-button type="submit" expand="block" [disabled]="paymentForm.invalid" class="modal-save-btn">
+            Guardar Medio de Pago
+          </ion-button>
+        </form>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>

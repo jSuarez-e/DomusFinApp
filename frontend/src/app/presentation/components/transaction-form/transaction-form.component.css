@@ -1,0 +1,133 @@
+/* frontend/src/app/presentation/components/transaction-form/transaction-form.component.css */
+
+.form-toolbar {
+  --background: #121212;
+  --border-color: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.form-content {
+  --background: #000000;
+  color: #ffffff;
+}
+
+.form-container {
+  padding: 24px 16px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.input-wrapper {
+  margin-bottom: 20px;
+}
+
+.input-label {
+  display: block;
+  font-size: 0.78rem;
+  color: #a6a6a6;
+  font-weight: 600;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.input-field {
+  display: flex;
+  align-items: center;
+  background: #121212;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 0 16px;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  height: 48px;
+}
+
+.input-field:focus-within {
+  border-color: #88DCCC;
+  box-shadow: 0 0 8px rgba(136, 220, 204, 0.2);
+}
+
+.input-field--textarea {
+  height: 56px;
+}
+
+.field-icon {
+  font-size: 1.2rem;
+  color: #4C6793;
+  margin-right: 12px;
+}
+
+.premium-input {
+  --background: transparent;
+  --color: #ffffff;
+  --placeholder-color: #595959;
+  --padding-start: 0;
+  font-size: 0.95rem;
+  width: 100%;
+}
+
+.premium-select {
+  --placeholder-color: #595959;
+  --padding-start: 0;
+  --padding-end: 0;
+  color: #ffffff;
+  font-size: 0.95rem;
+  width: 100%;
+}
+
+.error-text {
+  color: var(--ion-color-danger, #eb445a);
+  font-size: 0.75rem;
+  margin-top: 6px;
+  font-weight: 500;
+}
+
+/* Toggle item */
+.toggle-item {
+  --background: #121212;
+  --border-color: rgba(255, 255, 255, 0.06);
+  --padding-start: 16px;
+  --inner-padding-end: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  margin-bottom: 24px;
+}
+
+.toggle-icon {
+  font-size: 1.3rem;
+  color: #4C6793;
+  margin-right: 12px;
+}
+
+.toggle-label h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0 0 2px 0;
+}
+
+.toggle-label p {
+  font-size: 0.75rem;
+  color: #a6a6a6;
+  margin: 0;
+}
+
+.premium-toggle {
+  --background: #333333;
+  --background-checked: #88DCCC;
+  --handle-background: #ffffff;
+  --handle-background-checked: #ffffff;
+}
+
+/* Button */
+.submit-button {
+  --background: #88DCCC;
+  --background-hover: #78c2b4;
+  --background-activated: #78c2b4;
+  --color: #121212;
+  font-weight: 700;
+  --border-radius: 12px;
+  margin-top: 32px;
+  box-shadow: 0 6px 20px rgba(136, 220, 204, 0.25);
+  height: 48px;
+}

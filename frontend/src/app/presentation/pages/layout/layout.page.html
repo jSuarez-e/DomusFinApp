@@ -1,0 +1,169 @@
+<!-- frontend/src/app/presentation/pages/layout/layout.page.html -->
+<!-- Side Menu -->
+<ion-menu menuId="main-menu" contentId="main-content" type="overlay">
+  <ion-header>
+    <ion-toolbar class="menu-toolbar">
+      <ion-title>Menú General</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content class="menu-content">
+    <!-- User Profile & Tenant Switcher Section -->
+    <div class="menu-header-section">
+      <div class="menu-profile-card">
+        <ion-avatar class="menu-profile-avatar">
+          <img [src]="currentUser()?.avatar || 'https://ionicframework.com/docs/img/demos/avatar.svg'" alt="Avatar Usuario" />
+        </ion-avatar>
+        <div class="menu-profile-info">
+          <h2 class="menu-user-name">{{ currentUser()?.name || 'Usuario' }}</h2>
+          <p class="menu-user-email">{{ currentUser()?.email || 'correo@ejemplo.com' }}</p>
+        </div>
+      </div>
+
+      <!-- Household Multitenant Selector -->
+      <div class="tenant-selector-wrapper">
+        <label class="tenant-label">Hogar Activo</label>
+        <div class="tenant-select-container">
+          <ion-icon name="people-outline" class="tenant-icon"></ion-icon>
+          <ion-select 
+            interface="popover" 
+            placeholder="Seleccionar Hogar"
+            [value]="currentUser()?.householdId"
+            [disabled]="membersCount() === 1"
+            (ionChange)="onHouseholdChange($event)"
+            class="tenant-select">
+            @for (h of households(); track h.id) {
+              <ion-select-option [value]="h.id">{{ h.name }}</ion-select-option>
+            }
+          </ion-select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Options List -->
+    <ion-list class="menu-options-list" lines="none">
+      <ion-item button routerLink="/dashboard/savings" routerLinkActive="active-item" (click)="closeMenu()" class="menu-option-item">
+        <ion-icon name="trending-up-outline" slot="start" class="option-icon"></ion-icon>
+        <ion-label>Ahorros</ion-label>
+      </ion-item>
+
+      <ion-item button routerLink="/dashboard/loans" routerLinkActive="active-item" (click)="closeMenu()" class="menu-option-item">
+        <ion-icon name="calculator-outline" slot="start" class="option-icon"></ion-icon>
+        <ion-label>Créditos</ion-label>
+      </ion-item>
+
+      <ion-item button routerLink="/dashboard/credit-cards" routerLinkActive="active-item" (click)="closeMenu()" class="menu-option-item">
+        <ion-icon name="card-outline" slot="start" class="option-icon"></ion-icon>
+        <ion-label>Tarjetas de Crédito</ion-label>
+      </ion-item>
+
+      <ion-item button routerLink="/dashboard/archive" routerLinkActive="active-item" (click)="closeMenu()" class="menu-option-item">
+        <ion-icon name="archive-outline" slot="start" class="option-icon"></ion-icon>
+        <ion-label>Archivo Histórico</ion-label>
+      </ion-item>
+
+      @if (currentUser()?.role === 'admin') {
+        <ion-item button routerLink="/admin" routerLinkActive="active-item" (click)="closeMenu()" class="menu-option-item">
+          <ion-icon name="people-outline" slot="start" class="option-icon"></ion-icon>
+          <ion-label>Administrar Hogar</ion-label>
+        </ion-item>
+      }
+
+      <ion-item button routerLink="/dashboard/settings" routerLinkActive="active-item" (click)="closeMenu()" class="menu-option-item">
+        <ion-icon name="settings-outline" slot="start" class="option-icon"></ion-icon>
+        <ion-label>Ajustes de Cuenta</ion-label>
+      </ion-item>
+
+      <ion-item button routerLink="/dashboard/capture-settings" routerLinkActive="active-item" (click)="closeMenu()" class="menu-option-item">
+        <ion-icon name="flash-outline" slot="start" class="option-icon"></ion-icon>
+        <ion-label>Captura Automática</ion-label>
+      </ion-item>
+
+      <ion-item button (click)="openAboutModal()" class="menu-option-item">
+        <ion-icon name="information-circle-outline" slot="start" class="option-icon"></ion-icon>
+        <ion-label>Acerca de</ion-label>
+      </ion-item>
+
+      <div class="menu-separator"></div>
+
+      <ion-item button (click)="handleLogout()" class="menu-option-item menu-option-item--logout">
+        <ion-icon name="log-out-outline" slot="start" class="option-icon option-icon--logout"></ion-icon>
+        <ion-label>Cerrar Sesión</ion-label>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-menu>
+
+<!-- Main App Content with Bottom Tabs -->
+<ion-tabs id="main-content">
+  <ion-tab-bar slot="bottom" class="glass-tab-bar">
+    <ion-tab-button tab="inicio" layout="icon-top">
+      <ion-icon name="home-outline"></ion-icon>
+      <ion-label>Inicio</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="accounts" layout="icon-top">
+      <ion-icon name="wallet-outline"></ion-icon>
+      <ion-label>Cuentas</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="expenses" layout="icon-top">
+      <ion-icon name="cash-outline"></ion-icon>
+      <ion-label>Movimientos</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="reports" layout="icon-top">
+      <ion-icon name="bar-chart-outline"></ion-icon>
+      <ion-label>Reportes</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button (click)="openMenu(); $event.preventDefault(); $event.stopPropagation();" layout="icon-top">
+      <ion-icon name="menu-outline"></ion-icon>
+      <ion-label>Más</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>
+
+<!-- Acerca de Modal -->
+<ion-modal [isOpen]="isAboutModalOpen()" (didDismiss)="closeAboutModal()" class="about-modal">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar class="about-toolbar">
+        <ion-title>Acerca de DomusFin</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="closeAboutModal()" color="light">Cerrar</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="about-content">
+      <div class="about-container">
+        <div class="about-logo">
+          <ion-icon name="people-outline" class="about-logo-icon"></ion-icon>
+        </div>
+        <h2>DomusFinApp</h2>
+        <p class="about-version">Versión 1.0.0 (Beta)</p>
+        
+        <div class="about-card">
+          <h3>Nuestra Misión</h3>
+          <p>
+            DomusFin es una plataforma diseñada para simplificar y unificar la gestión de finanzas compartidas, permitiendo colaborar en tiempo real y registrar gastos de forma inteligente y segura.
+          </p>
+        </div>
+
+        <div class="about-card">
+          <h3>Soporte y Contacto</h3>
+          <p>¿Tienes dudas o sugerencias? Contáctanos a través de nuestros canales oficiales:</p>
+          <div class="about-contact-item">
+            <strong>Email:</strong> support&#64;domusfin.com
+          </div>
+          <div class="about-contact-item">
+            <strong>Sitio Web:</strong> www.domusfin.com
+          </div>
+        </div>
+
+        <p class="about-copy">&copy; 2026 DomusFin. Todos los derechos reservados.</p>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>

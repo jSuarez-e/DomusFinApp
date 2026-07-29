@@ -1,0 +1,41 @@
+{
+  "currentUser": {
+    "id": 2,
+    "email": "rociocastilloa@gmail.com",
+    "name": "RochiCastillo",
+    "role": "user",
+    "isActive": true,
+    "currency": "COP",
+    "dateFormat": "DD/MM/YYYY",
+    "avatar": null,
+    "householdId": 1,
+    "createdAt": "2026-07-28T01:21:44.077Z",
+    "updatedAt": "2026-07-28T19:06:38.000Z"
+  },
+  "result": [
+    {
+      "id": 7,
+      "name": "Caja social roci",
+      "type": "BANK",
+      "initialBalance": "463.00",
+      "currentBalance": "463.00",
+      "createdAt": "2026-07-28T19:31:48.648Z",
+      "householdId": 1,
+      "userId": 2,
+      "isPrivate": true,
+      "user": {
+        "id": 2,
+        "email": "rociocastilloa@gmail.com",
+        "name": "RochiCastillo",
+        "role": "user",
+        "isActive": true,
+        "currency": "COP",
+        "dateFormat": "DD/MM/YYYY",
+        "avatar": null,
+        "householdId": 1,
+        "createdAt": "2026-07-28T01:21:44.077Z",
+        "updatedAt": "2026-07-28T19:06:38.000Z"
+      }
+    }
+  ]
+}

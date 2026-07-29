@@ -1,0 +1,283 @@
+<!-- frontend/src/app/presentation/pages/home/home.page.html -->
+<ion-header [translucent]="true">
+  <ion-toolbar class="glass-toolbar" style="display: flex; align-items: center; justify-content: space-between;">
+    <ion-title style="font-weight: 800;">Hola, {{ currentUser()?.name || 'Jaime' }} 👋</ion-title>
+    
+    <ion-buttons slot="end" style="display: flex; align-items: center; gap: 8px; margin-right: 12px;">
+      <!-- Theme Switcher Button -->
+      <ion-button fill="clear" (click)="toggleTheme()" style="--color: var(--ion-text-color); margin: 0; --padding-start: 4px; --padding-end: 4px;">
+        <ion-icon [name]="isDarkTheme() ? 'sunny-outline' : 'moon-outline'" slot="icon-only" style="font-size: 20px;"></ion-icon>
+      </ion-button>
+      
+      <!-- Month Select -->
+      <ion-select 
+        [value]="selectedMonth()" 
+        (ionChange)="onMonthChange($event)" 
+        interface="popover" 
+        class="premium-month-select"
+        style="margin: 0; padding: 4px 8px; font-size: 0.85rem; border-radius: 8px;">
+        @for (m of availableMonths; track m.value) {
+          <ion-select-option [value]="m.value">{{ m.label }}</ion-select-option>
+        }
+      </ion-select>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="premium-content">
+  <div class="glow-bg"></div>
+
+  <div class="content-container">
+      <!-- 2. Hero Card: Patrimonio Neto y Liquidez -->
+    <ion-card class="kpi-card">
+      <ion-card-header style="padding-bottom: 0;">
+        <ion-card-title style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--ion-color-step-300);">
+          Patrimonio Neto y Liquidez
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content style="padding-top: 12px;">
+        <div class="kpi-header-stats" style="margin-bottom: 16px;">
+          <div class="kpi-header-stat">
+            <span class="kpi-stat-label" style="font-size: 0.7rem; color: #a1a1aa; font-weight: 700;">Liquidez Disponible</span>
+            <span class="kpi-stat-val text-success" style="font-size: 1.5rem; font-weight: 800; color: var(--ion-color-success);">
+              {{ (dashboardData()?.total_liquidity || 0) | currency:'COP':'symbol-narrow':'1.0-0' }}
+            </span>
+          </div>
+          <div class="kpi-header-stat">
+            <span class="kpi-stat-label" style="font-size: 0.7rem; color: #a1a1aa; font-weight: 700;">Deuda Activa</span>
+            <span class="kpi-stat-val text-danger" style="font-size: 1.5rem; font-weight: 800; color: var(--ion-color-danger);">
+              {{ (dashboardData()?.total_debt || 0) | currency:'COP':'symbol-narrow':'1.0-0' }}
+            </span>
+          </div>
+        </div>
+
+        <div class="kpi-progress-section" style="margin-bottom: 8px;">
+          <div class="kpi-progress-labels" style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 6px;">
+            <span class="progress-subtext" style="font-weight: 500;">
+              Gastado {{ totalSpent() | currency:'COP':'symbol-narrow':'1.0-0' }} de {{ budget() | currency:'COP':'symbol-narrow':'1.0-0' }}
+            </span>
+            <span class="progress-percentage" style="font-weight: 700;">{{ spentRatio() * 100 | number:'1.0-0' }}%</span>
+          </div>
+          <ion-progress-bar 
+            [value]="spentRatio()" 
+            [color]="progressBarColor()" 
+            class="kpi-progress-bar"
+            style="height: 8px; border-radius: 4px;">
+          </ion-progress-bar>
+        </div>
+
+        <div class="kpi-footer-row" style="display: flex; justify-content: space-between; margin-top: 16px; border-top: 1px solid var(--ion-border-color); padding-top: 12px; font-size: 11px;">
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <ion-icon name="trending-up-outline" style="color: var(--ion-color-success); font-size: 14px;"></ion-icon>
+            <span>Ingresos: <strong>{{ income() | currency:'COP':'symbol-narrow':'1.0-0' }}</strong></span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <ion-icon name="trending-down-outline" style="color: var(--ion-color-danger); font-size: 14px;"></ion-icon>
+            <span>Gastos: <strong>{{ totalSpent() | currency:'COP':'symbol-narrow':'1.0-0' }}</strong></span>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- 3. Carrusel Rápido de Cuentas (Horizontal Scroll Slider) -->
+    <div class="section-title-row" style="margin-top: 16px; margin-bottom: 8px; padding: 0;">
+      <h2 style="font-size: 1.05rem; font-weight: 800; margin: 0;">Mis Cuentas</h2>
+    </div>
+    
+    <div class="quick-accounts-slider" style="display: flex; overflow-x: auto; gap: 10px; padding: 4px 0; margin-bottom: 16px; scrollbar-width: none; -ms-overflow-style: none;">
+      @if (accounts().length === 0) {
+        <div style="font-size: 12px; color: #a1a1aa; padding: 8px 0;">No hay cuentas registradas.</div>
+      }
+      
+      @for (acc of accounts(); track acc.id) {
+        <div class="account-mini-card" style="flex: 0 0 160px; background: var(--ion-card-background); border: 1px solid var(--ion-border-color); border-radius: 16px; padding: 12px; display: flex; flex-direction: column; gap: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); position: relative;">
+          <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <span style="font-size: 11px; font-weight: 700; color: var(--ion-text-color); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 105px;">
+              {{ acc.name }}
+            </span>
+            @if (acc.isPrivate) {
+              <ion-badge style="--background: rgba(92, 46, 126, 0.15); --color: #a78bfa; font-size: 8px; padding: 2px 4px; border-radius: 4px; display: flex; align-items: center;">
+                <ion-icon name="lock-closed-outline" style="font-size: 9px;"></ion-icon>
+              </ion-badge>
+            }
+          </div>
+          <span style="font-size: 15px; font-weight: 800; color: var(--ion-color-primary);">
+            {{ acc.currentBalance | currency:'COP':'symbol-narrow':'1.0-0' }}
+          </span>
+        </div>
+      }
+    </div>
+
+    <!-- 4. Sección de Alertas: "Próximos Pagos" (Proactividad) -->
+    @if (upcomingAlerts().length > 0) {
+      <div class="alert-section" style="margin-bottom: 16px;">
+        <div class="section-title-row" style="margin-top: 16px; margin-bottom: 8px; padding: 0;">
+          <h2 style="font-size: 1.05rem; font-weight: 800; margin: 0; color: var(--ion-color-danger);">Próximos Pagos de Tarjetas</h2>
+        </div>
+        @for (alert of upcomingAlerts(); track alert.name) {
+          <div class="urgent-payment-alert" style="background: rgba(239, 68, 68, 0.06); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 16px; padding: 12px; display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+            <ion-icon name="alert-circle-outline" style="color: var(--ion-color-danger); font-size: 18px;"></ion-icon>
+            <div style="display: flex; flex-direction: column; gap: 2px; flex: 1;">
+              <span style="font-size: 12px; font-weight: 700;">
+                Pago de TC: {{ alert.name }}
+              </span>
+              <span style="font-size: 11px; color: var(--ion-color-danger); font-weight: 500;">
+                {{ alert.amount | currency:'COP':'symbol-narrow':'1.0-0' }} vence en {{ alert.dueDays }} {{ alert.dueDays === 1 ? 'día' : 'días' }}
+              </span>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- 5. Resumen de Metas (Ahorros) -->
+    @if (featuredGoal(); as goal) {
+      <div class="section-title-row" style="margin-top: 16px; margin-bottom: 8px; padding: 0;">
+        <h2 style="font-size: 1.05rem; font-weight: 800; margin: 0;">Ahorro en Progreso</h2>
+      </div>
+      
+      <ion-card class="featured-goal-card">
+        <ion-card-content style="padding: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span style="font-size: 13px; font-weight: 700;">{{ goal.title }}</span>
+              @if (!goal.isPrivate && goal.participants && goal.participants.length > 0) {
+                <ion-badge color="tertiary" style="font-size: 8px; display: flex; align-items: center; gap: 2px; padding: 2px 4px; border-radius: 4px;">
+                  <ion-icon name="people-outline" style="font-size: 9px;"></ion-icon>
+                  Compartido
+                </ion-badge>
+              }
+              @if (goal.isPrivate) {
+                <ion-badge style="--background: rgba(92, 46, 126, 0.15); --color: #a78bfa; font-size: 8px; display: flex; align-items: center; gap: 2px; padding: 2px 4px; border-radius: 4px;">
+                  <ion-icon name="lock-closed-outline" style="font-size: 9px;"></ion-icon>
+                  Privado
+                </ion-badge>
+              }
+            </div>
+            <span style="font-size: 12px; color: var(--ion-color-primary); font-weight: 700;">
+              {{ getGoalProgress(goal) | number:'1.0-0' }}%
+            </span>
+          </div>
+          
+          <ion-progress-bar 
+            [value]="getGoalProgress(goal) / 100" 
+            color="primary" 
+            style="height: 6px; border-radius: 3px; margin-bottom: 8px;">
+          </ion-progress-bar>
+          
+          <div style="display: flex; justify-content: space-between; font-size: 11px; color: #a1a1aa;">
+            <span>Ahorrado: <strong>{{ Number(goal.currentAmount) | currency:'COP':'symbol-narrow':'1.0-0' }}</strong></span>
+            <span>Meta: <strong>{{ Number(goal.targetAmount) | currency:'COP':'symbol-narrow':'1.0-0' }}</strong></span>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    }
+
+    <!-- 6. Lista: Últimos 5 Movimientos (Rediseñada) -->
+    <div class="section-title-row" style="margin-top: 16px; margin-bottom: 8px; padding: 0; display: flex; justify-content: space-between; align-items: center;">
+      <h2 style="font-size: 1.05rem; font-weight: 800; margin: 0;">Últimos 5 Movimientos</h2>
+      <ion-badge color="dark" style="font-size: 9px; border-radius: 4px; padding: 3px 6px;">Hogar</ion-badge>
+    </div>
+
+    <ion-list class="movements-list" lines="none" style="background: transparent; padding: 0; margin-bottom: 24px;">
+      @if (recentMovements().length === 0) {
+        <div class="empty-state-container" style="padding: 24px 12px; text-align: center; border: 1px dashed var(--ion-border-color); border-radius: 12px; background: rgba(255,255,255,0.01);">
+          <div class="empty-state-icon-bg" style="width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: center; margin: 0 auto 10px auto;">
+            <ion-icon name="wallet-outline" style="font-size: 20px; color: #a1a1aa;"></ion-icon>
+          </div>
+          <h3 style="font-size: 13px; font-weight: 700; margin-bottom: 4px;">Sin Movimientos</h3>
+          <p style="font-size: 11px; color: #a1a1aa; margin: 0;">No se encontraron movimientos registrados en este hogar.</p>
+        </div>
+      }
+
+      @for (m of recentMovements(); track m.id) {
+        <ion-item class="movement-item" style="--padding-start: 12px; --padding-end: 12px; margin-bottom: 8px; border-radius: 12px; border: 1px solid var(--ion-border-color);">
+          @if (m.isPrivate || m.isPrivateRedacted) {
+            <!-- 1. Private/Redacted Movement (Masked details) -->
+            <!-- Icon Column (Shield/Lock) -->
+            <div 
+              class="icon-wrapper private" 
+              style="width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-right: 12px; background: rgba(167, 139, 250, 0.1);">
+              <ion-icon name="lock-closed-outline" style="font-size: 16px; color: #a78bfa;"></ion-icon>
+            </div>
+
+            <!-- Description (Masked) -->
+            <ion-label class="item-label" style="margin: 0;">
+              <div class="item-title-row" style="display: block; margin-bottom: 2px;">
+                <span class="item-title" style="font-size: 13px; font-weight: 700; color: var(--ion-text-color); font-style: normal; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                  Movimiento privado de {{ m.user?.name || 'Miembro' }}
+                </span>
+              </div>
+              <span class="item-date" style="font-size: 10px; color: #a78bfa; font-weight: 600; display: flex; align-items: center; gap: 4px;">
+                🔒 Transacción Privada
+              </span>
+            </ion-label>
+          } @else {
+            <!-- 2. Standard Public Movement -->
+            <!-- Icon Column -->
+            <div 
+              class="icon-wrapper" 
+              style="width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-right: 12px; background: rgba(255,255,255,0.03);">
+              <ion-icon [name]="getMovementIcon(m)" style="font-size: 16px; color: var(--ion-color-primary);"></ion-icon>
+            </div>
+
+            <!-- Description and Date -->
+            <ion-label class="item-label" style="margin: 0;">
+              <div class="item-title-row" style="display: flex; align-items: center; gap: 4px; margin-bottom: 2px;">
+                <span class="item-title" style="font-size: 13px; font-weight: 700;">
+                  {{ m.description }}
+                </span>
+                @if (m.is_auto_captured) {
+                  <span class="auto-captured-lightning" title="Captura Automática (⚡)" style="font-size: 10px; color: var(--ion-color-warning);">⚡</span>
+                }
+              </div>
+              <span class="item-date" style="font-size: 10px; color: #a1a1aa; display: flex; align-items: center; gap: 4px;">
+                {{ m.transactionDate | date:(currentUser()?.dateFormat === 'MM/DD/YYYY' ? 'MM/dd/yyyy, h:mm a' : 'dd/MM/yyyy, h:mm a') }}
+                @if (m.user?.name) {
+                  • 👤 {{ m.user?.name }}
+                }
+              </span>
+            </ion-label>
+          }
+
+          <!-- Amount -->
+          <div slot="end" class="amount-wrapper" style="margin: 0;">
+            <span 
+              class="item-amount" 
+              [class.income]="m.type === 'Ingreso'" 
+              [class.expense]="m.type === 'Gasto'"
+              [class.transfer]="m.type === 'Ahorro' || m.type === 'Pago Crédito' || m.type === 'Pago TC' || m.type === 'Transferencia'"
+              style="font-size: 13px; font-weight: 800;">
+              {{ m.type === 'Ingreso' ? '+' : '-' }}{{ m.amount | currency:'COP':'symbol-narrow':'1.0-0' }}
+            </span>
+          </div>
+        </ion-item>
+      }
+    </ion-list>
+  </div>
+
+  <!-- 7. El FAB (Floating Action Button) de Acciones Rápidas (Speed Dial) -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" style="margin-bottom: 12px; margin-right: 12px;">
+    <ion-fab-button color="primary">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top">
+      <!-- 📉 Registrar Gasto -->
+      <ion-fab-button (click)="openAddModal('Gasto')" title="Registrar Gasto" style="--background: var(--ion-color-danger); --color: #ffffff;">
+        <ion-icon name="trending-down-outline"></ion-icon>
+      </ion-fab-button>
+      <!-- 📈 Registrar Ingreso -->
+      <ion-fab-button (click)="openAddModal('Ingreso')" title="Registrar Ingreso" style="--background: var(--ion-color-success); --color: #ffffff;">
+        <ion-icon name="trending-up-outline"></ion-icon>
+      </ion-fab-button>
+      <!-- 🔄 Transferencia -->
+      <ion-fab-button (click)="openAddModal('Transferencia')" title="Transferencia entre Cuentas" style="--background: var(--ion-color-tertiary); --color: #ffffff;">
+        <ion-icon name="swap-horizontal-outline"></ion-icon>
+      </ion-fab-button>
+      <!-- 🏦 Aporte Ahorro -->
+      <ion-fab-button (click)="openAddModal('Ahorro')" title="Aporte de Ahorro" style="--background: var(--ion-color-primary); --color: #ffffff;">
+        <ion-icon name="cash-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+</ion-content>

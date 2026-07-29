@@ -1,0 +1,127 @@
+<!-- frontend/src/app/presentation/pages/register/register.page.html -->
+<ion-content [fullscreen]="true" class="premium-content">
+  <div class="glow-bg"></div>
+
+  <div class="auth-wrapper">
+    <div class="auth-header">
+      <div class="app-logo">
+        <ion-icon name="person-outline" class="logo-icon"></ion-icon>
+      </div>
+      <h1>Crear Cuenta</h1>
+      <p class="auth-subtitle">Únete y empieza a colaborar en la economía de tu hogar</p>
+    </div>
+
+    <ion-card class="auth-card">
+      <ion-card-content>
+        <form [formGroup]="registerForm" (ngSubmit)="handleRegister()">
+          <!-- Username Input -->
+          <div class="input-wrapper">
+            <label class="input-label">Usuario</label>
+            <div class="input-field">
+              <ion-icon name="person-outline" class="field-icon"></ion-icon>
+              <ion-input
+                type="text"
+                placeholder="Ej. NombreUsuario"
+                formControlName="username"
+                class="premium-input">
+              </ion-input>
+            </div>
+            @if (registerForm.get('username')?.invalid && registerForm.get('username')?.touched) {
+              <div class="error-text">
+                El usuario es obligatorio (mínimo 3 caracteres).
+              </div>
+            }
+          </div>
+
+          <!-- Email Input -->
+          <div class="input-wrapper">
+            <label class="input-label">Correo Electrónico</label>
+            <div class="input-field">
+              <ion-icon name="mail-outline" class="field-icon"></ion-icon>
+              <ion-input
+                type="email"
+                placeholder="correo@ejemplo.com"
+                formControlName="email"
+                class="premium-input">
+              </ion-input>
+            </div>
+            @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
+              <div class="error-text">
+                Ingrese un correo electrónico válido.
+              </div>
+            }
+          </div>
+
+          <!-- Password Input & Strength Indicator -->
+          <div class="input-wrapper">
+            <label class="input-label">Contraseña</label>
+            <div class="input-field">
+              <ion-icon name="lock-closed-outline" class="field-icon"></ion-icon>
+              <ion-input
+                [type]="showPassword() ? 'text' : 'password'"
+                placeholder="Crea una contraseña segura"
+                formControlName="password"
+                class="premium-input">
+              </ion-input>
+              <ion-button fill="clear" size="small" (click)="showPassword.set(!showPassword())" style="margin: 0; color: #a1a1aa; --padding-start: 4px; --padding-end: 4px; z-index: 10;">
+                <ion-icon [name]="showPassword() ? 'eye-outline' : 'eye-off-outline'" slot="icon-only" style="font-size: 18px;"></ion-icon>
+              </ion-button>
+            </div>
+            @if (registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
+              <div class="error-text">
+                La contraseña es obligatoria.
+              </div>
+            }
+            <!-- Real-time strength validator component -->
+            <app-password-strength [password]="registerForm.get('password')?.value || ''">
+            </app-password-strength>
+          </div>
+
+          <!-- Invitation Toggle -->
+          <ion-item class="toggle-item" lines="none">
+            <ion-label class="toggle-label">¿Te invitaron a un hogar?</ion-label>
+            <ion-toggle formControlName="isInvited" color="primary"></ion-toggle>
+          </ion-item>
+
+          <!-- Invitation Code Input -->
+          @if (registerForm.get('isInvited')?.value) {
+            <div class="input-wrapper input-wrapper--animated">
+              <label class="input-label">Código del Hogar (Tenant)</label>
+              <div class="input-field">
+                <ion-icon name="key-outline" class="field-icon"></ion-icon>
+                <ion-input
+                  type="text"
+                  placeholder="Ej. HOGAR-1"
+                  formControlName="invitationCode"
+                  class="premium-input">
+                </ion-input>
+              </div>
+              @if (registerForm.get('invitationCode')?.invalid && registerForm.get('invitationCode')?.touched) {
+                <div class="error-text">
+                  El código de invitación es obligatorio.
+                </div>
+              }
+              <p class="input-hint">El código debe tener el formato HOGAR-&lt;ID&gt; de tu grupo familiar.</p>
+            </div>
+          } @else {
+            <p class="input-hint">Si no posees un código, crearemos un nuevo Hogar padre para ti.</p>
+          }
+
+          <!-- Submit Button -->
+          <ion-button 
+            type="submit"
+            expand="block" 
+            class="submit-button"
+            [disabled]="registerForm.invalid">
+            Registrarme
+          </ion-button>
+        </form>
+
+        <div class="auth-footer">
+          <span>¿Ya tienes cuenta?</span>
+          <a routerLink="/login" class="auth-link auth-link--highlight">Inicia Sesión</a>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>
