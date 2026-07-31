@@ -192,7 +192,7 @@
 
       @for (m of recentMovements(); track m.id) {
         <ion-item class="movement-item" style="--padding-start: 12px; --padding-end: 12px; margin-bottom: 8px; border-radius: 12px; border: 1px solid var(--ion-border-color);">
-          @if (m.isPrivateRedacted || (m.isPrivate && m.userId !== currentUser()?.id && m.user?.id !== currentUser()?.id)) {
+          @if (m.isPrivateRedacted || m.isPrivate) {
             <!-- 1. Private/Redacted Movement (Masked details) -->
             <!-- Icon Column (Shield/Lock) -->
             <div 

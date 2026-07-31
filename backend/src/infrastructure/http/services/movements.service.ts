@@ -49,7 +49,8 @@ export class MovementsService {
           throw new NotFoundException(`Cuenta con ID ${dto.accountId} no encontrada en este hogar.`);
         }
 
-        isPrivate = dto.isPrivate === true || account.isPrivate === true;
+        // La privacidad del movimiento depende exclusivamente del toggle del usuario (dto.isPrivate).
+        // La cuenta privada oculta la cuenta como entidad, pero NO fuerza la privacidad de sus movimientos.
 
         // Ajustar saldo según tipo de movimiento
         const amount = Number(dto.amount);
@@ -87,7 +88,8 @@ export class MovementsService {
           throw new NotFoundException(`Tarjeta de crédito con ID ${dto.creditCardId} no encontrada en este hogar.`);
         }
 
-        isPrivate = true;
+        // Las tarjetas de crédito son privadas como entidad, pero los movimientos
+        // asociados respetan el flag manual del usuario (dto.isPrivate).
 
         const amount = Number(dto.amount);
         if (dto.type === 'Ingreso') {
