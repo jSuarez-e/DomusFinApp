@@ -1,5 +1,6 @@
 // frontend/src/app/presentation/pages/credit-cards/credit-cards.page.ts
-import { ChangeDetectionStrategy, Component, OnInit, signal, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, signal, computed, effect } from '@angular/core';
+import { TransactionEventService } from '../../../core/services/transaction-event.service';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
@@ -117,7 +118,8 @@ export class CreditCardsPage implements OnInit {
     private readonly accountService: AccountService,
     private readonly fb: FormBuilder,
     private readonly alertCtrl: AlertController,
-    private readonly toastCtrl: ToastController
+    private readonly toastCtrl: ToastController,
+    private readonly transactionEventService: TransactionEventService
   ) {
     addIcons({
       addOutline,
@@ -149,6 +151,23 @@ export class CreditCardsPage implements OnInit {
     this.payForm = this.fb.group({
       accountId: ['', Validators.required],
       amount: [null, [Validators.required, Validators.min(100)]]
+    });
+
+    // Recargar tarjetas reactivamente al detectar mutaciones financieras
+    effect(() => {
+      const changeCount = this.transactionEventService.transactionSaved();
+      if (changeCount > 0) {
+        this.creditCardService.loadCreditCards(true).then((cards) => {
+          const current = this.selectedCard();
+          if (current) {
+            const updated = cards.find(c => c.id === current.id);
+            if (updated) {
+              this.selectedCard.set(updated);
+            }
+          }
+        });
+        this.accountService.loadAccounts(true);
+      }
     });
   }
 
@@ -210,6 +229,7 @@ export class CreditCardsPage implements OnInit {
       this.selectCard(newCard);
       this.closeCreateModal();
       await this.showToast('Tarjeta de crédito registrada');
+      this.transactionEventService.emitTransactionSaved();
     } catch (err: any) {
       const msg = err?.error?.message || 'Error al guardar la tarjeta';
       await this.showToast(msg, 'danger');
@@ -259,6 +279,7 @@ export class CreditCardsPage implements OnInit {
           }
           this.closePayModal();
           await this.showToast('Pago registrado correctamente');
+          this.transactionEventService.emitTransactionSaved();
           this.isSubmitting.set(false);
         },
         error: async (err) => {

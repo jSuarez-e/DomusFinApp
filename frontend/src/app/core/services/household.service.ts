@@ -3,12 +3,14 @@ import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom, Observable } from 'rxjs';
 import { Household } from '@shared/index';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HouseholdService {
-  private readonly apiUrl = '/api/households';
+  private readonly baseUrlEnv = environment.apiUrl;
+  private readonly apiUrlHouseholds = this.baseUrlEnv + '/households';
 
   // Reactivity State with Signals
   private householdState = signal<Household | null>(null);
@@ -33,7 +35,7 @@ export class HouseholdService {
     }
 
     try {
-      const data = await firstValueFrom(this.http.get<Household>(`${this.apiUrl}/${householdId}`));
+      const data = await firstValueFrom(this.http.get<Household>(`${this.apiUrlHouseholds}/${householdId}`));
       this.householdState.set(data);
       this.isLoaded = true;
     } catch (error) {
@@ -56,7 +58,7 @@ export class HouseholdService {
    * @returns {Observable<Household>}
    */
   updateHouseholdBudget(monthlyBudget: number): Observable<Household> {
-    const obs = this.http.put<Household>(`${this.apiUrl}/budget`, { monthlyBudget });
+    const obs = this.http.put<Household>(`${this.apiUrlHouseholds}/budget`, { monthlyBudget });
     obs.subscribe({
       next: (updatedHousehold) => {
         this.householdState.set(updatedHousehold);

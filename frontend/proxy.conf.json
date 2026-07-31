@@ -1,7 +1,7 @@
 {
   "/api": {
-    "target": "http://127.0.0.1:3000",
-    "secure": false,
+    "target": "https://domusfinapp-production.up.railway.app/api",
+    "secure": true,
     "changeOrigin": true,
     "logLevel": "debug"
   }

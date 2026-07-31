@@ -3,6 +3,7 @@ import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { Account, CreateAccountDto, UpdateAccountDto } from '@shared/index';
+import { environment } from 'src/environments/environment';
 
 /**
  * Servicio Angular para gestión de cuentas financieras.
@@ -12,7 +13,8 @@ import { Account, CreateAccountDto, UpdateAccountDto } from '@shared/index';
   providedIn: 'root',
 })
 export class AccountService {
-  private readonly baseUrl = '/api/accounts';
+  private readonly baseUrlEnv = environment.apiUrl;
+  private readonly apiUrlAccounts = this.baseUrlEnv + '/accounts';
 
   private accountsState = signal<Account[]>([]);
   public accounts = this.accountsState.asReadonly();
@@ -33,7 +35,7 @@ export class AccountService {
     }
 
     try {
-      const data = await firstValueFrom(this.http.get<Account[]>(this.baseUrl));
+      const data = await firstValueFrom(this.http.get<Account[]>(this.apiUrlAccounts));
       this.accountsState.set(data || []);
       this.isLoaded = true;
       return data;
@@ -50,7 +52,7 @@ export class AccountService {
    * @returns {Promise<Account>} La cuenta creada.
    */
   async createAccount(dto: CreateAccountDto): Promise<Account> {
-    const newAccount = await firstValueFrom(this.http.post<Account>(this.baseUrl, dto));
+    const newAccount = await firstValueFrom(this.http.post<Account>(this.apiUrlAccounts, dto));
     this.accountsState.update((current) => [newAccount, ...current]);
     return newAccount;
   }
@@ -63,7 +65,7 @@ export class AccountService {
    * @returns {Promise<Account>} La cuenta actualizada.
    */
   async updateAccount(id: number, dto: UpdateAccountDto): Promise<Account> {
-    const updated = await firstValueFrom(this.http.patch<Account>(`${this.baseUrl}/${id}`, dto));
+    const updated = await firstValueFrom(this.http.patch<Account>(`${this.apiUrlAccounts}/${id}`, dto));
     this.accountsState.update((current) =>
       current.map((acc) => (acc.id === id ? { ...acc, ...updated } : acc))
     );
@@ -77,7 +79,7 @@ export class AccountService {
    * @returns {Promise<void>}
    */
   async deleteAccount(id: number): Promise<void> {
-    await firstValueFrom(this.http.delete(`${this.baseUrl}/${id}`));
+    await firstValueFrom(this.http.delete(`${this.apiUrlAccounts}/${id}`));
     this.accountsState.update((current) => current.filter((acc) => acc.id !== id));
   }
 }

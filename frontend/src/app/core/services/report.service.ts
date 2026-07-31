@@ -3,12 +3,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ReportDataDto } from '@shared/index';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ReportService {
-  private readonly apiUrl = '/api/reports';
+  private readonly baseUrlEnv = environment.apiUrl;
+  private readonly apiUrl = this.baseUrlEnv + '/reports';
 
   constructor(private readonly http: HttpClient) {}
 

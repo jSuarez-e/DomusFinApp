@@ -404,7 +404,7 @@ export class SettingsPage implements OnInit {
         {
           text: 'Confirmar Inactivar',
           handler: () => {
-            this.http.post('/api/users/delete-account', { password }).subscribe({
+            this.http.post(`${this.authService.apiUrlUsers}/delete-account`, { password }).subscribe({
               next: () => {
                 this.authService.logout();
                 this.router.navigate(['/login']);

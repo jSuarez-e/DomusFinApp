@@ -1,9 +1,11 @@
 // frontend/src/app/presentation/pages/savings/savings.page.ts
-import { ChangeDetectionStrategy, Component, OnInit, signal, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, signal, computed, effect } from '@angular/core';
+import { TransactionEventService } from '../../../core/services/transaction-event.service';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
+import { environment } from 'src/environments/environment'; // Import environment config for API URL
 import {
   IonContent,
   IonHeader,
@@ -130,6 +132,7 @@ export class SavingsPage implements OnInit {
     private readonly fb: FormBuilder,
     private readonly http: HttpClient,
     private readonly toastController: ToastController,
+    private readonly transactionEventService: TransactionEventService
   ) {
     addIcons({
       addOutline,
@@ -142,6 +145,23 @@ export class SavingsPage implements OnInit {
       walletOutline,
       helpCircleOutline,
       informationCircleOutline,
+    });
+
+    // Recargar metas de ahorro reactivamente al detectar mutaciones financieras
+    effect(() => {
+      const changeCount = this.transactionEventService.transactionSaved();
+      if (changeCount > 0) {
+        this.savingsService.loadSavingsGoals(true).then((goals) => {
+          const current = this.selectedGoal();
+          if (current) {
+            const updated = goals.find(g => g.id === current.id);
+            if (updated) {
+              this.selectedGoal.set(updated);
+            }
+          }
+        });
+        this.accountService.loadAccounts(true);
+      }
     });
   }
 
@@ -186,7 +206,8 @@ export class SavingsPage implements OnInit {
 
   private async loadMembers() {
     try {
-      const members = await firstValueFrom(this.http.get<any[]>('/api/users/members'));
+      // Update to use environment.apiUrl for getting members
+      const members = await firstValueFrom(this.http.get<any[]>(`${environment.apiUrl}/users/members`));
       // Filter out the current user from the list (the creator is implicitly added)
       const currentUserId = this.currentUser()?.id;
       this.householdMembers.set(members.filter((m) => m.id !== currentUserId));
@@ -237,6 +258,7 @@ export class SavingsPage implements OnInit {
       await this.savingsService.createSavingsGoal(dto);
       this.closeCreateModal();
       this.presentToast('Meta de ahorro creada con éxito.', 'success');
+      this.transactionEventService.emitTransactionSaved();
     } catch (error: any) {
       const msg = error.error?.message || 'Error al crear la meta de ahorro.';
       this.presentToast(msg, 'danger');
@@ -259,6 +281,7 @@ export class SavingsPage implements OnInit {
       // Reload accounts since balance changed
       await this.accountService.loadAccounts(true);
       this.presentToast('Aporte registrado con éxito.', 'success');
+      this.transactionEventService.emitTransactionSaved();
     } catch (error: any) {
       const msg = error.error?.message || 'Error al registrar el aporte.';
       this.presentToast(msg, 'danger');

@@ -49,7 +49,7 @@ export class MovementsService {
           throw new NotFoundException(`Cuenta con ID ${dto.accountId} no encontrada en este hogar.`);
         }
 
-        isPrivate = account.isPrivate;
+        isPrivate = dto.isPrivate === true || account.isPrivate === true;
 
         // Ajustar saldo según tipo de movimiento
         const amount = Number(dto.amount);

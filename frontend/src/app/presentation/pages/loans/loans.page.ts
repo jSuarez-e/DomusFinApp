@@ -1,9 +1,11 @@
 // frontend/src/app/presentation/pages/loans/loans.page.ts
-import { ChangeDetectionStrategy, Component, OnInit, signal, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, signal, computed, effect } from '@angular/core';
+import { TransactionEventService } from '../../../core/services/transaction-event.service';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
+import { environment } from 'src/environments/environment'; // Import environment config for API URL
 import {
   IonContent,
   IonHeader,
@@ -137,6 +139,7 @@ export class LoansPage implements OnInit {
     private readonly fb: FormBuilder,
     private readonly http: HttpClient,
     private readonly toastController: ToastController,
+    private readonly transactionEventService: TransactionEventService
   ) {
     addIcons({
       addOutline,
@@ -150,6 +153,23 @@ export class LoansPage implements OnInit {
       informationCircleOutline,
       swapHorizontalOutline,
       calendarOutline,
+    });
+
+    // Recargar créditos reactivamente al detectar mutaciones financieras
+    effect(() => {
+      const changeCount = this.transactionEventService.transactionSaved();
+      if (changeCount > 0) {
+        this.loanService.loadLoans(true).then((loans) => {
+          const current = this.selectedLoan();
+          if (current) {
+            const updated = loans.find(l => l.id === current.id);
+            if (updated) {
+              this.selectedLoan.set(updated);
+            }
+          }
+        });
+        this.accountService.loadAccounts(true);
+      }
     });
   }
 
@@ -208,7 +228,8 @@ export class LoansPage implements OnInit {
 
   private async loadMembers() {
     try {
-      const members = await firstValueFrom(this.http.get<any[]>('/api/users/members'));
+      // Update to use environment.apiUrl for getting members
+      const members = await firstValueFrom(this.http.get<any[]>(`${environment.apiUrl}/users/members`));
       const currentUserId = this.currentUser()?.id;
       this.householdMembers.set(members.filter((m) => m.id !== currentUserId));
     } catch (err) {
@@ -266,6 +287,7 @@ export class LoansPage implements OnInit {
       await this.loanService.createLoan(dto);
       this.closeCreateModal();
       this.presentToast('Crédito registrado con éxito.', 'success');
+      this.transactionEventService.emitTransactionSaved();
     } catch (error: any) {
       const msg = error.error?.message || 'Error al registrar el crédito.';
       this.presentToast(msg, 'danger');
@@ -287,6 +309,7 @@ export class LoansPage implements OnInit {
       this.closePayModal();
       await this.accountService.loadAccounts(true);
       this.presentToast('Pago registrado con éxito.', 'success');
+      this.transactionEventService.emitTransactionSaved();
     } catch (error: any) {
       const msg = error.error?.message || 'Error al registrar el pago.';
       this.presentToast(msg, 'danger');

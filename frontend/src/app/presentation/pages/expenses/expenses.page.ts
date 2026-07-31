@@ -1,5 +1,6 @@
 // frontend/src/app/presentation/pages/expenses/expenses.page.ts
-import { ChangeDetectionStrategy, Component, computed, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, OnInit, signal } from '@angular/core';
+import { TransactionEventService } from '../../../core/services/transaction-event.service';
 import { CommonModule } from '@angular/common';
 import { 
   IonContent, 
@@ -75,7 +76,8 @@ export class ExpensesPage implements OnInit {
     private expenseService: ExpenseService,
     private householdService: HouseholdService,
     private authService: AuthService,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private transactionEventService: TransactionEventService
   ) {
     // Register IonIcons
     addIcons({
@@ -84,6 +86,14 @@ export class ExpensesPage implements OnInit {
       walletOutline,
       eyeOffOutline,
       globeOutline
+    });
+
+    // Recargar gastos reactivamente al detectar mutaciones financieras
+    effect(() => {
+      const changeCount = this.transactionEventService.transactionSaved();
+      if (changeCount > 0) {
+        this.expenseService.loadExpenses(true);
+      }
     });
   }
 

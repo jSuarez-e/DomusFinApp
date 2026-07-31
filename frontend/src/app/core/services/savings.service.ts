@@ -3,12 +3,14 @@ import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom, Observable } from 'rxjs';
 import { SavingsGoal, CreateSavingsGoalDto, DepositSavingsGoalDto } from '@shared/index';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SavingsService {
-  private readonly baseUrl = '/api/savings-goals';
+  private readonly baseUrlEnv = environment.apiUrl;
+  private readonly apiUrl = this.baseUrlEnv + '/savings-goals';
 
   private savingsGoalsState = signal<SavingsGoal[]>([]);
   public savingsGoals = this.savingsGoalsState.asReadonly();
@@ -29,7 +31,7 @@ export class SavingsService {
     }
 
     try {
-      const data = await firstValueFrom(this.http.get<SavingsGoal[]>(this.baseUrl));
+      const data = await firstValueFrom(this.http.get<SavingsGoal[]>(this.apiUrl));
       this.savingsGoalsState.set(data || []);
       this.isLoaded = true;
       return data;
@@ -46,7 +48,7 @@ export class SavingsService {
    * @returns La meta de ahorro creada.
    */
   async createSavingsGoal(dto: CreateSavingsGoalDto): Promise<SavingsGoal> {
-    const newGoal = await firstValueFrom(this.http.post<SavingsGoal>(this.baseUrl, dto));
+    const newGoal = await firstValueFrom(this.http.post<SavingsGoal>(this.apiUrl, dto));
     this.savingsGoalsState.update((current) => [newGoal, ...current]);
     return newGoal;
   }
@@ -60,7 +62,7 @@ export class SavingsService {
    * @returns Observable con la respuesta del aporte.
    */
   depositToSavingsGoal(id: number, dto: DepositSavingsGoalDto): Observable<SavingsGoal> {
-    const obs = this.http.post<SavingsGoal>(`${this.baseUrl}/${id}/deposit`, dto);
+    const obs = this.http.post<SavingsGoal>(`${this.apiUrl}/${id}/deposit`, dto);
     obs.subscribe({
       next: (updatedGoal) => {
         this.savingsGoalsState.update((current) =>
@@ -84,7 +86,7 @@ export class SavingsService {
    * @param id ID de la meta a eliminar.
    */
   async deleteSavingsGoal(id: number): Promise<void> {
-    await firstValueFrom(this.http.delete(`${this.baseUrl}/${id}`));
+    await firstValueFrom(this.http.delete(`${this.apiUrl}/${id}`));
     this.savingsGoalsState.update((current) => current.filter((g) => g.id !== id));
   }
 }

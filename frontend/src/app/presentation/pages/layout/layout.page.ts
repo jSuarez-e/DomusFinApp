@@ -110,10 +110,10 @@ export class LayoutPage implements OnInit {
 
   async ngOnInit() {
     try {
-      const list = await firstValueFrom(this.http.get<any[]>('/api/users/households'));
+      const list = await firstValueFrom(this.http.get<any[]>(`${this.authService.apiUrlUsers}/households`));
       this.households.set(list || []);
 
-      const members = await firstValueFrom(this.http.get<any[]>('/api/users/members'));
+      const members = await firstValueFrom(this.http.get<any[]>(`${this.authService.apiUrlUsers}/members`));
       this.membersCount.set(members?.length || 1);
     } catch (err) {
       console.warn('No se pudo cargar la lista de hogares del backend, usando mock para demo.', err);
@@ -155,7 +155,7 @@ export class LayoutPage implements OnInit {
       await this.householdService.loadHousehold(selectedId, true);
       await this.expenseService.loadExpenses(true);
 
-      const members = await firstValueFrom(this.http.get<any[]>('/api/users/members'));
+      const members = await firstValueFrom(this.http.get<any[]>(`${this.authService.apiUrlUsers}/members`));
       this.membersCount.set(members?.length || 1);
 
       await this.closeMenu();

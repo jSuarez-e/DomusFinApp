@@ -3,12 +3,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CreateMovementDto, Movement, PaymentMethod, MonthlySummaryDto } from '@shared/index';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MovementService {
-  private readonly baseUrl = '/api';
+  private readonly baseUrlEnv = environment.apiUrl;
+  private readonly apiUrl = this.baseUrlEnv + '/movements';
 
   constructor(private readonly http: HttpClient) {}
 
@@ -19,7 +21,7 @@ export class MovementService {
    * @returns {Observable<Movement>} El movimiento guardado.
    */
   saveMovement(movement: CreateMovementDto): Observable<Movement> {
-    return this.http.post<Movement>(`${this.baseUrl}/movements`, movement);
+    return this.http.post<Movement>(`${this.apiUrl}`, movement);
   }
 
   /**
@@ -28,7 +30,7 @@ export class MovementService {
    * @returns {Observable<Movement[]>} Lista de movimientos.
    */
   getMovementList(): Observable<Movement[]> {
-    return this.http.get<Movement[]>(`${this.baseUrl}/movements`);
+    return this.http.get<Movement[]>(`${this.apiUrl}`);
   }
 
   /**
@@ -37,7 +39,7 @@ export class MovementService {
    * @returns {Observable<PaymentMethod[]>} Lista de medios de pago.
    */
   getPaymentMethods(): Observable<PaymentMethod[]> {
-    return this.http.get<PaymentMethod[]>(`${this.baseUrl}/payment-methods`);
+    return this.http.get<PaymentMethod[]>(`${this.baseUrlEnv}/payment-methods`);
   }
 
   /**
@@ -47,7 +49,7 @@ export class MovementService {
    * @returns {Observable<PaymentMethod>}
    */
   createPaymentMethod(name: string): Observable<PaymentMethod> {
-    return this.http.post<PaymentMethod>(`${this.baseUrl}/payment-methods`, { name });
+    return this.http.post<PaymentMethod>(`${this.baseUrlEnv}/payment-methods`, { name });
   }
 
   /**
@@ -58,7 +60,7 @@ export class MovementService {
    */
   getMonthlySummary(month?: string): Observable<MonthlySummaryDto> {
     const params: Record<string, string> = month ? { month } : {}; // Explicitly typed key-value string dictionary
-    return this.http.get<MonthlySummaryDto>(`${this.baseUrl}/movements/monthly-summary`, { params });
+    return this.http.get<MonthlySummaryDto>(`${this.apiUrl}/monthly-summary`, { params });
   }
 
   /**
@@ -66,6 +68,6 @@ export class MovementService {
    */
   getDashboardSummary(month?: string): Observable<{ total_liquidity: number; total_debt: number; monthly_budget_remaining: number }> {
     const params: Record<string, string> = month ? { month } : {};
-    return this.http.get<{ total_liquidity: number; total_debt: number; monthly_budget_remaining: number }>(`${this.baseUrl}/dashboard/summary`, { params });
+    return this.http.get<{ total_liquidity: number; total_debt: number; monthly_budget_remaining: number }>(`${this.baseUrlEnv}/dashboard/summary`, { params });
   }
 }

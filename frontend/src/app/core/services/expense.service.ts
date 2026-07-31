@@ -3,12 +3,14 @@ import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { Expense, Category, CategoryType } from '@shared/index';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ExpenseService {
-  private readonly apiUrl = '/api/expenses';
+  private readonly baseUrlEnv = environment.apiUrl;
+  private readonly apiUrlExpenses = this.baseUrlEnv + '/expenses';
 
   // Reactivity State with Signals
   private expensesState = signal<Expense[]>([]);
@@ -34,7 +36,7 @@ export class ExpenseService {
    */
   async loadCategories(): Promise<Category[]> {
     try {
-      const data = await firstValueFrom(this.http.get<Category[]>('/api/categories'));
+      const data = await firstValueFrom(this.http.get<Category[]>(`${this.baseUrlEnv}/categories`));
       this.categoriesState.set(data || []);
       return data;
     } catch (error) {
@@ -56,7 +58,7 @@ export class ExpenseService {
     }
 
     try {
-      const data = await firstValueFrom(this.http.get<Expense[]>(this.apiUrl));
+      const data = await firstValueFrom(this.http.get<Expense[]>(this.apiUrlExpenses));
       this.expensesState.set(data || []);
       await this.loadCategories();
       this.isLoaded = true;
@@ -74,7 +76,7 @@ export class ExpenseService {
    */
   async createExpense(dto: Partial<Expense>): Promise<Expense> {
     try {
-      const newExpense = await firstValueFrom(this.http.post<Expense>(this.apiUrl, dto));
+      const newExpense = await firstValueFrom(this.http.post<Expense>(this.apiUrlExpenses, dto));
       this.expensesState.update((current) => [newExpense, ...current]);
       return newExpense;
     } catch (error) {

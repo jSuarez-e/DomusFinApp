@@ -1,5 +1,6 @@
 // frontend/src/app/presentation/pages/accounts/accounts.page.ts
-import { ChangeDetectionStrategy, Component, computed, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, OnInit, signal } from '@angular/core';
+import { TransactionEventService } from '../../../core/services/transaction-event.service';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
@@ -105,7 +106,8 @@ export class AccountsPage implements OnInit {
     private readonly authService: AuthService,
     private readonly fb: FormBuilder,
     private readonly alertCtrl: AlertController,
-    private readonly toastCtrl: ToastController
+    private readonly toastCtrl: ToastController,
+    private readonly transactionEventService: TransactionEventService
   ) {
     addIcons({
       addOutline,
@@ -126,6 +128,14 @@ export class AccountsPage implements OnInit {
       type: [AccountType.BANK, Validators.required],
       initialBalance: [null, [Validators.required, Validators.min(0)]],
       isPrivate: [false],
+    });
+
+    // Recargar cuentas reactivamente al detectar mutaciones financieras
+    effect(() => {
+      const changeCount = this.transactionEventService.transactionSaved();
+      if (changeCount > 0) {
+        this.accountService.loadAccounts(true);
+      }
     });
   }
 
@@ -167,6 +177,7 @@ export class AccountsPage implements OnInit {
       });
       this.closeModal();
       await this.showToast('Cuenta creada exitosamente');
+      this.transactionEventService.emitTransactionSaved();
     } catch (err: unknown) {
       const message = (err as { error?: { message?: string } })?.error?.message || 'Error al crear la cuenta';
       await this.showToast(message, 'danger');
@@ -194,6 +205,7 @@ export class AccountsPage implements OnInit {
             try {
               await this.accountService.deleteAccount(account.id);
               await this.showToast('Cuenta eliminada');
+              this.transactionEventService.emitTransactionSaved();
             } catch (err: unknown) {
               const message = (err as { error?: { message?: string } })?.error?.message || 'No se pudo eliminar la cuenta';
               await this.showToast(message, 'danger');

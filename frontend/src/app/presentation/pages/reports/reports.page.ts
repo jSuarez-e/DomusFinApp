@@ -40,6 +40,7 @@ import {
 
 import { ReportService } from '../../../core/services/report.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { TransactionEventService } from '../../../core/services/transaction-event.service';
 import { ReportDataDto } from '@shared/index';
 
 @Component({
@@ -155,7 +156,8 @@ export class ReportsPage implements OnInit {
   constructor(
     private readonly reportService: ReportService,
     private readonly authService: AuthService,
-    private readonly http: HttpClient
+    private readonly http: HttpClient,
+    private readonly transactionEventService: TransactionEventService
   ) {
     addIcons({ 
       barChartOutline, 
@@ -177,6 +179,14 @@ export class ReportsPage implements OnInit {
         setTimeout(() => this.drawDonutChart(), 50);
       }
     });
+
+    // Auto reload report when a transaction is saved
+    effect(() => {
+      const changeCount = this.transactionEventService.transactionSaved();
+      if (changeCount > 0) {
+        this.loadReport();
+      }
+    });
   }
 
   ngOnInit() {
@@ -185,7 +195,7 @@ export class ReportsPage implements OnInit {
   }
 
   public loadHouseholdMembers() {
-    this.http.get<any[]>('/api/users/members').subscribe({
+    this.http.get<any[]>(`${this.authService.apiUrlUsers}/members`).subscribe({
       next: (data) => {
         this.members.set(data || []);
       },

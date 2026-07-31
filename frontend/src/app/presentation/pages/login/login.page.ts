@@ -70,8 +70,8 @@ export class LoginPage {
 
     addIcons({ logInOutline, personOutline, lockClosedOutline, eyeOutline, eyeOffOutline });
 
-    // Validate alphanumeric or email pattern for username/email
-    const userOrEmailPattern = '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$|^[a-zA-Z0-9]+$';
+    // Validate alphanumeric, dots, underscores, hyphens or email pattern for username/email
+    const userOrEmailPattern = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,4}$|^[a-zA-Z0-9._\-]+$/;
 
     this.loginForm = this.fb.group({
       usernameOrEmail: ['', [Validators.required, Validators.pattern(userOrEmailPattern)]],

@@ -4,12 +4,15 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { LoginResponseDto, RegisterDto, ForgotPasswordDto, ResetPasswordDto } from '@shared/index';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly apiUrl = '/api/auth';
+  private readonly baseUrlEnv = environment.apiUrl;
+  public readonly apiUrlAuth = this.baseUrlEnv + '/auth';
+  public readonly apiUrlUsers = this.baseUrlEnv + '/users';
 
   // Reactivity State with Signals
   private currentUserState = signal<any | null>(null);
@@ -59,7 +62,7 @@ export class AuthService {
     try {
       const encryptedPassword = await this.hashPassword(password);
       const response = await firstValueFrom(
-        this.http.post<LoginResponseDto>(`${this.apiUrl}/login`, {
+        this.http.post<LoginResponseDto>(`${this.apiUrlAuth}/login`, {
           usernameOrEmail,
           password: encryptedPassword,
         })
@@ -95,7 +98,7 @@ export class AuthService {
     try {
       const encryptedPassword = await this.hashPassword(dto.password);
       await firstValueFrom(
-        this.http.post<any>(`${this.apiUrl}/register`, {
+        this.http.post<any>(`${this.apiUrlAuth}/register`, {
           ...dto,
           password: encryptedPassword,
         })
@@ -112,7 +115,7 @@ export class AuthService {
   async forgotPassword(email: string): Promise<void> {
     try {
       const dto: ForgotPasswordDto = { email };
-      await firstValueFrom(this.http.post<any>(`${this.apiUrl}/forgot-password`, dto));
+      await firstValueFrom(this.http.post<any>(`${this.apiUrlAuth}/forgot-password`, dto));
     } catch (error) {
       console.error('Forgot password error:', error);
       throw error;
@@ -126,7 +129,7 @@ export class AuthService {
     try {
       const encryptedPassword = await this.hashPassword(dto.newPassword);
       await firstValueFrom(
-        this.http.post<any>(`${this.apiUrl}/reset-password`, {
+        this.http.post<any>(`${this.apiUrlAuth}/reset-password`, {
           token: dto.token,
           newPassword: encryptedPassword,
         })
@@ -145,7 +148,7 @@ export class AuthService {
   async switchHousehold(householdId: number): Promise<void> {
     try {
       const response = await firstValueFrom(
-        this.http.post<any>(`/api/users/switch-household/${householdId}`, {})
+        this.http.post<any>(`${this.apiUrlUsers}/switch-household/${householdId}`, {})
       );
 
       this.currentUserState.set(response.user);
@@ -169,7 +172,7 @@ export class AuthService {
     const encryptedCurrent = await this.hashPassword(currentPassword);
     const encryptedNew = await this.hashPassword(newPassword);
     await firstValueFrom(
-      this.http.patch<any>('/api/users/settings/password', {
+      this.http.patch<any>(`${this.apiUrlUsers}/settings/password`, {
         currentPassword: encryptedCurrent,
         newPassword: encryptedNew,
       })
@@ -181,7 +184,7 @@ export class AuthService {
    */
   async updateEmail(newEmail: string): Promise<void> {
     const response = await firstValueFrom(
-      this.http.patch<any>('/api/users/settings/email', { newEmail })
+      this.http.patch<any>(`${this.apiUrlUsers}/settings/email`, { newEmail })
     );
 
     this.currentUserState.set(response.user);
@@ -198,7 +201,7 @@ export class AuthService {
    */
   async updatePreferences(currency: string, dateFormat: string): Promise<void> {
     const response = await firstValueFrom(
-      this.http.patch<any>('/api/users/settings/preferences', { currency, dateFormat })
+      this.http.patch<any>(`${this.apiUrlUsers}/settings/preferences`, { currency, dateFormat })
     );
 
     this.currentUserState.set(response.user);
@@ -215,7 +218,7 @@ export class AuthService {
    */
   async updateAvatar(avatar: string): Promise<void> {
     const response = await firstValueFrom(
-      this.http.patch<any>('/api/users/settings/avatar', { avatar })
+      this.http.patch<any>(`${this.apiUrlUsers}/settings/avatar`, { avatar })
     );
 
     this.currentUserState.set(response.user);

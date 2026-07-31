@@ -3,12 +3,14 @@ import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom, Observable } from 'rxjs';
 import { Loan, CreateLoanDto, PayLoanDto, AmortizationPeriod } from '@shared/index';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LoanService {
-  private readonly baseUrl = '/api/loans';
+  private readonly baseUrlEnv = environment.apiUrl;
+  private readonly apiUrlLoans = this.baseUrlEnv + '/loans';
 
   private loansState = signal<Loan[]>([]);
   public loans = this.loansState.asReadonly();
@@ -29,7 +31,7 @@ export class LoanService {
     }
 
     try {
-      const data = await firstValueFrom(this.http.get<Loan[]>(this.baseUrl));
+      const data = await firstValueFrom(this.http.get<Loan[]>(this.apiUrlLoans));
       this.loansState.set(data || []);
       this.isLoaded = true;
       return data;
@@ -46,7 +48,7 @@ export class LoanService {
    * @returns El crédito creado.
    */
   async createLoan(dto: CreateLoanDto): Promise<Loan> {
-    const newLoan = await firstValueFrom(this.http.post<Loan>(this.baseUrl, dto));
+    const newLoan = await firstValueFrom(this.http.post<Loan>(this.apiUrlLoans, dto));
     this.loansState.update((current) => [newLoan, ...current]);
     return newLoan;
   }
@@ -59,7 +61,7 @@ export class LoanService {
    * @returns Observable con el crédito actualizado.
    */
   payLoan(id: number, dto: PayLoanDto): Observable<Loan> {
-    const obs = this.http.post<Loan>(`${this.baseUrl}/${id}/pay`, dto);
+    const obs = this.http.post<Loan>(`${this.apiUrlLoans}/${id}/pay`, dto);
     obs.subscribe({
       next: (updatedLoan) => {
         this.loansState.update((current) =>
@@ -79,7 +81,7 @@ export class LoanService {
       interestRate: interestRate.toString(),
       installments: installments.toString(),
     };
-    return this.http.get<AmortizationPeriod[]>(`${this.baseUrl}/simulate`, { params });
+    return this.http.get<AmortizationPeriod[]>(`${this.apiUrlLoans}/simulate`, { params });
   }
 
   /**
@@ -95,7 +97,7 @@ export class LoanService {
    * @param id ID del crédito a eliminar.
    */
   async deleteLoan(id: number): Promise<void> {
-    await firstValueFrom(this.http.delete(`${this.baseUrl}/${id}`));
+    await firstValueFrom(this.http.delete(`${this.apiUrlLoans}/${id}`));
     this.loansState.update((current) => current.filter((l) => l.id !== id));
   }
 }

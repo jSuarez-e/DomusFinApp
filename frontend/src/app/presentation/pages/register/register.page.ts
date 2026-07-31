@@ -62,7 +62,7 @@ export class RegisterPage {
     addIcons({ personOutline, mailOutline, lockClosedOutline, keyOutline, arrowBackOutline, eyeOutline, eyeOffOutline });
 
     this.registerForm = this.fb.group({
-      username: ['', [Validators.required, Validators.minLength(3)]],
+      username: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z0-9._\-]+$/)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       isInvited: [false],

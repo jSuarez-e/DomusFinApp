@@ -192,7 +192,7 @@
 
       @for (m of recentMovements(); track m.id) {
         <ion-item class="movement-item" style="--padding-start: 12px; --padding-end: 12px; margin-bottom: 8px; border-radius: 12px; border: 1px solid var(--ion-border-color);">
-          @if (m.isPrivate || m.isPrivateRedacted) {
+          @if (m.isPrivateRedacted || (m.isPrivate && m.userId !== currentUser()?.id && m.user?.id !== currentUser()?.id)) {
             <!-- 1. Private/Redacted Movement (Masked details) -->
             <!-- Icon Column (Shield/Lock) -->
             <div 
@@ -235,6 +235,9 @@
                 {{ m.transactionDate | date:(currentUser()?.dateFormat === 'MM/DD/YYYY' ? 'MM/dd/yyyy, h:mm a' : 'dd/MM/yyyy, h:mm a') }}
                 @if (m.user?.name) {
                   • 👤 {{ m.user?.name }}
+                }
+                @if (m.isPrivate) {
+                  • <span style="color: var(--ion-color-warning); font-weight: 600;">🔒 Privado</span>
                 }
               </span>
             </ion-label>

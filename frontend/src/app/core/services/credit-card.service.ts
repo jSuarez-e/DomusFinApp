@@ -3,12 +3,14 @@ import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom, Observable } from 'rxjs';
 import { CreditCard, CreateCreditCardDto, PayCreditCardDto, AmortizationPeriod } from '@shared/index';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CreditCardService {
-  private readonly baseUrl = '/api/credit-cards';
+  private readonly baseUrlEnv = environment.apiUrl;
+  private readonly apiUrlCreditCards = this.baseUrlEnv + '/credit-cards';
 
   private creditCardsState = signal<CreditCard[]>([]);
   public creditCards = this.creditCardsState.asReadonly();
@@ -26,7 +28,7 @@ export class CreditCardService {
     }
 
     try {
-      const data = await firstValueFrom(this.http.get<CreditCard[]>(this.baseUrl));
+      const data = await firstValueFrom(this.http.get<CreditCard[]>(this.apiUrlCreditCards));
       this.creditCardsState.set(data || []);
       this.isLoaded = true;
       return data;
@@ -40,7 +42,7 @@ export class CreditCardService {
    * Registra una nueva tarjeta de crédito.
    */
   async createCreditCard(dto: CreateCreditCardDto): Promise<CreditCard> {
-    const newCard = await firstValueFrom(this.http.post<CreditCard>(this.baseUrl, dto));
+    const newCard = await firstValueFrom(this.http.post<CreditCard>(this.apiUrlCreditCards, dto));
     this.creditCardsState.update((current) => [newCard, ...current]);
     return newCard;
   }
@@ -54,14 +56,14 @@ export class CreditCardService {
       interestRate: interestRate.toString(),
       installments: installments.toString(),
     };
-    return this.http.get<AmortizationPeriod[]>(`${this.baseUrl}/simulate`, { params });
+    return this.http.get<AmortizationPeriod[]>(`${this.apiUrlCreditCards}/simulate`, { params });
   }
 
   /**
    * Paga deuda de una tarjeta de crédito debitando saldo de una cuenta.
    */
   payCreditCard(dto: PayCreditCardDto): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/pay`, dto);
+    return this.http.post<any>(`${this.apiUrlCreditCards}/pay`, dto);
   }
 
   /**
@@ -70,7 +72,7 @@ export class CreditCardService {
    * @param id ID de la tarjeta a eliminar.
    */
   async deleteCreditCard(id: number): Promise<void> {
-    await firstValueFrom(this.http.delete(`${this.baseUrl}/${id}`));
+    await firstValueFrom(this.http.delete(`${this.apiUrlCreditCards}/${id}`));
     this.creditCardsState.update((current) => current.filter((c) => c.id !== id));
   }
 }

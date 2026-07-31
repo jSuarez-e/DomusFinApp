@@ -1,6 +1,6 @@
 // frontend/src/app/app.component.ts
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
+import { IonApp, IonRouterOutlet, Platform } from '@ionic/angular/standalone';
 
 import { ThemeService } from './core/services/theme.service';
 
@@ -16,5 +16,13 @@ import { ThemeService } from './core/services/theme.service';
   standalone: true,
 })
 export class AppComponent {
-  constructor(private readonly themeService: ThemeService) {}
+  constructor(
+    private readonly themeService: ThemeService,
+    private readonly platform: Platform
+  ) {
+    // Bloquear el botón de atrás nativo de los celulares
+    this.platform.backButton.subscribeWithPriority(9999, () => {
+      console.log('Botón atrás nativo bloqueado');
+    });
+  }
 }

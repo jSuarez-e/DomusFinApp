@@ -58,6 +58,7 @@ import {
 import { HouseholdService } from '../../../core/services/household.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { Category, PaymentMethod, CategoryType } from '@shared/index';
+import { environment } from 'src/environments/environment'; // Import environment config for API URL
 import { MoneyMaskDirective } from '../../directives/money-mask.directive';
 
 @Component({
@@ -251,14 +252,16 @@ export class AdminPage implements OnInit {
 
   // --- Data Loading API ---
   public loadCategories() {
-    this.http.get<Category[]>('/api/categories').subscribe({
+    // Update to use environment.apiUrl for fetching categories
+    this.http.get<Category[]>(`${environment.apiUrl}/categories`).subscribe({
       next: (data) => this.categories.set(data || []),
       error: (err) => console.error('Failed to load categories:', err)
     });
   }
 
   public loadPaymentMethods() {
-    this.http.get<PaymentMethod[]>('/api/payment-methods').subscribe({
+    // Update to use environment.apiUrl for fetching payment methods
+    this.http.get<PaymentMethod[]>(`${environment.apiUrl}/payment-methods`).subscribe({
       next: (data) => this.paymentMethods.set(data || []),
       error: (err) => console.error('Failed to load payment methods:', err)
     });
@@ -312,7 +315,8 @@ export class AdminPage implements OnInit {
 
     const val = this.categoryForm.value;
     if (this.isCategoryEdit()) {
-      this.http.put(`/api/categories/${this.currentEditingCategoryId}`, val).subscribe({
+      // Update to use environment.apiUrl for category updates
+      this.http.put(`${environment.apiUrl}/categories/${this.currentEditingCategoryId}`, val).subscribe({
         next: () => {
           this.triggerAlert('Éxito', 'Categoría actualizada con éxito.');
           this.loadCategories();
@@ -325,7 +329,8 @@ export class AdminPage implements OnInit {
         }
       });
     } else {
-      this.http.post('/api/categories', val).subscribe({
+      // Update to use environment.apiUrl for category creation
+      this.http.post(`${environment.apiUrl}/categories`, val).subscribe({
         next: () => {
           this.triggerAlert('Éxito', 'Categoría creada con éxito.');
           this.loadCategories();
@@ -351,7 +356,8 @@ export class AdminPage implements OnInit {
           text: 'Eliminar',
           role: 'destructive',
           handler: () => {
-            this.http.delete(`/api/categories/${cat.id}`).subscribe({
+            // Update to use environment.apiUrl for category deletion
+            this.http.delete(`${environment.apiUrl}/categories/${cat.id}`).subscribe({
               next: () => {
                 this.triggerAlert('Éxito', 'Categoría eliminada con éxito.');
                 this.loadCategories();
@@ -392,7 +398,8 @@ export class AdminPage implements OnInit {
 
     const val = this.paymentForm.value;
     if (this.isPaymentEdit()) {
-      this.http.put(`/api/payment-methods/${this.currentEditingPaymentId}`, val).subscribe({
+      // Update to use environment.apiUrl for payment method updates
+      this.http.put(`${environment.apiUrl}/payment-methods/${this.currentEditingPaymentId}`, val).subscribe({
         next: () => {
           this.triggerAlert('Éxito', 'Medio de pago actualizado con éxito.');
           this.loadPaymentMethods();
@@ -405,7 +412,8 @@ export class AdminPage implements OnInit {
         }
       });
     } else {
-      this.http.post('/api/payment-methods', val).subscribe({
+      // Update to use environment.apiUrl for payment method creation
+      this.http.post(`${environment.apiUrl}/payment-methods`, val).subscribe({
         next: () => {
           this.triggerAlert('Éxito', 'Medio de pago creado con éxito.');
           this.loadPaymentMethods();
@@ -431,7 +439,8 @@ export class AdminPage implements OnInit {
           text: 'Eliminar',
           role: 'destructive',
           handler: () => {
-            this.http.delete(`/api/payment-methods/${pm.id}`).subscribe({
+            // Update to use environment.apiUrl for payment method deletion
+            this.http.delete(`${environment.apiUrl}/payment-methods/${pm.id}`).subscribe({
               next: () => {
                 this.triggerAlert('Éxito', 'Medio de pago eliminado con éxito.');
                 this.loadPaymentMethods();
@@ -491,7 +500,8 @@ export class AdminPage implements OnInit {
         {
           text: 'Suspender',
           handler: () => {
-            this.http.delete(`/api/users/${member.id}`).subscribe({
+            // Update to use environment.apiUrl for user suspension
+            this.http.delete(`${environment.apiUrl}/users/${member.id}`).subscribe({
               next: () => {
                 this.triggerAlert('Éxito', `La cuenta de ${member.name} ha sido suspendida.`);
                 this.loadMembers();
@@ -539,7 +549,8 @@ export class AdminPage implements OnInit {
     }
 
     const email = this.inviteForm.value.email;
-    this.http.post('/api/users/invite', { email }).subscribe({
+    // Update to use environment.apiUrl for sending household invitations
+    this.http.post(`${environment.apiUrl}/users/invite`, { email }).subscribe({
       next: (res: any) => {
         this.triggerAlert(
           'Invitación Enviada (Simulado)',
@@ -567,7 +578,8 @@ export class AdminPage implements OnInit {
   }
 
   public loadMembers() {
-    this.http.get<any[]>('/api/users/members').subscribe({
+    // Update to use environment.apiUrl for loading household members
+    this.http.get<any[]>(`${environment.apiUrl}/users/members`).subscribe({
       next: (data) => this.members.set(data || []),
       error: (err) => console.error('Failed to load members:', err)
     });
@@ -575,7 +587,8 @@ export class AdminPage implements OnInit {
 
   public toggleMemberRole(member: any) {
     const newRole = member.role === 'admin' ? 'user' : 'admin';
-    this.http.patch(`/api/users/${member.id}/role`, { role: newRole }).subscribe({
+    // Update to use environment.apiUrl for updating member role
+    this.http.patch(`${environment.apiUrl}/users/${member.id}/role`, { role: newRole }).subscribe({
       next: () => {
         this.triggerAlert('Éxito', `Rol de ${member.name} cambiado a ${newRole}.`);
         this.loadMembers();
@@ -600,7 +613,8 @@ export class AdminPage implements OnInit {
         {
           text: 'Eliminar Miembro',
           handler: () => {
-            this.http.delete(`/api/users/${member.id}`).subscribe({
+            // Update to use environment.apiUrl for logical member deletion
+            this.http.delete(`${environment.apiUrl}/users/${member.id}`).subscribe({
               next: () => {
                 this.triggerAlert('Éxito', `Miembro ${member.name} desactivado.`);
                 this.loadMembers();
