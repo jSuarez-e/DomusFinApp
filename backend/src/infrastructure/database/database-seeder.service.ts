@@ -39,20 +39,22 @@ export class DatabaseSeederService implements OnApplicationBootstrap {
   private async clearFinancialData(): Promise<void> {
     this.logger.log('🧹 Iniciando limpieza de datos financieros de la base de datos...');
     try {
-      await this.categoryRepository.query('SET FOREIGN_KEY_CHECKS = 0;');
-      
-      await this.categoryRepository.query('DELETE FROM movements;');
-      await this.categoryRepository.query('DELETE FROM loans;');
-      await this.categoryRepository.query('DELETE FROM credit_cards;');
-      await this.categoryRepository.query('DELETE FROM savings_goals;');
-      await this.categoryRepository.query('DELETE FROM accounts;');
-      await this.categoryRepository.query('DELETE FROM expenses;');
-      
-      // Limpiar categorías y medios de pago para que el seeder los vuelva a generar limpios
-      await this.categoryRepository.query('DELETE FROM categories;');
-      await this.categoryRepository.query('DELETE FROM payment_methods;');
-      
-      await this.categoryRepository.query('SET FOREIGN_KEY_CHECKS = 1;');
+      await this.categoryRepository.manager.transaction(async (manager) => {
+        await manager.query('SET FOREIGN_KEY_CHECKS = 0;');
+        
+        await manager.query('DELETE FROM movements;');
+        await manager.query('DELETE FROM loans;');
+        await manager.query('DELETE FROM credit_cards;');
+        await manager.query('DELETE FROM savings_goals;');
+        await manager.query('DELETE FROM accounts;');
+        await manager.query('DELETE FROM expenses;');
+        
+        // Limpiar categorías y medios de pago para que el seeder los vuelva a generar limpios
+        await manager.query('DELETE FROM categories;');
+        await manager.query('DELETE FROM payment_methods;');
+        
+        await manager.query('SET FOREIGN_KEY_CHECKS = 1;');
+      });
       this.logger.log('✨ Base de datos limpia con éxito (usuarios y hogares conservados).');
     } catch (err) {
       this.logger.error('❌ Error limpiando base de datos:', err);
@@ -137,14 +139,20 @@ export class DatabaseSeederService implements OnApplicationBootstrap {
       householdGroups.get(hhId)!.push(u);
     }
 
+    const usersToUpdate: UserDbEntity[] = [];
+
     for (const [hhId, hhUsers] of householdGroups.entries()) {
       const hasAdmin = hhUsers.some((u) => u.role === 'admin' && u.isActive);
       if (!hasAdmin && hhUsers.length > 0) {
         const target = hhUsers.find((u) => u.isActive) || hhUsers[0];
         target.role = 'admin';
-        await this.userRepository.save(target);
+        usersToUpdate.push(target);
         this.logger.log(`⚠️ Hogar ${hhId || 'sin hogar'}: No se encontró ningún admin activo. El usuario ${target.name} ha sido promovido a 'admin' automáticamente.`);
       }
+    }
+
+    if (usersToUpdate.length > 0) {
+      await this.userRepository.save(usersToUpdate);
     }
   }
 }

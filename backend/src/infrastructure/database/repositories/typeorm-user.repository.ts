@@ -1,5 +1,5 @@
 // backend/src/infrastructure/database/repositories/typeorm-user.repository.ts
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { IUserRepository } from '../../../core/repositories/user-repository.interface';
@@ -20,8 +20,12 @@ export class TypeOrmUserRepository implements IUserRepository {
    * @returns {Promise<UserEntity | null>} El usuario de dominio mapeado o null si no se encuentra.
    */
   async findById(id: number): Promise<UserEntity | null> {
-    const user = await this.repository.findOneBy({ id });
-    return user ? new UserEntity(user) : null;
+    try {
+      const user = await this.repository.findOneBy({ id });
+      return user ? new UserEntity(user) : null;
+    } catch (error) {
+      throw new InternalServerErrorException('Error al buscar el usuario');
+    }
   }
 
   /**
@@ -31,8 +35,12 @@ export class TypeOrmUserRepository implements IUserRepository {
    * @returns {Promise<UserEntity | null>} El usuario de dominio mapeado o null si no se encuentra.
    */
   async findByEmail(email: string): Promise<UserEntity | null> {
-    const user = await this.repository.findOneBy({ email });
-    return user ? new UserEntity(user) : null;
+    try {
+      const user = await this.repository.findOneBy({ email });
+      return user ? new UserEntity(user) : null;
+    } catch (error) {
+      throw new InternalServerErrorException('Error al buscar el usuario por email');
+    }
   }
 
   /**
@@ -42,8 +50,12 @@ export class TypeOrmUserRepository implements IUserRepository {
    * @returns {Promise<UserEntity>} La entidad de dominio del usuario guardado.
    */
   async save(user: UserEntity): Promise<UserEntity> {
-    const dbEntity = this.repository.create(user);
-    const saved = await this.repository.save(dbEntity);
-    return new UserEntity(saved);
+    try {
+      const dbEntity = this.repository.create(user);
+      const saved = await this.repository.save(dbEntity);
+      return new UserEntity(saved);
+    } catch (error) {
+      throw new InternalServerErrorException('Error al persistir el usuario');
+    }
   }
 }

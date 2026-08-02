@@ -26,10 +26,17 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
    * @throws {UnauthorizedException} Si el usuario indicado en el payload no existe en la base de datos.
    */
   async validate(payload: { sub: number; email: string }) {
-    const user = await this.userRepository.findById(payload.sub);
-    if (!user) {
-      throw new UnauthorizedException();
+    try {
+      const user = await this.userRepository.findById(payload.sub);
+      if (!user) {
+        throw new UnauthorizedException();
+      }
+      return user;
+    } catch (error) {
+      if (error instanceof UnauthorizedException) {
+        throw error;
+      }
+      throw new UnauthorizedException('Error en la validación del token');
     }
-    return user;
   }
 }
