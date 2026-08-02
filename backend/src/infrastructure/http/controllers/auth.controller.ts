@@ -42,7 +42,7 @@ export class AuthController {
   @ApiResponse({ status: 201, description: 'Registration successful' })
   @ApiResponse({ status: 400, description: 'Invalid data' })
   @ApiResponse({ status: 409, description: 'Email already registered' })
-  async register(@Body() dto: RegisterDto): Promise<any> {
+  async register(@Body() dto: RegisterDto): Promise<Record<string, unknown>> {
     return this.authService.register(dto);
   }
 
@@ -51,7 +51,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Request password recovery email' })
   @ApiResponse({ status: 200, description: 'Recovery instructions simulation triggered' })
   @ApiResponse({ status: 404, description: 'Email not found' })
-  async forgotPassword(@Body() dto: ForgotPasswordDto): Promise<any> {
+  async forgotPassword(@Body() dto: ForgotPasswordDto): Promise<Record<string, unknown>> {
     return this.authService.forgotPassword(dto.email);
   }
 
@@ -60,7 +60,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Reset user password using token verification' })
   @ApiResponse({ status: 200, description: 'Password reset successful' })
   @ApiResponse({ status: 401, description: 'Invalid/expired token' })
-  async resetPassword(@Body() dto: ResetPasswordDto): Promise<any> {
+  async resetPassword(@Body() dto: ResetPasswordDto): Promise<Record<string, unknown>> {
     return this.authService.resetPassword(dto.token, dto.newPassword);
   }
 }

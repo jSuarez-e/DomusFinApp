@@ -36,7 +36,7 @@ export class CategoriesController {
       throw new BadRequestException('El usuario no pertenece a ningún hogar.');
     }
 
-    const whereClause: any[] = [
+    const whereClause: Record<string, unknown>[] = [
       { householdId: req.user.householdId },
       { householdId: IsNull() }
     ];

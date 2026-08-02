@@ -4,6 +4,7 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { json, urlencoded } from 'express';
+import { GlobalExceptionFilter } from './infrastructure/http/filters/global-exception.filter';
 
 /**
  * Inicializa y arranca la aplicación NestJS.
@@ -17,7 +18,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   // Global prefixes and configuration
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix('api/v1');
 
   // Increase payload size limits for Base64 attachments/avatars
   app.use(json({ limit: '2mb' }));
@@ -45,6 +46,9 @@ async function bootstrap() {
   
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
+
+  // Registro del filtro global de excepciones (RFC 7807)
+  app.useGlobalFilters(new GlobalExceptionFilter());
 
   await app.listen(process.env.PORT ?? 3000);
 }

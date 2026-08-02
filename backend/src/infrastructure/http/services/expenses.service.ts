@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { IExpenseRepository } from '../../../core/repositories/expense-repository.interface';
 import { CreateExpenseDto } from '../dtos/create-expense.dto';
 import { ExpenseDbEntity } from '../../database/entities/expense.entity';
+import { ExpenseEntity } from '../../../core/entities/expense.entity';
 import { CategoryDbEntity } from '../../database/entities/category.entity';
 import { NativeCaptureExpenseDto } from '../dtos/native-capture.dto';
 import { User } from '@shared/index';
@@ -23,15 +24,15 @@ export class ExpensesService {
    * 
    * @param {CreateExpenseDto} dto DTO que contiene los datos del gasto a crear.
    * @param {User} user Usuario autenticado que realiza el registro del gasto.
-   * @returns {Promise<ExpenseDbEntity>} El registro del gasto creado guardado en base de datos.
+   * @returns {Promise<ExpenseEntity>} El registro del gasto creado guardado en base de datos.
    * @throws {BadRequestException} Si el usuario no pertenece a ningún hogar.
    */
-  async createExpense(dto: CreateExpenseDto, user: User): Promise<ExpenseDbEntity> {
+  async createExpense(dto: CreateExpenseDto, user: User): Promise<ExpenseEntity> {
     if (!user.householdId) {
       throw new BadRequestException('User does not belong to any household.');
     }
 
-    const expenseData: Partial<ExpenseDbEntity> = {
+    const expenseData: Partial<ExpenseEntity> = {
       amount: dto.amount,
       description: dto.description,
       categoryId: dto.categoryId,
@@ -48,9 +49,9 @@ export class ExpensesService {
    * Obtiene todos los gastos conjuntos de un hogar específico.
    * 
    * @param {number} householdId ID único del hogar del cual se desean consultar los gastos.
-   * @returns {Promise<ExpenseDbEntity[]>} Listado con los gastos pertenecientes a dicho hogar.
+   * @returns {Promise<ExpenseEntity[]>} Listado con los gastos pertenecientes a dicho hogar.
    */
-  async getExpensesForHousehold(householdId: number): Promise<ExpenseDbEntity[]> {
+  async getExpensesForHousehold(householdId: number): Promise<ExpenseEntity[]> {
     return this.expenseRepository.findByHousehold(householdId);
   }
 
@@ -59,11 +60,11 @@ export class ExpensesService {
    * 
    * @param {number} id ID único del gasto.
    * @param {User} user Usuario autenticado que solicita consultar el gasto.
-   * @returns {Promise<ExpenseDbEntity>} El registro detallado del gasto.
+   * @returns {Promise<ExpenseEntity>} El registro detallado del gasto.
    * @throws {NotFoundException} Si el gasto con el ID provisto no existe.
    * @throws {BadRequestException} Si el gasto pertenece a un hogar distinto al del usuario actual.
    */
-  async getExpenseById(id: number, user: User): Promise<ExpenseDbEntity> {
+  async getExpenseById(id: number, user: User): Promise<ExpenseEntity> {
     const expense = await this.expenseRepository.findById(id);
     if (!expense) {
       throw new NotFoundException('Expense not found.');
@@ -82,10 +83,10 @@ export class ExpensesService {
    * 
    * @param {NativeCaptureExpenseDto} dto DTO que contiene los datos del gasto capturado.
    * @param {User} user Usuario autenticado propietario de la captura.
-   * @returns {Promise<ExpenseDbEntity>} El registro del gasto creado en base de datos.
+   * @returns {Promise<ExpenseEntity>} El registro del gasto creado en base de datos.
    * @throws {BadRequestException} Si el usuario no pertenece a ningún hogar.
    */
-  async createExpenseFromNativeCapture(dto: NativeCaptureExpenseDto, user: User): Promise<ExpenseDbEntity> {
+  async createExpenseFromNativeCapture(dto: NativeCaptureExpenseDto, user: User): Promise<ExpenseEntity> {
     if (!user.householdId) {
       throw new BadRequestException('User does not belong to any household.');
     }
@@ -114,7 +115,7 @@ export class ExpensesService {
       categoryId = category.id;
     }
 
-    const expenseData: Partial<ExpenseDbEntity> = {
+    const expenseData: Partial<ExpenseEntity> = {
       amount: dto.amount,
       description: dto.description,
       categoryId: categoryId,

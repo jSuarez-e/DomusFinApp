@@ -75,7 +75,7 @@ export class MovementsPrivacyInterceptor implements NestInterceptor {
     const mov = movement as Record<string, unknown>;
     const isAutoCaptured = mov['sourceApp'] === 'NativeCapture';
     
-    let result: Record<string, any> = {
+    let result: Record<string, unknown> = {
       ...mov,
       is_auto_captured: isAutoCaptured,
     };

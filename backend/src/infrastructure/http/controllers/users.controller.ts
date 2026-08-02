@@ -351,18 +351,25 @@ export class UsersController {
     let errorMsg = '';
 
     if (host && user && pass) {
-      let nodemailerLib: any;
+      let nodemailerLib: unknown;
       try {
         const nodemailerPackageName = 'nodemailer';
         nodemailerLib = require(nodemailerPackageName);
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.warn('nodemailer is not installed. SMTP delivery failed.', err);
         errorMsg = 'Nodemailer package is not installed in the system dependencies.';
       }
 
       if (nodemailerLib) {
         try {
-          const transporter = nodemailerLib.createTransport({
+          type NodemailerType = {
+            createTransport(options: Record<string, unknown>): {
+              verify(): Promise<void>;
+              sendMail(options: Record<string, unknown>): Promise<void>;
+            };
+          };
+
+          const transporter = (nodemailerLib as NodemailerType).createTransport({
             host,
             port,
             secure: port === 465,
@@ -387,9 +394,9 @@ export class UsersController {
           });
 
           emailSent = true;
-        } catch (err: any) {
+        } catch (err: unknown) {
           console.error('Real SMTP delivery failed, falling back to simulated output.', err);
-          errorMsg = err.message;
+          errorMsg = err instanceof Error ? err.message : 'Unknown SMTP Error';
         }
       }
     }
