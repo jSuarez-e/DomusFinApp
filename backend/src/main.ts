@@ -18,7 +18,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   // Global prefixes and configuration
-  app.setGlobalPrefix('api/v1');
+  app.setGlobalPrefix('api/');
 
   // Increase payload size limits for Base64 attachments/avatars
   app.use(json({ limit: '2mb' }));
