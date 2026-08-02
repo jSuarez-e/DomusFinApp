@@ -47,7 +47,8 @@ import {
   peopleOutline,
   alertCircleOutline,
   addOutline,
-  closeOutline
+  closeOutline,
+  lockClosed
 } from 'ionicons/icons';
 
 import { MovementService } from '../../../core/services/movement.service';
@@ -229,7 +230,8 @@ export class HomePage implements OnInit {
       peopleOutline,
       alertCircleOutline,
       addOutline,
-      closeOutline
+      closeOutline,
+      lockClosed
     });
 
     this.generateAvailableMonths();

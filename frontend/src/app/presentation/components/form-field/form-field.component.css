@@ -1,0 +1,47 @@
+/* frontend/src/app/presentation/components/form-field/form-field.component.css */
+.input-wrapper {
+  margin-bottom: 20px;
+}
+
+.input-label {
+  display: block;
+  font-size: 0.78rem;
+  color: #a6a6a6;
+  font-weight: 600;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.input-field {
+  display: flex;
+  align-items: center;
+  background: #121212;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 0 16px;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  height: 48px;
+}
+
+.input-field:focus-within {
+  border-color: #88DCCC;
+  box-shadow: 0 0 8px rgba(136, 220, 204, 0.2);
+}
+
+.input-field--textarea {
+  height: 56px;
+}
+
+.field-icon {
+  font-size: 1.2rem;
+  color: #4C6793;
+  margin-right: 12px;
+}
+
+.error-text {
+  color: var(--ion-color-danger, #eb445a);
+  font-size: 0.75rem;
+  margin-top: 6px;
+  font-weight: 500;
+}

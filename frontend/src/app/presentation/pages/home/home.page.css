@@ -48,74 +48,175 @@ body.dark .premium-month-select:hover {
   z-index: 1;
 }
 
-/* 2. Hero KPI Card Styling */
 .kpi-card {
-  border: 1px solid var(--ion-border-color);
-  border-radius: 18px !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04) !important;
-}
-
-.premium-content ion-card {
-  margin-bottom: 24px !important;
+  /* Fondo degradado de cristal muy sutil */
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15) !important;
+  margin-bottom: 20px !important; /* Más respiro entre tarjetas */
 }
 
 body.dark .kpi-card {
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4) !important;
 }
 
+.kpi-card ion-card-header {
+  padding: 18px 20px 4px 20px;
+}
+
+.kpi-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #71717a; /* Un gris un poco más elegante */
+}
+
+.kpi-card ion-card-content {
+  padding: 0 20px 20px 20px;
+}
+
+/* ------------------------------------
+   Tarjeta A: Estado Patrimonial
+   ------------------------------------ */
 .kpi-header-stats {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  background: rgba(0, 0, 0, 0.02);
-  padding: 10px;
-  border-radius: 12px;
-  border: 1px solid var(--ion-border-color);
-}
-
-body.dark .kpi-header-stats {
-  background: rgba(255, 255, 255, 0.01);
+  display: flex;
+  justify-content: space-between; /* Empuja los elementos a los bordes */
+  align-items: center;
+  background: transparent; /* ELIMINADA la caja interna oscura */
+  padding: 10px 0 0 0;
+  border: none; /* ELIMINADO el borde interno */
 }
 
 .kpi-header-stat {
   display: flex;
   flex-direction: column;
+  gap: 4px;
 }
 
-/* Horizontal Accounts Slider */
-.quick-accounts-slider::-webkit-scrollbar {
-  display: none; /* Safari and Chrome */
+/* Alinea la deuda a la derecha para equilibrar visualmente */
+.kpi-header-stat:last-child {
+  align-items: flex-end;
+  text-align: right;
 }
 
-.quick-accounts-slider {
-  -webkit-overflow-scrolling: touch;
+.kpi-stat-label {
+  font-size: 0.75rem;
+  color: #a1a1aa;
+  font-weight: 500;
 }
 
-/* Movement item layout styling */
-.movement-item {
-  --border-radius: 12px;
-  --padding-start: 10px;
-  --padding-end: 10px;
-  margin-bottom: 8px;
-  transition: transform 0.2s ease, border-color 0.2s ease;
+.kpi-stat-val {
+  font-size: 1.6rem; /* Números más protagonistas */
+  font-weight: 800;
+  letter-spacing: -0.5px;
 }
 
-.movement-item:hover {
-  transform: translateY(-1px);
-  border-color: var(--ion-color-primary-tint) !important;
+.text-success { color: #10b981 !important; }
+.text-danger { color: #ef4444 !important; }
+
+/* ------------------------------------
+   Tarjeta B: Flujo Mensual
+   ------------------------------------ */
+.kpi-progress-section {
+  /* La caja interna oscura se traslada aquí para enmarcar el presupuesto */
+  background: rgba(0, 0, 0, 0.2); 
+  padding: 16px;
+  border-radius: 16px;
+  margin-top: 10px;
+  margin-bottom: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.03);
 }
 
-/* Amount colors */
-.item-amount.income {
-  color: var(--ion-color-success) !important;
+.kpi-progress-labels {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
 }
 
-.item-amount.expense {
-  color: var(--ion-text-color) !important;
+.progress-subtext {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #e4e4e7;
 }
 
-.item-amount.transfer {
-  color: #AF7AC5 !important; /* Neutral beautiful purple for assets transfers */
+.progress-percentage {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #ffffff;
+  /* Efecto de pastilla (pill) para el porcentaje */
+  background: rgba(255, 255, 255, 0.1);
+  padding: 4px 10px;
+  border-radius: 10px;
+}
+
+.kpi-progress-bar {
+  height: 8px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  --background: rgba(255, 255, 255, 0.08); /* Color del track vacío */
+}
+
+.progress-amounts {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: #9ca3af;
+  font-weight: 500;
+}
+
+/* Grilla de Ingresos y Gastos */
+.kpi-cashflow-grid {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 8px;
+}
+
+.cashflow-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1; /* Para que ambas mitades ocupen lo mismo */
+  justify-content: center;
+}
+
+.icon-box {
+  width: 42px; /* Cajas de iconos más grandes */
+  height: 42px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-box ion-icon {
+  font-size: 1.4rem; /* Iconos más visibles */
+}
+
+/* Hacemos los fondos ligeramente más vibrantes */
+.bg-success-light { background: rgba(16, 185, 129, 0.15); color: #10b981;}
+.bg-danger-light { background: rgba(239, 68, 68, 0.15); color: #ef4444;}
+
+.cashflow-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cf-label {
+  font-size: 0.7rem;
+  color: #a1a1aa;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.cf-value {
+  font-size: 1.1rem;
+  font-weight: 800;
 }
 
 /* Alertas & Featured Card styles */
@@ -128,8 +229,107 @@ body.dark .kpi-header-stats {
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* =======================================================
+   DISEÑO DE TARJETAS DE MOVIMIENTOS (IDÉNTICO A REPORTES)
+   ======================================================= */
+.movement-item {
+  --background: rgba(255, 255, 255, 0.03); /* Fondo de tarjeta suave */
+  --padding-start: 12px;
+  --padding-end: 16px;
+  --inner-padding-end: 0;
+  margin-bottom: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important; /* Borde sutil activado */
+  border-radius: 12px !important;
+}
+
+/* Zona Izquierda: Icono */
+.icon-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  margin-right: 14px;
+  flex-shrink: 0;
+}
+
+.icon-circle ion-icon {
+  font-size: 1.25rem;
+}
+
+/* Zona Central: Textos */
+.item-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+}
+
+.item-title-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.item-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--ion-text-color);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mini-lock {
+  font-size: 0.8rem;
+  color: #a78bfa; /* Candadito morado */
+}
+
+.item-desc {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Zona Derecha: Montos y Usuario */
+.item-end {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 4px;
+  margin-left: 12px;
+}
+
+.item-amount {
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.item-amount.income { color: #10b981 !important; } /* Verde */
+.item-amount.expense { color: #ef4444 !important; } /* Rojo */
+.item-amount.transfer { color: #a78bfa !important; } /* Morado */
+
+.end-meta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.item-user {
+  font-size: 0.75rem;
+  color: #9ca3af; /* Gris claro para el nombre de usuario */
+}
+
 /* Pulse animation for auto captured transactions */
-.auto-captured-lightning {
+.auto-lightning {
+  font-size: 0.7rem;
+  color: #f59e0b;
   animation: pulse 2.5s infinite;
   display: inline-flex;
 }

@@ -132,13 +132,13 @@
     }
 
     <!-- Movements Listing -->
+    <!-- Movements Listing -->
     <div class="list-section-header">
       <h3>Detalle de Transacciones</h3>
-      <ion-badge color="dark" class="count-badge">{{ movements().length }} items</ion-badge>
     </div>
 
-    <ion-list class="movements-list" lines="none">
-      @if (movements().length === 0) {
+    <div class="movements-container">
+      @if (groupedMovements().length === 0) {
         <div class="empty-state">
           <ion-icon name="analytics-outline" class="empty-icon"></ion-icon>
           <h4>Sin Transacciones</h4>
@@ -146,48 +146,75 @@
         </div>
       }
 
-      @for (m of movements(); track m.id) {
-        <ion-item class="movement-item">
-          <!-- Icon Column -->
-          <div 
-            class="icon-wrapper" 
-            [class.private]="m.description === 'Gasto Privado' || m.description?.startsWith('Movimiento de')">
-            @if (m.description === 'Gasto Privado' || m.description?.startsWith('Movimiento de')) {
-              <ion-icon name="lock-closed-outline" class="item-icon"></ion-icon>
-            } @else {
-              <ion-icon [name]="getMovementIcon(m)" class="item-icon"></ion-icon>
-            }
-          </div>
-
-          <!-- Description and Date -->
-          <ion-label class="item-label">
-            <div class="item-title-row">
-              <span class="item-title" [class.private-text]="m.description === 'Gasto Privado' || m.description?.startsWith('Movimiento de')">
-                {{ m.description }}
-              </span>
-              @if (m.is_auto_captured) {
-                <span class="auto-lightning" title="Captura Automática (⚡)">⚡</span>
-              }
-            </div>
-            <div class="item-metadata">
-              <span class="meta-member">{{ m.userName }}</span>
-              <span class="meta-dot">•</span>
-              <span class="meta-date">{{ m.transactionDate | date:(currentUser()?.dateFormat === 'MM/DD/YYYY' ? 'MM/dd/yyyy, h:mm a' : 'dd/MM/yyyy, h:mm a') }}</span>
-            </div>
-          </ion-label>
-
-          <!-- Amount -->
-          <div slot="end" class="amount-wrapper">
-            <span 
-              class="item-amount" 
-              [class.income]="m.type === 'Ingreso'" 
-              [class.expense]="m.type === 'Gasto'"
-              [class.transfer]="m.type === 'Ahorro' || m.type === 'Pago Crédito' || m.type === 'Pago TC'">
-              {{ m.type === 'Ingreso' ? '+' : '-' }}{{ m.amount | currency:'COP':'symbol-narrow':'1.0-0' }}
+      @for (group of groupedMovements(); track group.dateLabel) {
+        <div class="date-group">
+          
+          <!-- Date Header Row -->
+          <div class="date-header">
+            <span class="date-label">{{ group.dateLabel }}</span>
+            <span class="date-summary">
+              {{ group.dailyTotal < 0 ? '-' : '' }}{{ (group.dailyTotal < 0 ? (group.dailyTotal * -1) : group.dailyTotal) | currency:'COP':'symbol-narrow':'1.0-0' }}
             </span>
           </div>
-        </ion-item>
+
+          <!-- Items List per Day -->
+          <ion-list class="movements-list" lines="none">
+            @for (m of group.items; track m.id) {
+              <ion-item class="movement-item">
+                
+                <!-- ZONA IZQUIERDA: Icono Circular -->
+                <div slot="start" 
+                     class="icon-circle" 
+                     [style.background-color]="m.isPrivate && activeType() !== 'Privado' ? 'rgba(239, 68, 68, 0.15)' : getCategoryColorById(m.categoryId) + '33'"
+                     [style.color]="m.isPrivate && activeType() !== 'Privado' ? '#ef4444' : getCategoryColorById(m.categoryId)">
+                  <ion-icon [name]="m.isPrivate && activeType() !== 'Privado' ? 'lock-closed' : (getMovementIcon(m) || 'cash-outline')"></ion-icon>
+                </div>
+
+                <!-- ZONA CENTRAL: Título y Descripción -->
+                <ion-label class="item-body">
+                  <div class="item-title-row">
+                    <h3 class="item-title">
+                      @if (m.isPrivate && activeType() !== 'Privado') {
+                        Movimiento Privado
+                      } @else {
+                        {{ m.categoryName || m.type }}
+                      }
+                    </h3>
+                    @if (m.isPrivate) {
+                      <ion-icon name="lock-closed" class="mini-lock"></ion-icon>
+                    }
+                  </div>
+                  <p class="item-desc">
+                    @if (m.isPrivate && activeType() !== 'Privado') {
+                      Oculto por {{ m.userName?.split(' ')[0] || 'Miembro' }}
+                    } @else {
+                      {{ m.description || 'General' }}
+                    }
+                  </p>
+                </ion-label>
+
+                <!-- ZONA DERECHA: Monto y Usuario/Hora -->
+                <div slot="end" class="item-end">
+                  <span class="item-amount"
+                        [class.income]="m.type === 'Ingreso'"
+                        [class.expense]="m.type === 'Gasto'"
+                        [class.transfer]="m.type === 'Ahorro' || m.type === 'Pago Crédito' || m.type === 'Pago TC'">
+                    {{ m.type === 'Ingreso' ? '+' : '-' }}{{ m.amount | currency:'COP':'symbol-narrow':'1.0-0' }}
+                  </span>
+                  
+                  <div class="end-meta">
+                    @if (m.is_auto_captured) {
+                      <span class="auto-lightning" title="Captura Automática">⚡</span>
+                    }
+                    <span class="item-user">{{ m.userName?.split(' ')[0] || 'Miembro' }}</span>
+                  </div>
+                </div>
+
+              </ion-item>
+            }
+          </ion-list>
+        </div>
       }
-    </ion-list>
+    </div>
   </div>
 </ion-content>

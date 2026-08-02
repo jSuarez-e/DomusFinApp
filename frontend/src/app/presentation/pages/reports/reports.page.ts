@@ -34,8 +34,14 @@ import {
   trendingDownOutline, 
   walletOutline,
   lockClosedOutline,
+  lockClosed,
   flash,
-  swapHorizontalOutline
+  swapHorizontalOutline,
+  cashOutline,
+  fastFoodOutline,
+  carOutline,
+  cameraOutline,
+  helpCircleOutline
 } from 'ionicons/icons';
 
 import { ReportService } from '../../../core/services/report.service';
@@ -139,6 +145,38 @@ export class ReportsPage implements OnInit {
     return list;
   });
 
+  // NUEVO: Agrupa los movimientos por día para replicar el diseño visual propuesto
+  public groupedMovements = computed(() => {
+    const list = this.movements();
+    const groupsMap = new Map<string, { dateLabel: string, dateValue: Date, dailyTotal: number, items: any[] }>();
+
+    list.forEach(m => {
+      const d = new Date(m.transactionDate);
+      const dateKey = new Intl.DateTimeFormat('es-CO', { day: 'numeric', month: 'long' }).format(d);
+      
+      if (!groupsMap.has(dateKey)) {
+        groupsMap.set(dateKey, {
+          dateLabel: dateKey,
+          dateValue: d,
+          dailyTotal: 0,
+          items: []
+        });
+      }
+      
+      const group = groupsMap.get(dateKey)!;
+      group.items.push(m);
+      
+      const amount = Number(m.amount);
+      if (m.type === 'Ingreso') {
+        group.dailyTotal += amount;
+      } else {
+        group.dailyTotal -= amount;
+      }
+    });
+
+    return Array.from(groupsMap.values()).sort((a, b) => b.dateValue.getTime() - a.dateValue.getTime());
+  });
+
   public currentUser = this.authService.currentUser;
 
   // Corporate palette mapping for canvas chart drawing
@@ -167,20 +205,23 @@ export class ReportsPage implements OnInit {
       trendingDownOutline,
       walletOutline,
       lockClosedOutline,
+      lockClosed,
       flash,
-      swapHorizontalOutline
+      swapHorizontalOutline,
+      cashOutline,
+      fastFoodOutline,
+      carOutline,
+      cameraOutline,
+      helpCircleOutline
     });
 
-    // Auto redraw chart when data changes
     effect(() => {
       const data = this.reportData();
       if (data) {
-        // Run in next microtask to let DOM render
         setTimeout(() => this.drawDonutChart(), 50);
       }
     });
 
-    // Auto reload report when a transaction is saved
     effect(() => {
       const changeCount = this.transactionEventService.transactionSaved();
       if (changeCount > 0) {
@@ -217,13 +258,11 @@ export class ReportsPage implements OnInit {
       },
       error: (err) => {
         console.error('Failed to load analytical report:', err);
-        // Clear old reports
         this.reportData.set(null);
       }
     });
   }
 
-  // --- Filter Updates ---
   public onMonthChange(event: any) {
     this.selectedMonth.set(Number(event.detail.value));
     this.loadReport();
@@ -266,15 +305,12 @@ export class ReportsPage implements OnInit {
     return this.chartColors[index % this.chartColors.length];
   }
 
-  /**
-   * Dibuja un gráfico circular de tipo Dona nativamente utilizando la API Canvas 2D.
-   * Totalmente libre de dependencias npm de terceros para evitar errores de compilación y colisiones de versiones.
-   * 
-   * NOTA PARA INTEGRACIÓN FUTURA CON CHART.JS:
-   * Para migrar esta visualización a Chart.js, instale 'chart.js' y '@types/chart.js',
-   * reemplace el elemento <canvas #donutCanvas> con <canvas id="chartJS"></canvas> y cree la instancia de la gráfica:
-   * new Chart(ctx, { type: 'doughnut', data: { ... } });
-   */
+  // NUEVO: Obtiene el color exacto para los iconos redondos basado en el ID de categoría
+  public getCategoryColorById(categoryId: number | undefined): string {
+    const id = categoryId || 0;
+    return this.chartColors[id % this.chartColors.length];
+  }
+
   private drawDonutChart() {
     if (!this.donutCanvas) return;
 
@@ -282,7 +318,6 @@ export class ReportsPage implements OnInit {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Aumentar resolución del canvas para pantallas retina (anti-aliasing)
     const size = 200;
     canvas.width = size * 2;
     canvas.height = size * 2;
@@ -295,14 +330,12 @@ export class ReportsPage implements OnInit {
     const radius = size * 0.45;
     const innerRadius = radius * 0.6;
 
-    // Limpiar canvas
     ctx.clearRect(0, 0, size, size);
 
-    const categories = this.byCategory().filter(c => c.categoryId !== 0); // No graficar el valor virtual anónimo de ingresos si aplica
+    const categories = this.byCategory().filter(c => c.categoryId !== 0); 
     const spentCategories = categories.filter(c => c.amount > 0);
 
     if (spentCategories.length === 0) {
-      // Dibujar círculo gris indicador de sin datos
       ctx.beginPath();
       ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
       ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
@@ -310,10 +343,9 @@ export class ReportsPage implements OnInit {
 
       ctx.beginPath();
       ctx.arc(centerX, centerY, innerRadius, 0, 2 * Math.PI);
-      ctx.fillStyle = '#09090b'; // Coincide con el background premium
+      ctx.fillStyle = '#09090b'; 
       ctx.fill();
 
-      // Texto de "Sin Datos" al centro
       ctx.fillStyle = '#71717a';
       ctx.font = 'bold 10px "Outfit", "Inter", sans-serif';
       ctx.textAlign = 'center';
@@ -323,14 +355,13 @@ export class ReportsPage implements OnInit {
     }
 
     const totalAmount = spentCategories.reduce((sum, c) => sum + c.amount, 0);
-    let startAngle = 1.5 * Math.PI; // Iniciar arriba a las 12 en punto
+    let startAngle = 1.5 * Math.PI; 
 
     spentCategories.forEach((cat, index) => {
       const sliceAngle = (cat.amount / totalAmount) * 2 * Math.PI;
       const endAngle = startAngle + sliceAngle;
       const color = this.getCategoryColor(index);
 
-      // Dibujar rebanada
       ctx.beginPath();
       ctx.moveTo(centerX, centerY);
       ctx.arc(centerX, centerY, radius, startAngle, endAngle);
@@ -341,13 +372,11 @@ export class ReportsPage implements OnInit {
       startAngle = endAngle;
     });
 
-    // Dibujar el hueco central de la dona
     ctx.beginPath();
     ctx.arc(centerX, centerY, innerRadius, 0, 2 * Math.PI);
-    ctx.fillStyle = '#09090b'; // Background color de la página
+    ctx.fillStyle = '#09090b'; 
     ctx.fill();
 
-    // Texto central indicando total gastado
     ctx.fillStyle = '#a1a1aa';
     ctx.font = '500 8px "Outfit", "Inter", sans-serif';
     ctx.textAlign = 'center';
@@ -356,7 +385,7 @@ export class ReportsPage implements OnInit {
 
     ctx.fillStyle = '#ffffff';
     ctx.font = 'bold 11px "Outfit", "Inter", sans-serif';
-    const totalSpentStr = `$${totalAmount.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+    const totalSpentStr = `$${totalAmount.toLocaleString('es-CO', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
     ctx.fillText(totalSpentStr, centerX, centerY + 6);
   }
 }

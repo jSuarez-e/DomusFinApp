@@ -41,6 +41,17 @@ import { Category, PaymentMethod, CreateMovementDto, Account, TransactionType, C
 import { MoneyMaskDirective } from '../../directives/money-mask.directive';
 import { BlockScientificNotationDirective } from '../../directives/block-scientific-notation.directive';
 import { TransactionEventService } from '../../../core/services/transaction-event.service';
+import { FormFieldComponent } from '../form-field/form-field.component';
+
+// En tu componente TS
+export const TRANSACTION_OPTIONS = [
+  { value: TransactionType.EXPENSE, label: 'Gasto' },
+  { value: TransactionType.INCOME, label: 'Ingreso' },
+  { value: TransactionType.SAVINGS_DEPOSIT, label: 'Ahorro' },
+  { value: TransactionType.CREDIT_PAYMENT, label: 'Pago Crédito' },
+  { value: TransactionType.CC_PAYMENT, label: 'Pago TC' },
+  { value: TransactionType.TRANSFER, label: 'Transferencia' }
+];
 
 @Component({
   selector: 'app-transaction-form',
@@ -64,7 +75,8 @@ import { TransactionEventService } from '../../../core/services/transaction-even
     IonTitle,
     IonButtons,
     MoneyMaskDirective,
-    BlockScientificNotationDirective
+    BlockScientificNotationDirective,
+    FormFieldComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -92,6 +104,7 @@ export class TransactionFormComponent implements OnInit {
   });
 
   /** Enum reference for template */
+  public transactionOptions = TRANSACTION_OPTIONS;
   public TransactionType = TransactionType;
   public readonly Number = Number;
 
@@ -128,7 +141,7 @@ export class TransactionFormComponent implements OnInit {
       creditCardId: [''],
       installments: [null],
       isPrivate: [false],
-      description: [''],
+      description: ['', Validators.required],
       sourceApp: ['Webapp', Validators.required]
     });
 
