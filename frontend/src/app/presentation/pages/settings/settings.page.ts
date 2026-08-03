@@ -1,5 +1,5 @@
 // frontend/src/app/presentation/pages/settings/settings.page.ts
-import { ChangeDetectionStrategy, Component, OnInit, signal, effect, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, signal, effect, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { 
   FormBuilder, 
@@ -64,6 +64,9 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { ThemeService } from '../../../core/services/theme.service';
 import { Category, CategoryType } from '@shared/index';
+import { SettingsStore } from './settings.store';
+import { AdminWarningComponent } from '../../../shared/components/admin-warning/admin-warning.component';
+import { CategoryListItemComponent } from '../../../shared/components/category-list-item/category-list-item.component';
 
 /**
  * Validador cruzado para comprobar que la contraseña nueva y su confirmación coincidan.
@@ -111,27 +114,27 @@ export function passwordMatchValidator(control: AbstractControl): ValidationErro
     IonSegment,
     IonSegmentButton,
     IonModal,
-    IonAlert
+    IonAlert,
+    AdminWarningComponent,
+    CategoryListItemComponent
   ],
+  providers: [SettingsStore],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SettingsPage implements OnInit {
+  public store = inject(SettingsStore);
   public currentUser = this.authService.currentUser;
   
-  // Segment navigation
-  public activeSegment = signal<'profile' | 'preferences' | 'expenses_cat' | 'income_cat'>('profile');
-  
-  // Categories logic
-  public categories = signal<Category[]>([]);
+  // Categorías y segmentación centralizada en el Store local
+  public activeSegment = this.store.activeSegment;
   public CategoryType = CategoryType;
-  public expenseCategories = computed(() => this.categories().filter((c) => c.type === CategoryType.EXPENSE || !c.type));
-  public incomeCategories = computed(() => this.categories().filter((c) => c.type === CategoryType.INCOME));
+  public expenseCategories = this.store.expenseCategories;
+  public incomeCategories = this.store.incomeCategories;
+  public isCategoryModalOpen = this.store.isCategoryModalOpen;
+  public isCategoryEdit = this.store.isCategoryEdit;
+
   public isAdmin = computed(() => this.currentUser()?.role === 'admin');
 
-  // Category Modal status
-  public isCategoryModalOpen = signal(false);
-  public isCategoryEdit = signal(false);
-  public currentEditingCategoryId: number | null = null;
   public categoryForm!: FormGroup;
 
   // Custom available icons for categories selection
@@ -425,47 +428,41 @@ export class SettingsPage implements OnInit {
 
   // --- Category Actions ---
   public onSegmentChange(event: any): void {
-    this.activeSegment.set(event.detail.value);
+    this.store.setActiveSegment(event.detail.value);
   }
 
   public loadCategories(): void {
-    this.http.get<Category[]>('/api/categories').subscribe({
-      next: (data) => this.categories.set(data || []),
-      error: (err) => console.error('Failed to load categories:', err)
-    });
+    this.store.loadCategories();
   }
 
   public openAddCategory(defaultType = CategoryType.EXPENSE): void {
-    this.isCategoryEdit.set(false);
+    this.store.openAddCategory();
     this.categoryForm.reset({ name: '', icon: 'list-outline', type: defaultType });
-    this.isCategoryModalOpen.set(true);
   }
 
   public openEditCategory(cat: Category): void {
-    this.isCategoryEdit.set(true);
-    this.currentEditingCategoryId = cat.id;
+    this.store.openEditCategory(cat.id);
     this.categoryForm.setValue({
       name: cat.name,
       icon: cat.icon || 'list-outline',
       type: cat.type || CategoryType.EXPENSE
     });
-    this.isCategoryModalOpen.set(true);
   }
 
   public closeCategoryModal(): void {
-    this.isCategoryModalOpen.set(false);
+    this.store.closeCategoryModal();
   }
 
   public saveCategory(): void {
     if (this.categoryForm.invalid) return;
 
     const val = this.categoryForm.value;
-    if (this.isCategoryEdit()) {
-      this.http.put(`/api/categories/${this.currentEditingCategoryId}`, val).subscribe({
+    if (this.store.isCategoryEdit()) {
+      this.http.put(`/api/categories/${this.store.currentEditingCategoryId()}`, val).subscribe({
         next: () => {
           this.showToast('Categoría actualizada con éxito.', 'success');
-          this.loadCategories();
-          this.closeCategoryModal();
+          this.store.loadCategories();
+          this.store.closeCategoryModal();
         },
         error: (err) => {
           console.error('Failed to update category:', err);
@@ -477,8 +474,8 @@ export class SettingsPage implements OnInit {
       this.http.post('/api/categories', val).subscribe({
         next: () => {
           this.showToast('Categoría creada con éxito.', 'success');
-          this.loadCategories();
-          this.closeCategoryModal();
+          this.store.loadCategories();
+          this.store.closeCategoryModal();
         },
         error: (err) => {
           console.error('Failed to create category:', err);

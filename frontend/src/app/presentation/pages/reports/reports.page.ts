@@ -1,5 +1,5 @@
 // frontend/src/app/presentation/pages/reports/reports.page.ts
-import { ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild, signal, computed, effect } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild, effect, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { 
@@ -48,6 +48,8 @@ import { ReportService } from '../../../core/services/report.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { TransactionEventService } from '../../../core/services/transaction-event.service';
 import { ReportDataDto } from '@shared/index';
+import { ReportsStore } from './reports.store';
+import { ReportLegendComponent } from '../../../shared/components/report-legend/report-legend.component';
 
 @Component({
   selector: 'app-reports',
@@ -76,22 +78,33 @@ import { ReportDataDto } from '@shared/index';
     IonBadge,
     IonItem,
     IonList,
-    IonToggle
+    IonItem,
+    IonList,
+    IonToggle,
+    ReportLegendComponent
   ],
+  providers: [ReportsStore],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReportsPage implements OnInit {
+  public store = inject(ReportsStore);
+  
   @ViewChild('donutCanvas', { static: false }) donutCanvas!: ElementRef<HTMLCanvasElement>;
 
-  // Filters State
-  public selectedYear = signal<number>(new Date().getFullYear());
-  public selectedMonth = signal<number>(new Date().getMonth() + 1);
-  public selectedMemberId = signal<number | null>(null);
-  public activeType = signal<'General' | 'Gasto' | 'Ingreso' | 'Privado'>('General');
-
-  // Server Data
-  public reportData = signal<ReportDataDto | null>(null);
+  // Miembros del hogar (Estado local de la UI)
   public members = signal<any[]>([]);
+
+  // Delegación de selectores del Store para uso en la plantilla HTML
+  public selectedYear = this.store.selectedYear;
+  public selectedMonth = this.store.selectedMonth;
+  public selectedMemberId = this.store.selectedMemberId;
+  public activeType = this.store.activeType;
+  public excludeCapitalMovements = this.store.excludeCapitalMovements;
+  public reportData = this.store.reportData;
+  public summary = this.store.summary;
+  public byCategory = this.store.byCategory;
+  public movements = this.store.movements;
+  public groupedMovements = this.store.groupedMovements;
 
   // Static options
   public availableYears = [2026, 2025, 2024];
@@ -109,73 +122,6 @@ export class ReportsPage implements OnInit {
     { value: 11, label: 'Noviembre' },
     { value: 12, label: 'Diciembre' },
   ];
-
-  // Exclude Capital Movements Filter
-  public excludeCapitalMovements = signal<boolean>(true);
-
-  // Computed totals and lists
-  public summary = computed(() => {
-    const serverSummary = this.reportData()?.summary as any;
-    if (!serverSummary) {
-      return { totalSpent: 0, totalIncome: 0, netSavings: 0 };
-    }
-
-    const exclude = this.excludeCapitalMovements();
-    const operating = Number(serverSummary.operatingExpenses || serverSummary.totalSpent || 0);
-    const capital = Number(serverSummary.capitalMovements || 0);
-
-    const totalSpent = exclude ? operating : (operating + capital);
-    const totalIncome = Number(serverSummary.totalIncome || 0);
-    const netSavings = totalIncome - totalSpent;
-
-    return {
-      totalSpent,
-      totalIncome,
-      netSavings,
-    };
-  });
-
-  public byCategory = computed(() => this.reportData()?.byCategory || []);
-  
-  public movements = computed(() => {
-    const list = this.reportData()?.movements || [];
-    if (this.excludeCapitalMovements()) {
-      return list.filter((m) => !['Ahorro', 'Pago Crédito', 'Pago TC'].includes(m.type));
-    }
-    return list;
-  });
-
-  // NUEVO: Agrupa los movimientos por día para replicar el diseño visual propuesto
-  public groupedMovements = computed(() => {
-    const list = this.movements();
-    const groupsMap = new Map<string, { dateLabel: string, dateValue: Date, dailyTotal: number, items: any[] }>();
-
-    list.forEach(m => {
-      const d = new Date(m.transactionDate);
-      const dateKey = new Intl.DateTimeFormat('es-CO', { day: 'numeric', month: 'long' }).format(d);
-      
-      if (!groupsMap.has(dateKey)) {
-        groupsMap.set(dateKey, {
-          dateLabel: dateKey,
-          dateValue: d,
-          dailyTotal: 0,
-          items: []
-        });
-      }
-      
-      const group = groupsMap.get(dateKey)!;
-      group.items.push(m);
-      
-      const amount = Number(m.amount);
-      if (m.type === 'Ingreso') {
-        group.dailyTotal += amount;
-      } else {
-        group.dailyTotal -= amount;
-      }
-    });
-
-    return Array.from(groupsMap.values()).sort((a, b) => b.dateValue.getTime() - a.dateValue.getTime());
-  });
 
   public currentUser = this.authService.currentUser;
 
@@ -225,14 +171,14 @@ export class ReportsPage implements OnInit {
     effect(() => {
       const changeCount = this.transactionEventService.transactionSaved();
       if (changeCount > 0) {
-        this.loadReport();
+        this.store.loadReport();
       }
     });
   }
 
   ngOnInit() {
     this.loadHouseholdMembers();
-    this.loadReport();
+    this.store.loadReport();
   }
 
   public loadHouseholdMembers() {
@@ -244,44 +190,29 @@ export class ReportsPage implements OnInit {
     });
   }
 
-  public loadReport() {
-    const params = {
-      month: this.selectedMonth(),
-      year: this.selectedYear(),
-      userId: this.selectedMemberId() || undefined,
-      type: this.activeType()
-    };
-
-    this.reportService.getAnalyticsReport(params).subscribe({
-      next: (data) => {
-        this.reportData.set(data);
-      },
-      error: (err) => {
-        console.error('Failed to load analytical report:', err);
-        this.reportData.set(null);
-      }
-    });
-  }
-
   public onMonthChange(event: any) {
-    this.selectedMonth.set(Number(event.detail.value));
-    this.loadReport();
+    this.store.updateFilter({ selectedMonth: Number(event.detail.value) });
+    this.store.loadReport();
   }
 
   public onYearChange(event: any) {
-    this.selectedYear.set(Number(event.detail.value));
-    this.loadReport();
+    this.store.updateFilter({ selectedYear: Number(event.detail.value) });
+    this.store.loadReport();
   }
 
   public onMemberChange(event: any) {
     const val = event.detail.value;
-    this.selectedMemberId.set(val ? Number(val) : null);
-    this.loadReport();
+    this.store.updateFilter({ selectedMemberId: val ? Number(val) : null });
+    this.store.loadReport();
   }
 
   public onTypeChange(event: any) {
-    this.activeType.set(event.detail.value);
-    this.loadReport();
+    this.store.updateFilter({ activeType: event.detail.value });
+    this.store.loadReport();
+  }
+
+  public onExcludeCapitalChange(event: any) {
+    this.store.updateFilter({ excludeCapitalMovements: event.detail.checked });
   }
 
   public getCategoryIcon(categoryId: number): string {
@@ -305,10 +236,18 @@ export class ReportsPage implements OnInit {
     return this.chartColors[index % this.chartColors.length];
   }
 
-  // NUEVO: Obtiene el color exacto para los iconos redondos basado en el ID de categoría
-  public getCategoryColorById(categoryId: number | undefined): string {
-    const id = categoryId || 0;
-    return this.chartColors[id % this.chartColors.length];
+  /**
+   * Obtiene la clase CSS para aplicar el color exacto en base a la categoría,
+   * reemplazando los estilos inline obsoletos.
+   * @param m Objeto de movimiento
+   * @returns {string} Clase BEM para el icono
+   */
+  public getMovementIconClass(m: any): string {
+    if (m.isPrivate && this.store.activeType() !== 'Privado') {
+      return 'movement-icon--private';
+    }
+    const id = m.categoryId || 0;
+    return `movement-icon--color-${id % 8}`;
   }
 
   private drawDonutChart() {
@@ -332,7 +271,7 @@ export class ReportsPage implements OnInit {
 
     ctx.clearRect(0, 0, size, size);
 
-    const categories = this.byCategory().filter(c => c.categoryId !== 0); 
+    const categories = this.store.byCategory().filter(c => c.categoryId !== 0); 
     const spentCategories = categories.filter(c => c.amount > 0);
 
     if (spentCategories.length === 0) {

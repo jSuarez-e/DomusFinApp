@@ -1,0 +1,72 @@
+:host {
+  display: block;
+}
+
+.menu-option-item {
+  --background: transparent !important;
+  background: transparent !important;
+  --color: #a1a1aa !important;
+  color: #a1a1aa !important;
+  --padding-start: 12px !important;
+  --inner-padding-end: 12px !important;
+  --border-radius: 12px !important;
+  margin: 4px 6px !important;
+  font-weight: 500 !important;
+  font-size: 0.9rem !important;
+  border-bottom: none !important;
+  border: none !important;
+  --border-style: none !important;
+  --border-width: 0 !important;
+  transition: all 0.25s ease !important;
+  --min-height: 44px !important;
+}
+
+.menu-option-item::part(native) {
+  border-radius: 12px;
+  border: none !important;
+  background: transparent !important;
+}
+
+.menu-option-item:hover {
+  --background: rgba(255, 255, 255, 0.03) !important;
+  color: #ffffff !important;
+  --color: #ffffff !important;
+}
+
+.menu-option-item:hover .option-icon {
+  color: #88DCCC !important;
+}
+
+.menu-option-item.active-item {
+  --background: rgba(136, 220, 204, 0.08) !important;
+  background: rgba(136, 220, 204, 0.08) !important;
+  --color: #88DCCC !important;
+  color: #88DCCC !important;
+  font-weight: 700 !important;
+}
+
+.menu-option-item.active-item .option-icon {
+  color: #88DCCC !important;
+}
+
+.option-icon {
+  font-size: 1.15rem;
+  color: #71717a !important;
+  margin-right: 12px;
+  transition: color 0.25s ease;
+}
+
+.menu-option-item--logout {
+  --color: #ff6b6b !important;
+  color: #ff6b6b !important;
+  font-weight: 600 !important;
+}
+
+.menu-option-item--logout:hover {
+  --background: rgba(255, 107, 107, 0.08) !important;
+  color: #ff6b6b !important;
+}
+
+.option-icon--logout {
+  color: #ff6b6b !important;
+}

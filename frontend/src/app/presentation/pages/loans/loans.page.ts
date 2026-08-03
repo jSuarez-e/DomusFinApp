@@ -1,5 +1,5 @@
 // frontend/src/app/presentation/pages/loans/loans.page.ts
-import { ChangeDetectionStrategy, Component, OnInit, signal, computed, effect } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, signal, effect, inject } from '@angular/core';
 import { TransactionEventService } from '../../../core/services/transaction-event.service';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -52,6 +52,8 @@ import { AuthService } from '../../../core/services/auth.service';
 import { Loan, Account, User, AmortizationPeriod } from '@shared/index';
 import { MoneyMaskDirective } from '../../directives/money-mask.directive';
 import { BlockScientificNotationDirective } from '../../directives/block-scientific-notation.directive';
+import { LoansStore } from './loans.store';
+import { LoanProgressComponent } from '../../../shared/components/loan-progress/loan-progress.component';
 
 @Component({
   selector: 'app-loans',
@@ -84,13 +86,22 @@ import { BlockScientificNotationDirective } from '../../directives/block-scienti
     IonSegmentButton,
     IonToggle,
     MoneyMaskDirective,
-    BlockScientificNotationDirective
+    BlockScientificNotationDirective,
+    LoanProgressComponent
   ],
+  providers: [LoansStore],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoansPage implements OnInit {
+  public store = inject(LoansStore);
+  private loanService = inject(LoanService);
+
   // State Signals
-  public loans = this.loanService.loans;
+  public activeLoans = this.store.activeLoans;
+  public totalDebt = this.store.totalDebt;
+  public totalInitial = this.store.totalInitial;
+  public debtPaidPercent = this.store.debtPaidPercent;
+  
   public accounts = this.accountService.accounts;
   public currentUser = this.authService.currentUser;
   
@@ -99,9 +110,6 @@ export class LoansPage implements OnInit {
   public activeSegment = signal<'debts' | 'simulator'>('debts');
   public amortizationPlan = signal<AmortizationPeriod[]>([]);
 
-  // Computed signal to filter active loans (outstanding balance > 0)
-  public activeLoans = computed(() => this.loans().filter((l) => Number(l.currentBalance) > 0));
-  
   // Modal & Async states
   public isCreateModalOpen = signal(false);
   public isPayModalOpen = signal(false);
@@ -116,24 +124,7 @@ export class LoansPage implements OnInit {
   public readonly Number = Number;
   public readonly Math = Math;
 
-  // Computed properties based on active loans only
-  public totalDebt = computed(() => {
-    return this.activeLoans().reduce((sum, loan) => sum + Number(loan.currentBalance), 0);
-  });
-
-  public totalInitial = computed(() => {
-    return this.activeLoans().reduce((sum, loan) => sum + Number(loan.initialPrincipal), 0);
-  });
-
-  public debtPaidPercent = computed(() => {
-    const initial = this.totalInitial();
-    if (initial === 0) return 0;
-    const paid = initial - this.totalDebt();
-    return Math.min(100, Math.max(0, (paid / initial) * 100));
-  });
-
   constructor(
-    private readonly loanService: LoanService,
     private readonly accountService: AccountService,
     private readonly authService: AuthService,
     private readonly fb: FormBuilder,
@@ -159,10 +150,11 @@ export class LoansPage implements OnInit {
     effect(() => {
       const changeCount = this.transactionEventService.transactionSaved();
       if (changeCount > 0) {
-        this.loanService.loadLoans(true).then((loans) => {
+        this.store.loadLoans(true).then(() => {
+          const loans = this.store.activeLoans();
           const current = this.selectedLoan();
           if (current) {
-            const updated = loans.find(l => l.id === current.id);
+            const updated = loans.find((l: Loan) => l.id === current.id);
             if (updated) {
               this.selectedLoan.set(updated);
             }
@@ -217,7 +209,7 @@ export class LoansPage implements OnInit {
   private async loadData() {
     try {
       await Promise.all([
-        this.loanService.loadLoans(true),
+        this.store.loadLoans(true),
         this.accountService.loadAccounts(true),
         this.loadMembers(),
       ]);
@@ -305,7 +297,7 @@ export class LoansPage implements OnInit {
     this.isSubmitting.set(true);
     try {
       const dto = this.payForm.value;
-      await firstValueFrom(this.loanService.payLoan(loan.id, dto));
+      await this.loanService.payLoan(loan.id, dto);
       this.closePayModal();
       await this.accountService.loadAccounts(true);
       this.presentToast('Pago registrado con éxito.', 'success');
@@ -318,21 +310,19 @@ export class LoansPage implements OnInit {
     }
   }
 
-  public handleSimulate() {
+  public async handleSimulate() {
     if (this.simForm.invalid) {
       return;
     }
 
     const { simAmount, simRate, simInstallments } = this.simForm.value;
-    this.loanService.simulateInstallments(simAmount, simRate, simInstallments).subscribe({
-      next: (plan) => {
-        this.amortizationPlan.set(plan || []);
-      },
-      error: (err) => {
-        console.error('Error simulating plan:', err);
-        this.presentToast('Error al simular la tabla de amortización.', 'danger');
-      },
-    });
+    try {
+      const data = await this.loanService.simulateInstallments(simAmount, simRate, simInstallments);
+      this.amortizationPlan.set(data || []);
+    } catch (err) {
+      console.error('Error simulating plan:', err);
+      this.presentToast('Error al simular la tabla de amortización.', 'danger');
+    }
   }
 
   // Helpers

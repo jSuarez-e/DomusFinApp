@@ -1,12 +1,12 @@
 <!-- frontend/src/app/presentation/pages/home/home.page.html -->
 <ion-header [translucent]="true">
-  <ion-toolbar class="glass-toolbar" style="display: flex; align-items: center; justify-content: space-between;">
-    <ion-title style="font-weight: 800;">Hola, {{ currentUser()?.name || 'Jaime' }} 👋</ion-title>
+  <ion-toolbar class="home-header__toolbar glass-toolbar">
+    <ion-title class="home-header__title">Hola, {{ currentUser()?.name || 'Jaime' }} 👋</ion-title>
     
-    <ion-buttons slot="end" style="display: flex; align-items: center; gap: 8px; margin-right: 12px;">
+    <ion-buttons slot="end" class="home-header__buttons">
       <!-- Theme Switcher Button -->
-      <ion-button fill="clear" (click)="toggleTheme()" style="--color: var(--ion-text-color); margin: 0; --padding-start: 4px; --padding-end: 4px;">
-        <ion-icon [name]="isDarkTheme() ? 'sunny-outline' : 'moon-outline'" slot="icon-only" style="font-size: 20px;"></ion-icon>
+      <ion-button fill="clear" (click)="toggleTheme()" class="home-header__theme-btn">
+        <ion-icon [name]="isDarkTheme() ? 'sunny-outline' : 'moon-outline'" slot="icon-only" class="home-header__theme-icon"></ion-icon>
       </ion-button>
       
       <!-- Month Select -->
@@ -14,8 +14,7 @@
         [value]="selectedMonth()" 
         (ionChange)="onMonthChange($event)" 
         interface="popover" 
-        class="premium-month-select"
-        style="margin: 0; padding: 4px 8px; font-size: 0.85rem; border-radius: 8px;">
+        class="home-header__month-select premium-month-select">
         @for (m of availableMonths; track m.value) {
           <ion-select-option [value]="m.value">{{ m.label }}</ion-select-option>
         }
@@ -104,28 +103,28 @@
     </ion-card>
 
     <!-- 3. Carrusel Rápido de Cuentas (Horizontal Scroll Slider) -->
-    <div class="section-title-row" style="margin-top: 16px; margin-bottom: 8px; padding: 0;">
-      <h2 style="font-size: 1.05rem; font-weight: 800; margin: 0;">Cuentas Bancarias</h2>
+    <div class="home-section__header">
+      <h2 class="home-section__title">Cuentas Bancarias</h2>
     </div>
     
-    <div class="quick-accounts-slider" style="display: flex; overflow-x: auto; gap: 10px; padding: 4px 0; margin-bottom: 16px; scrollbar-width: none; -ms-overflow-style: none;">
+    <div class="home-accounts__slider quick-accounts-slider">
       @if (accounts().length === 0) {
-        <div style="font-size: 12px; color: #a1a1aa; padding: 8px 0;">No hay cuentas registradas.</div>
+        <div class="home-accounts__empty">No hay cuentas registradas.</div>
       }
       
       @for (acc of accounts(); track acc.id) {
-        <div class="account-mini-card" style="flex: 0 0 160px; background: var(--ion-card-background); border: 1px solid var(--ion-border-color); border-radius: 16px; padding: 12px; display: flex; flex-direction: column; gap: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); position: relative;">
-          <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-            <span style="font-size: 11px; font-weight: 700; color: var(--ion-text-color); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 105px;">
+        <div class="home-accounts__card account-mini-card">
+          <div class="home-accounts__card-header">
+            <span class="home-accounts__card-title">
               {{ acc.name }}
             </span>
             @if (acc.isPrivate) {
-              <ion-badge style="--background: rgba(92, 46, 126, 0.15); --color: #a78bfa; font-size: 8px; padding: 2px 4px; border-radius: 4px; display: flex; align-items: center;">
-                <ion-icon name="lock-closed-outline" style="font-size: 9px;"></ion-icon>
+              <ion-badge class="home-accounts__card-badge">
+                <ion-icon name="lock-closed-outline" class="home-accounts__card-badge-icon"></ion-icon>
               </ion-badge>
             }
           </div>
-          <span style="font-size: 15px; font-weight: 800; color: var(--ion-color-primary);">
+          <span class="home-accounts__card-balance">
             {{ acc.currentBalance | currency:'COP':'symbol-narrow':'1.0-0' }}
           </span>
         </div>
@@ -134,18 +133,18 @@
 
     <!-- 4. Sección de Alertas: "Próximos Pagos" (Proactividad) -->
     @if (upcomingAlerts().length > 0) {
-      <div class="alert-section" style="margin-bottom: 16px;">
-        <div class="section-title-row" style="margin-top: 16px; margin-bottom: 8px; padding: 0;">
-          <h2 style="font-size: 1.05rem; font-weight: 800; margin: 0; color: var(--ion-color-danger);">Próximos Pagos de Tarjetas</h2>
+      <div class="home-alerts alert-section">
+        <div class="home-section__header">
+          <h2 class="home-section__title home-section__title--danger">Próximos Pagos de Tarjetas</h2>
         </div>
         @for (alert of upcomingAlerts(); track alert.name) {
-          <div class="urgent-payment-alert" style="background: rgba(239, 68, 68, 0.06); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 16px; padding: 12px; display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
-            <ion-icon name="alert-circle-outline" style="color: var(--ion-color-danger); font-size: 18px;"></ion-icon>
-            <div style="display: flex; flex-direction: column; gap: 2px; flex: 1;">
-              <span style="font-size: 12px; font-weight: 700;">
+          <div class="home-alerts__item urgent-payment-alert">
+            <ion-icon name="alert-circle-outline" class="home-alerts__icon"></ion-icon>
+            <div class="home-alerts__details">
+              <span class="home-alerts__name">
                 Pago de TC: {{ alert.name }}
               </span>
-              <span style="font-size: 11px; color: var(--ion-color-danger); font-weight: 500;">
+              <span class="home-alerts__amount">
                 {{ alert.amount | currency:'COP':'symbol-narrow':'1.0-0' }} vence en {{ alert.dueDays }} {{ alert.dueDays === 1 ? 'día' : 'días' }}
               </span>
             </div>
@@ -156,29 +155,29 @@
 
     <!-- 5. Resumen de Metas (Ahorros) -->
     @if (featuredGoal(); as goal) {
-      <div class="section-title-row" style="margin-top: 16px; margin-bottom: 8px; padding: 0;">
-        <h2 style="font-size: 1.05rem; font-weight: 800; margin: 0;">Ahorros en Progreso</h2>
+      <div class="home-section__header">
+        <h2 class="home-section__title">Ahorros en Progreso</h2>
       </div>
       
       <ion-card class="featured-goal-card">
-        <ion-card-content style="padding: 12px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-            <div style="display: flex; align-items: center; gap: 6px;">
-              <span style="font-size: 13px; font-weight: 700;">{{ goal.title }}</span>
+        <ion-card-content class="home-goals__content">
+          <div class="home-goals__header">
+            <div class="home-goals__title-wrapper">
+              <span class="home-goals__title">{{ goal.title }}</span>
               @if (!goal.isPrivate && goal.participants && goal.participants.length > 0) {
-                <ion-badge color="tertiary" style="font-size: 8px; display: flex; align-items: center; gap: 2px; padding: 2px 4px; border-radius: 4px;">
-                  <ion-icon name="people-outline" style="font-size: 9px;"></ion-icon>
+                <ion-badge color="tertiary" class="home-goals__badge">
+                  <ion-icon name="people-outline" class="home-goals__badge-icon"></ion-icon>
                   Compartido
                 </ion-badge>
               }
               @if (goal.isPrivate) {
-                <ion-badge style="--background: rgba(92, 46, 126, 0.15); --color: #a78bfa; font-size: 8px; display: flex; align-items: center; gap: 2px; padding: 2px 4px; border-radius: 4px;">
-                  <ion-icon name="lock-closed-outline" style="font-size: 9px;"></ion-icon>
+                <ion-badge class="home-goals__badge home-goals__badge--private">
+                  <ion-icon name="lock-closed-outline" class="home-goals__badge-icon"></ion-icon>
                   Privado
                 </ion-badge>
               }
             </div>
-            <span style="font-size: 12px; color: var(--ion-color-primary); font-weight: 700;">
+            <span class="home-goals__progress-text">
               {{ getGoalProgress(goal) | number:'1.0-0' }}%
             </span>
           </div>
@@ -186,10 +185,10 @@
           <ion-progress-bar 
             [value]="getGoalProgress(goal) / 100" 
             color="primary" 
-            style="height: 6px; border-radius: 3px; margin-bottom: 8px;">
+            class="home-goals__progress-bar">
           </ion-progress-bar>
           
-          <div style="display: flex; justify-content: space-between; font-size: 11px; color: #a1a1aa;">
+          <div class="home-goals__amounts">
             <span>Ahorrado: <strong>{{ Number(goal.currentAmount) | currency:'COP':'symbol-narrow':'1.0-0' }}</strong></span>
             <span>Meta: <strong>{{ Number(goal.targetAmount) | currency:'COP':'symbol-narrow':'1.0-0' }}</strong></span>
           </div>
@@ -198,19 +197,19 @@
     }
 
     <!-- 6. Lista: Últimos 5 Movimientos (TARJETAS PROFESIONALES) -->
-    <div class="section-title-row" style="margin-top: 16px; margin-bottom: 12px; padding: 0; display: flex; justify-content: space-between; align-items: center;">
-      <h2 style="font-size: 1.05rem; font-weight: 800; margin: 0;">Últimos 5 Movimientos</h2>
-      <ion-badge color="dark" style="font-size: 9px; border-radius: 4px; padding: 3px 6px;">Hogar</ion-badge>
+    <div class="home-section__header home-section__header--flex">
+      <h2 class="home-section__title">Últimos 5 Movimientos</h2>
+      <ion-badge color="dark" class="home-section__badge">Hogar</ion-badge>
     </div>
 
-    <ion-list class="movements-list" lines="none" style="background: transparent; padding: 0; margin-bottom: 24px;">
+    <ion-list class="home-movements movements-list" lines="none">
       @if (recentMovements().length === 0) {
-        <div class="empty-state-container" style="padding: 24px 12px; text-align: center; border: 1px dashed var(--ion-border-color); border-radius: 12px; background: rgba(255,255,255,0.01);">
-          <div class="empty-state-icon-bg" style="width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: center; margin: 0 auto 10px auto;">
-            <ion-icon name="wallet-outline" style="font-size: 20px; color: #a1a1aa;"></ion-icon>
+        <div class="home-movements__empty empty-state-container">
+          <div class="home-movements__empty-icon-bg empty-state-icon-bg">
+            <ion-icon name="wallet-outline" class="home-movements__empty-icon"></ion-icon>
           </div>
-          <h3 style="font-size: 13px; font-weight: 700; margin-bottom: 4px;">Sin Movimientos</h3>
-          <p style="font-size: 11px; color: #a1a1aa; margin: 0;">No se encontraron movimientos registrados en este hogar.</p>
+          <h3 class="home-movements__empty-title">Sin Movimientos</h3>
+          <p class="home-movements__empty-desc">No se encontraron movimientos registrados en este hogar.</p>
         </div>
       }
 
@@ -220,8 +219,8 @@
           <!-- ZONA IZQUIERDA: Icono Circular -->
           <div slot="start" 
                class="icon-circle" 
-               [style.background]="(m.isPrivateRedacted || m.isPrivate) ? 'rgba(239, 68, 68, 0.15)' : 'rgba(136, 220, 204, 0.08)'"
-               [style.color]="(m.isPrivateRedacted || m.isPrivate) ? '#ef4444' : 'var(--ion-color-primary)'">
+               [class.home-movements__icon--private]="m.isPrivateRedacted || m.isPrivate"
+               [class.home-movements__icon--public]="!(m.isPrivateRedacted || m.isPrivate)">
             <ion-icon [name]="(m.isPrivateRedacted || m.isPrivate) ? 'lock-closed' : (getMovementIcon(m) || 'cash-outline')"></ion-icon>
           </div>
 
@@ -274,25 +273,25 @@
   </div>
 
   <!-- 7. El FAB (Floating Action Button) de Acciones Rápidas (Speed Dial) -->
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed" style="margin-bottom: 12px; margin-right: 12px;">
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" class="home-fab">
     <ion-fab-button color="primary">
       <ion-icon name="add-outline"></ion-icon>
     </ion-fab-button>
     <ion-fab-list side="top">
       <!-- 📉 Registrar Gasto -->
-      <ion-fab-button (click)="openAddModal('Gasto')" title="Registrar Gasto" style="--background: var(--ion-color-danger); --color: #ffffff;">
+      <ion-fab-button (click)="openAddModal('Gasto')" title="Registrar Gasto" class="home-fab__btn--expense">
         <ion-icon name="trending-down-outline"></ion-icon>
       </ion-fab-button>
       <!-- 📈 Registrar Ingreso -->
-      <ion-fab-button (click)="openAddModal('Ingreso')" title="Registrar Ingreso" style="--background: var(--ion-color-success); --color: #ffffff;">
+      <ion-fab-button (click)="openAddModal('Ingreso')" title="Registrar Ingreso" class="home-fab__btn--income">
         <ion-icon name="trending-up-outline"></ion-icon>
       </ion-fab-button>
       <!-- 🔄 Transferencia -->
-      <ion-fab-button (click)="openAddModal('Transferencia')" title="Transferencia entre Cuentas" style="--background: var(--ion-color-tertiary); --color: #ffffff;">
+      <ion-fab-button (click)="openAddModal('Transferencia')" title="Transferencia entre Cuentas" class="home-fab__btn--transfer">
         <ion-icon name="swap-horizontal-outline"></ion-icon>
       </ion-fab-button>
       <!-- 🏦 Aporte Ahorro -->
-      <ion-fab-button (click)="openAddModal('Ahorro')" title="Aporte de Ahorro" style="--background: var(--ion-color-primary); --color: #ffffff;">
+      <ion-fab-button (click)="openAddModal('Ahorro')" title="Aporte de Ahorro" class="home-fab__btn--savings">
         <ion-icon name="cash-outline"></ion-icon>
       </ion-fab-button>
     </ion-fab-list>

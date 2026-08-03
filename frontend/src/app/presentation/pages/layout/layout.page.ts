@@ -1,5 +1,5 @@
 // frontend/src/app/presentation/pages/layout/layout.page.ts
-import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
@@ -44,8 +44,8 @@ import {
   archiveOutline
 } from 'ionicons/icons';
 import { AuthService } from '../../../core/services/auth.service';
-import { ExpenseService } from '../../../core/services/expense.service';
-import { HouseholdService } from '../../../core/services/household.service';
+import { LayoutStore } from './layout.store';
+import { MenuOptionItemComponent } from '../../../shared/components/menu-option-item/menu-option-item.component';
 
 @Component({
   selector: 'app-layout',
@@ -72,21 +72,18 @@ import { HouseholdService } from '../../../core/services/household.service';
     IonSelectOption,
     IonModal,
     IonButton,
-    IonButtons
+    IonButtons,
+    MenuOptionItemComponent
   ],
+  providers: [LayoutStore],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LayoutPage implements OnInit {
   public currentUser = this.authService.currentUser;
-  public households = signal<any[]>([]);
-  public isAboutModalOpen = signal(false);
-  public membersCount = signal<number>(0);
+  public store = inject(LayoutStore);
 
   constructor(
     private authService: AuthService,
-    private expenseService: ExpenseService,
-    private householdService: HouseholdService,
-    private http: HttpClient,
     private menuCtrl: MenuController,
     private alertController: AlertController
   ) {
@@ -108,21 +105,12 @@ export class LayoutPage implements OnInit {
     });
   }
 
-  async ngOnInit() {
-    try {
-      const list = await firstValueFrom(this.http.get<any[]>(`${this.authService.apiUrlUsers}/households`));
-      this.households.set(list || []);
-
-      const members = await firstValueFrom(this.http.get<any[]>(`${this.authService.apiUrlUsers}/members`));
-      this.membersCount.set(members?.length || 1);
-    } catch (err) {
-      console.warn('No se pudo cargar la lista de hogares del backend, usando mock para demo.', err);
-      this.households.set([
-        { id: 1, name: 'Hogar Familiar Principal' },
-        { id: 2, name: 'Hogar Secundario (Trabajo)' }
-      ]);
-      this.membersCount.set(1);
-    }
+  /**
+   * Inicializa la vista cargando los datos a través del Store local.
+   * @returns {Promise<void>} Resolutor vacío
+   */
+  async ngOnInit(): Promise<void> {
+    await this.store.loadInitialData();
   }
 
   /**
@@ -142,43 +130,47 @@ export class LayoutPage implements OnInit {
 
   /**
    * Cambia el inquilino activo del usuario y recarga la información.
+   * @param {any} event - Evento del selector de Ionic.
+   * @returns {Promise<void>}
    */
-  async onHouseholdChange(event: any) {
+  async onHouseholdChange(event: any): Promise<void> {
     const selectedId = Number(event.detail.value);
     if (!selectedId || selectedId === this.currentUser()?.householdId) {
       return;
     }
 
-    try {
-      await this.authService.switchHousehold(selectedId);
-      // Forzar recarga de los servicios centrales con el nuevo ID del inquilino
-      await this.householdService.loadHousehold(selectedId, true);
-      await this.expenseService.loadExpenses(true);
-
-      const members = await firstValueFrom(this.http.get<any[]>(`${this.authService.apiUrlUsers}/members`));
-      this.membersCount.set(members?.length || 1);
-
-      await this.closeMenu();
-    } catch (err) {
-      console.error('Error switching tenant:', err);
-    }
+    await this.store.switchHousehold(selectedId);
+    await this.closeMenu();
   }
 
-  handleLogout() {
+  /**
+   * Gestiona el cierre de sesión
+   */
+  handleLogout(): void {
     this.closeMenu();
     this.authService.logout();
   }
 
-  openAboutModal() {
+  /**
+   * Abre el modal "Acerca de"
+   */
+  openAboutModal(): void {
     this.closeMenu();
-    this.isAboutModalOpen.set(true);
+    this.store.setAboutModalOpen(true);
   }
 
-  closeAboutModal() {
-    this.isAboutModalOpen.set(false);
+  /**
+   * Cierra el modal "Acerca de"
+   */
+  closeAboutModal(): void {
+    this.store.setAboutModalOpen(false);
   }
 
-  async triggerAccountSettingsAlert() {
+  /**
+   * Muestra un mensaje informativo para los ajustes de cuenta.
+   * @returns {Promise<void>}
+   */
+  async triggerAccountSettingsAlert(): Promise<void> {
     await this.closeMenu();
     const alert = await this.alertController.create({
       header: 'Ajustes de Cuenta',

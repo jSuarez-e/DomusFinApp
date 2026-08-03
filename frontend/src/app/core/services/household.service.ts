@@ -55,15 +55,19 @@ export class HouseholdService {
    * Actualiza la meta de presupuesto mensual del hogar en el backend.
    * 
    * @param {number} monthlyBudget Nuevo presupuesto mensual.
-   * @returns {Observable<Household>}
+   * @returns {Promise<Household>} Promesa con el hogar actualizado.
+   * @throws {Error} Si falla la petición HTTP.
    */
-  updateHouseholdBudget(monthlyBudget: number): Observable<Household> {
-    const obs = this.http.put<Household>(`${this.apiUrlHouseholds}/budget`, { monthlyBudget });
-    obs.subscribe({
-      next: (updatedHousehold) => {
-        this.householdState.set(updatedHousehold);
-      }
-    });
-    return obs;
+  async updateHouseholdBudget(monthlyBudget: number): Promise<Household> {
+    try {
+      const updatedHousehold = await firstValueFrom(
+        this.http.put<Household>(`${this.apiUrlHouseholds}/budget`, { monthlyBudget })
+      );
+      this.householdState.set(updatedHousehold);
+      return updatedHousehold;
+    } catch (error) {
+      console.error('Error updating household budget:', error);
+      throw error;
+    }
   }
 }

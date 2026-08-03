@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { IonApp, IonRouterOutlet, Platform } from '@ionic/angular/standalone';
 
 import { ThemeService } from './core/services/theme.service';
+import { SplashScreen } from '@capacitor/splash-screen';
 
 @Component({
   selector: 'app-root',
@@ -24,5 +25,17 @@ export class AppComponent {
     this.platform.backButton.subscribeWithPriority(9999, () => {
       console.log('Botón atrás nativo bloqueado');
     });
+
+    this.initializeApp();
+  }
+
+  async initializeApp() {
+    await this.platform.ready();
+
+    setTimeout(() => {
+      SplashScreen.hide({
+        fadeOutDuration: 500
+      });
+    }, 1000); 
   }
 }

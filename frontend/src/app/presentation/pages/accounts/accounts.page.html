@@ -36,41 +36,10 @@
       }
 
       @for (account of accounts(); track account.id) {
-        <ion-item-sliding>
-          <ion-item class="accounts-item">
-            <div class="accounts-item__icon-wrapper" slot="start">
-              <ion-icon [name]="getAccountTypeIcon(account.type)" class="accounts-item__icon"></ion-icon>
-            </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 4px 0;">
-              <div>
-                <div class="accounts-item__name" style="font-size: 15px; font-weight: 600; color: #ffffff;">{{ account.name }}</div>
-                <div class="accounts-item__balance" style="font-size: 18px; font-weight: 700; color: #88DCCC; margin-top: 4px;">
-                  {{ account.currentBalance | currency:'COP':'symbol-narrow':'1.0-0' }}
-                </div>
-              </div>
-              <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
-                <ion-badge class="accounts-item__type-badge" color="medium" style="font-size: 9px; padding: 3px 6px; border-radius: 6px; text-transform: uppercase;">
-                  {{ getAccountTypeLabel(account.type) }}
-                </ion-badge>
-                @if (account.isPrivate) {
-                  <ion-badge style="--background: rgba(92, 46, 126, 0.15); --color: #a78bfa; font-size: 10px; padding: 3px 6px; border-radius: 6px; display: flex; align-items: center; justify-content: center; width: fit-content;">
-                    🔒 Privada
-                  </ion-badge>
-                } @else {
-                  <ion-badge style="--background: rgba(136, 220, 204, 0.12); --color: #88dccc; font-size: 10px; padding: 3px 6px; border-radius: 6px; display: flex; align-items: center; justify-content: center; width: fit-content;">
-                    <ion-icon name="people-outline" style="font-size: 11px;"></ion-icon>
-                  </ion-badge>
-                }
-              </div>
-            </div>
-          </ion-item>
-
-          <ion-item-options side="end">
-            <ion-item-option color="danger" (click)="handleDelete(account)">
-              <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
-            </ion-item-option>
-          </ion-item-options>
-        </ion-item-sliding>
+        <app-account-item
+          [account]="account"
+          (onDelete)="handleDelete($event)">
+        </app-account-item>
       }
     </ion-list>
   </div>
@@ -153,11 +122,11 @@
           </div>
 
           <!-- Private Toggle -->
-          <div class="accounts-form__field" style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 12px; margin-bottom: 20px;">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <div style="display: flex; flex-direction: column; gap: 4px; padding-right: 12px;">
-                <span style="font-size: 13px; font-weight: 700; color: #ffffff;">Cuenta Privada</span>
-                <span style="font-size: 11px; color: #9ca3af; line-height: 1.3;">Si se activa, el dinero de esta cuenta no se sumará a la liquidez vista por otros miembros del hogar.</span>
+          <div class="accounts-form__field accounts-form__field--toggle">
+            <div class="accounts-form__toggle-wrapper">
+              <div class="accounts-form__toggle-texts">
+                <span class="accounts-form__toggle-title">Cuenta Privada</span>
+                <span class="accounts-form__toggle-desc">Si se activa, el dinero de esta cuenta no se sumará a la liquidez vista por otros miembros del hogar.</span>
               </div>
               <ion-toggle formControlName="isPrivate" color="primary"></ion-toggle>
             </div>

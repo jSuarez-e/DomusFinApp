@@ -68,16 +68,16 @@
         } @else {
           <div class="loans-grid">
             @for (loan of activeLoans(); track loan.id) {
-              <div class="loans-card-wrapper" style="margin-bottom: 24px;">
+              <div class="loans-card-wrapper">
                 <!-- Physical style card -->
-                <div class="loans-physical-card" [style.border-color]="loan.isPrivate ? '#5c2e7e' : 'rgba(255,255,255,0.08)'">
+                <div class="loans-physical-card" [class.loans-physical-card--private]="loan.isPrivate" [class.loans-physical-card--shared]="!loan.isPrivate">
                   <div class="loans-physical-card__glass"></div>
                   <div class="loans-physical-card__header">
                     <span class="loans-physical-card__bank">DOMUSFIN LOAN 
                       @if (loan.isPrivate) {
-                        <span style="font-size: 9px; opacity: 0.9; color: #a78bfa; margin-left: 8px;">🔒 Privada</span>
+                        <span class="loans-physical-card__badge loans-physical-card__badge--private">🔒 Privada</span>
                       } @else {
-                        <span style="font-size: 9px; opacity: 0.9; color: #88DCCC; margin-left: 8px;">👥 Compartida</span>
+                        <span class="loans-physical-card__badge loans-physical-card__badge--shared">👥 Compartida</span>
                       }
                     </span>
                     <ion-icon name="calculator-outline" class="loans-physical-card__logo"></ion-icon>
@@ -97,28 +97,23 @@
                 </div>
 
                 <!-- Progress Bar & Actions beneath it -->
-                <div class="loans-card__progress-container" style="padding: 0 8px; margin-top: -4px;">
-                  <div class="loans-progress-bar" style="height: 6px; border-radius: 3px; background: rgba(255,255,255,0.05); overflow: hidden;">
-                    <div class="loans-progress-bar__fill" [style.width.%]="getPaidPercentage(loan)" style="height: 100%; background: #88DCCC; border-radius: 3px;"></div>
-                  </div>
-                  <div class="loans-card__progress-text" style="display: flex; justify-content: space-between; font-size: 11px; color: #a1a1aa; margin-top: 6px;">
-                    <span>Inicial: {{ Number(loan.initialPrincipal) | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
-                    <span>Pagado: {{ getPaidPercentage(loan) | number:'1.0-1' }}%</span>
-                  </div>
-                  
+                <!-- Progress Bar & Actions beneath it -->
+                <app-loan-progress [loan]="loan"></app-loan-progress>
+                
+                <div class="loans-card__participants-container">
                   @if (!loan.isPrivate && loan.participants && loan.participants.length > 0) {
-                    <div class="loans-card__participants-list" style="display: flex; gap: 4px; align-items: center; flex-wrap: wrap; margin-top: 8px;">
-                      <span style="font-size: 9px; color: #71717a; text-transform: uppercase; font-weight: 700;">Participantes:</span>
+                    <div class="loans-card__participants-list">
+                      <span class="loans-card__participants-label">Participantes:</span>
                       @for (p of loan.participants; track p.id) {
-                        <ion-badge color="tertiary" style="font-size: 9px; padding: 2px 6px; border-radius: 6px;">👤 {{ p.name }}</ion-badge>
+                        <ion-badge color="tertiary" class="loans-card__participant-badge">👤 {{ p.name }}</ion-badge>
                       }
                     </div>
                   }
                 </div>
 
                 <!-- Pay Button -->
-                <div class="loans-card__actions" style="margin-top: 12px; padding: 0 8px;">
-                  <ion-button expand="block" size="small" class="loans-card__btn" style="--border-radius: 12px; font-weight: bold;" (click)="openPayModal(loan)">
+                <div class="loans-card__actions">
+                  <ion-button expand="block" size="small" class="loans-card__btn" (click)="openPayModal(loan)">
                     <ion-icon name="cash-outline" slot="start"></ion-icon>
                     Registrar Pago / Abono
                   </ion-button>

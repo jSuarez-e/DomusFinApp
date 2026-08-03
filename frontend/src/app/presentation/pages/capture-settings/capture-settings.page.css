@@ -139,3 +139,31 @@
   font-family: 'Outfit', 'Inter', sans-serif;
   font-weight: 500;
 }
+
+/* 
+ * ----------------------------------------------------
+ * Refactored BEM classes replacing inline styles
+ * ----------------------------------------------------
+ */
+
+.capture-card__icon-wrapper--native {
+  background: rgba(136, 220, 204, 0.1);
+  color: #88DCCC;
+}
+
+.capture-card__icon--native {
+  color: #88DCCC;
+}
+
+.capture-card__desc {
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: #9ca3af;
+  line-height: 1.4;
+}
+
+.capture-btn--native {
+  --border-radius: 12px;
+  font-weight: bold;
+  margin-top: 8px;
+}

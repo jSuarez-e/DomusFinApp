@@ -1,0 +1,54 @@
+.category-item {
+  border-radius: 12px;
+  margin-bottom: 8px;
+  --background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.category-item__icon-wrapper {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(136, 220, 204, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #88DCCC;
+  margin-right: 12px;
+}
+
+.category-item__name {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.category-item__badge {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 8px;
+  padding: 1px 4px;
+  border-radius: 4px;
+  margin-left: 8px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.category-item__actions {
+  display: flex;
+  gap: 8px;
+}
+
+.category-item__btn {
+  margin: 0;
+  font-size: 16px;
+  height: 32px;
+  width: 32px;
+}
+
+.category-item__btn--edit {
+  --color: #88DCCC;
+}
+
+.category-item__btn--delete {
+  --color: #ff6b6b;
+}

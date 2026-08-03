@@ -1,5 +1,5 @@
 // frontend/src/app/presentation/pages/forgot-password/forgot-password.page.ts
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -18,7 +18,9 @@ import {
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { mailOutline, arrowBackOutline, keyOutline } from 'ionicons/icons';
-import { AuthService } from '../../../core/services/auth.service';
+import { AuthHeaderComponent } from '../../../shared/components/auth-header/auth-header.component';
+import { ForgotPasswordStore } from './forgot-password.store';
+import { AuthService } from '@core/services/auth.service';
 
 @Component({
   selector: 'app-forgot-password',
@@ -38,12 +40,15 @@ import { AuthService } from '../../../core/services/auth.service';
     IonInput,
     IonText,
     IonIcon,
-    IonLabel
+    IonLabel,
+    AuthHeaderComponent
   ],
+  providers: [ForgotPasswordStore],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ForgotPasswordPage {
   public recoveryForm: FormGroup;
+  public store = inject(ForgotPasswordStore);
 
   constructor(
     private fb: FormBuilder,
@@ -59,42 +64,15 @@ export class ForgotPasswordPage {
   }
 
   /**
-   * Envía la solicitud de recuperación.
+   * Envía la solicitud de recuperación delegando al Store local.
+   * @returns {Promise<void>} Resolutor vacío
    */
-  async handleForgotPassword() {
+  async handleForgotPassword(): Promise<void> {
     if (this.recoveryForm.invalid) {
       return;
     }
 
     const { email } = this.recoveryForm.value;
-
-    try {
-      await this.authService.forgotPassword(email);
-      await this.showSuccessAlert();
-      this.router.navigate(['/login']);
-    } catch (err: any) {
-      const errMsg = err?.error?.message || 'No se pudo enviar la solicitud de recuperación.';
-      await this.showErrorAlert(errMsg);
-    }
-  }
-
-  private async showSuccessAlert() {
-    const alert = await this.alertController.create({
-      header: 'Correo Enviado',
-      message: 'Revisa tu buzón de correo. Si tu email está registrado, recibirás un link de restablecimiento.',
-      buttons: ['Entendido'],
-      cssClass: 'premium-alert'
-    });
-    await alert.present();
-  }
-
-  private async showErrorAlert(message: string) {
-    const alert = await this.alertController.create({
-      header: 'Fallo al Enviar',
-      message: message,
-      buttons: ['Corregir'],
-      cssClass: 'premium-alert'
-    });
-    await alert.present();
+    await this.store.forgotPassword(email);
   }
 }

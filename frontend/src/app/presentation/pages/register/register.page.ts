@@ -1,5 +1,5 @@
 // frontend/src/app/presentation/pages/register/register.page.ts
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
@@ -22,6 +22,10 @@ import { addIcons } from 'ionicons';
 import { personOutline, mailOutline, lockClosedOutline, keyOutline, arrowBackOutline, eyeOutline, eyeOffOutline } from 'ionicons/icons';
 import { AuthService } from '../../../core/services/auth.service';
 import { PasswordStrengthComponent } from '../../components/password-strength/password-strength.component';
+import { AuthHeaderComponent } from '../../../shared/components/auth-header/auth-header.component';
+import { PasswordInputComponent } from '../../../shared/components/password-input/password-input.component';
+import { RegisterStore } from './register.store';
+import { RegisterDto } from '@shared/index';
 
 @Component({
   selector: 'app-register',
@@ -44,13 +48,16 @@ import { PasswordStrengthComponent } from '../../components/password-strength/pa
     IonIcon,
     IonLabel,
     IonToggle,
-    PasswordStrengthComponent
+    PasswordStrengthComponent,
+    AuthHeaderComponent,
+    PasswordInputComponent
   ],
+  providers: [RegisterStore],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RegisterPage {
   public registerForm: FormGroup;
-  public showPassword = signal(false);
+  public store = inject(RegisterStore);
 
   constructor(
     private fb: FormBuilder,
@@ -94,49 +101,23 @@ export class RegisterPage {
   }
 
   /**
-   * Procesa la creación de la cuenta.
+   * Procesa la creación de la cuenta delegando al Store local.
+   * @returns {Promise<void>} Resolutor vacío
    */
-  async handleRegister() {
+  async handleRegister(): Promise<void> {
     if (this.registerForm.invalid) {
       return;
     }
 
     const { username, email, password, isInvited, invitationCode } = this.registerForm.value;
 
-    const payload = {
+    const payload: RegisterDto = {
       username,
       email,
       password,
       invitationCode: isInvited ? invitationCode.trim() : undefined
     };
 
-    try {
-      await this.authService.register(payload);
-      await this.showSuccessAlert();
-      this.router.navigate(['/login']);
-    } catch (err: any) {
-      const errMsg = err?.error?.message || 'No se pudo completar el registro.';
-      await this.showErrorAlert(errMsg);
-    }
-  }
-
-  private async showSuccessAlert() {
-    const alert = await this.alertController.create({
-      header: 'Registro Exitoso',
-      message: 'Tu cuenta ha sido creada. Ahora puedes iniciar sesión.',
-      buttons: ['Ok'],
-      cssClass: 'premium-alert'
-    });
-    await alert.present();
-  }
-
-  private async showErrorAlert(message: string) {
-    const alert = await this.alertController.create({
-      header: 'Fallo al Registrar',
-      message: message,
-      buttons: ['Corregir'],
-      cssClass: 'premium-alert'
-    });
-    await alert.present();
+    await this.store.register(payload);
   }
 }

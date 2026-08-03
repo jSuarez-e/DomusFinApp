@@ -1,0 +1,36 @@
+<ion-item class="expense-item">
+  <ion-label>
+    <div class="expense-item__header">
+      @if (expense().isPrivate) {
+        @if (expense().userId !== currentUser().id) {
+          <span class="expense-item__description expense-item__description--private">Gasto Privado</span>
+          <ion-badge color="tertiary" class="expense-item__privacy-badge">
+            <ion-icon name="lock-closed-outline"></ion-icon>
+            Privado (Anónimo)
+          </ion-badge>
+        } @else {
+          <span class="expense-item__description">{{ expense().description }}</span>
+          <ion-badge color="warning" class="expense-item__privacy-badge">
+            <ion-icon name="eye-off-outline"></ion-icon>
+            Privado (Tuyo)
+          </ion-badge>
+        }
+      } @else {
+        <span class="expense-item__description">{{ expense().description }}</span>
+        <ion-badge color="secondary" class="expense-item__privacy-badge">
+          <ion-icon name="globe-outline"></ion-icon>
+          Público
+        </ion-badge>
+      }
+    </div>
+
+    <div class="expense-item__meta">
+      <span class="expense-item__category">{{ categoryName() }}</span>
+      <span class="expense-item__date">{{ expense().date | date:(currentUser().dateFormat === 'MM/DD/YYYY' ? 'MM/dd/yyyy, h:mm a' : 'dd/MM/yyyy, h:mm a') }}</span>
+    </div>
+  </ion-label>
+
+  <span class="expense-item__amount" slot="end">
+    {{ expense().amount | currency:'USD':'symbol':'1.2-2' }}
+  </span>
+</ion-item>

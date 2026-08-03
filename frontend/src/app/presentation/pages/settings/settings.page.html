@@ -13,7 +13,7 @@
 
   <div class="content-container">
     <!-- Tabs Segment Control -->
-    <ion-segment scrollable="true" [value]="activeSegment()" (ionChange)="onSegmentChange($event)" class="tab-segment" style="margin-bottom: 24px;">
+    <ion-segment scrollable="true" [value]="activeSegment()" (ionChange)="onSegmentChange($event)" class="tab-segment settings-segment">
       <ion-segment-button value="profile">
         <ion-label>Perfil</ion-label>
       </ion-segment-button>
@@ -122,8 +122,8 @@
                     class="settings-item__input" 
                     placeholder="••••••">
                   </ion-input>
-                  <ion-button slot="end" fill="clear" size="small" (click)="showCurrentPassword.set(!showCurrentPassword())" style="margin-top: 14px; margin-bottom: 0; color: #a1a1aa; z-index: 10;">
-                    <ion-icon [name]="showCurrentPassword() ? 'eye-outline' : 'eye-off-outline'" slot="icon-only" style="font-size: 18px;"></ion-icon>
+                  <ion-button slot="end" fill="clear" size="small" (click)="showCurrentPassword.set(!showCurrentPassword())" class="password-toggle-btn">
+                    <ion-icon [name]="showCurrentPassword() ? 'eye-outline' : 'eye-off-outline'" slot="icon-only" class="password-toggle-icon"></ion-icon>
                   </ion-button>
                 </ion-item>
                 @if (passwordForm.get('currentPassword')?.touched && passwordForm.get('currentPassword')?.invalid) {
@@ -140,24 +140,23 @@
                     class="settings-item__input" 
                     placeholder="••••••">
                   </ion-input>
-                  <ion-button slot="end" fill="clear" size="small" (click)="showNewPassword.set(!showNewPassword())" style="margin-top: 14px; margin-bottom: 0; color: #a1a1aa; z-index: 10;">
-                    <ion-icon [name]="showNewPassword() ? 'eye-outline' : 'eye-off-outline'" slot="icon-only" style="font-size: 18px;"></ion-icon>
+                  <ion-button slot="end" fill="clear" size="small" (click)="showNewPassword.set(!showNewPassword())" class="password-toggle-btn">
+                    <ion-icon [name]="showNewPassword() ? 'eye-outline' : 'eye-off-outline'" slot="icon-only" class="password-toggle-icon"></ion-icon>
                   </ion-button>
                 </ion-item>
                 
                 @if (newPasswordValue()) {
-                  <div class="strength-meter-wrapper" style="padding: 0 16px; margin: 8px 0;">
-                    <div class="strength-labels" style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 4px;">
-                      <span class="strength-title" style="color: #a1a1aa;">Fortaleza:</span>
-                      <span class="strength-value" style="font-weight: bold; text-transform: uppercase;" [class]="'color-' + passwordStrengthInfo().color">
+                  <div class="strength-meter-wrapper settings-strength-meter">
+                    <div class="strength-labels">
+                      <span class="strength-title">Fortaleza:</span>
+                      <span class="strength-value" [class]="'color-' + passwordStrengthInfo().color">
                         {{ passwordStrengthInfo().label }}
                       </span>
                     </div>
                     <ion-progress-bar 
                       [value]="passwordStrengthInfo().score" 
                       [color]="passwordStrengthInfo().color" 
-                      class="strength-bar"
-                      style="border-radius: 4px; height: 6px;">
+                      class="strength-bar settings-strength-bar">
                     </ion-progress-bar>
                   </div>
                 }
@@ -178,8 +177,8 @@
                     class="settings-item__input" 
                     placeholder="••••••">
                   </ion-input>
-                  <ion-button slot="end" fill="clear" size="small" (click)="showConfirmPassword.set(!showConfirmPassword())" style="margin-top: 14px; margin-bottom: 0; color: #a1a1aa; z-index: 10;">
-                    <ion-icon [name]="showConfirmPassword() ? 'eye-outline' : 'eye-off-outline'" slot="icon-only" style="font-size: 18px;"></ion-icon>
+                  <ion-button slot="end" fill="clear" size="small" (click)="showConfirmPassword.set(!showConfirmPassword())" class="password-toggle-btn">
+                    <ion-icon [name]="showConfirmPassword() ? 'eye-outline' : 'eye-off-outline'" slot="icon-only" class="password-toggle-icon"></ion-icon>
                   </ion-button>
                 </ion-item>
                 
@@ -275,8 +274,8 @@
               </ion-item>
 
               <!-- Tema Oscuro toggle -->
-              <ion-item class="settings-item" style="margin-top: 16px; display: flex; justify-content: space-between; align-items: center;">
-                <ion-label class="settings-item__label" style="font-weight: 600; margin: 0;">Tema Oscuro</ion-label>
+              <ion-item class="settings-item settings-item--inline">
+                <ion-label class="settings-item__label settings-item__label--bold">Tema Oscuro</ion-label>
                 <ion-toggle 
                   [checked]="isDarkTheme()" 
                   (ionChange)="toggleTheme($event)" 
@@ -286,12 +285,12 @@
               </ion-item>
 
               <!-- Moneda Unificada (COP) -->
-              <ion-item class="settings-item" style="margin-top: 16px;">
+              <ion-item class="settings-item settings-item--spaced">
                 <ion-label position="stacked" class="settings-item__label">Moneda por Defecto</ion-label>
-                <div style="font-size: 14px; font-weight: bold; color: #88DCCC; margin-top: 8px;">
+                <div class="settings-currency-value">
                   Peso Colombiano ($ COP)
                 </div>
-                <p style="font-size: 11px; color: #a1a1aa; margin: 4px 0 0 0;">
+                <p class="settings-currency-desc">
                   La divisa de DomusFinApp está estandarizada a Peso Colombiano ($) para garantizar la coherencia contable del Hogar.
                 </p>
               </ion-item>
@@ -317,8 +316,8 @@
       <div class="tab-pane">
         <ion-card class="settings-card">
           <ion-card-content>
-            <div class="pane-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-              <h3 style="margin: 0; font-size: 1.1rem; font-weight: 700; color: #ffffff;">Categorías de Gastos</h3>
+            <div class="pane-header settings-pane-header">
+              <h3 class="settings-pane-title">Categorías de Gastos</h3>
               @if (isAdmin()) {
                 <ion-button (click)="openAddCategory(CategoryType.EXPENSE)" class="add-btn" size="small">
                   <ion-icon name="add-outline" slot="start"></ion-icon>
@@ -328,35 +327,17 @@
             </div>
 
             @if (!isAdmin()) {
-              <div style="background: rgba(136, 220, 204, 0.05); border: 1px solid rgba(136, 220, 204, 0.15); border-radius: 8px; padding: 12px; margin-bottom: 16px; font-size: 12px; color: #88DCCC;">
-                ℹ️ Solo los administradores del hogar pueden crear, editar o eliminar categorías.
-              </div>
+              <app-admin-warning></app-admin-warning>
             }
 
             <ion-list class="settings-list" lines="none">
               @for (cat of expenseCategories(); track cat.id) {
-                <ion-item class="settings-item" style="border-radius: 12px; margin-bottom: 8px; --background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.03);">
-                  <div class="category-icon-wrapper" style="width: 32px; height: 32px; border-radius: 8px; background: rgba(136, 220, 204, 0.1); display: flex; align-items: center; justify-content: center; color: #88DCCC; margin-right: 12px;">
-                    <ion-icon [name]="cat.icon || 'list-outline'" class="cat-icon"></ion-icon>
-                  </div>
-                  <ion-label>
-                    <span style="font-weight: 600; color: #ffffff;">{{ cat.name }}</span>
-                    @if (cat.isGlobal) {
-                      <span class="global-badge" style="background: rgba(255,255,255,0.1); color: #fff; font-size: 8px; padding: 1px 4px; border-radius: 4px; margin-left: 8px; font-weight: bold; text-transform: uppercase;">Global</span>
-                    }
-                  </ion-label>
-
-                  @if (isAdmin() && !cat.isGlobal) {
-                    <div slot="end" class="action-buttons" style="display: flex; gap: 8px;">
-                      <ion-button fill="clear" (click)="openEditCategory(cat)" style="margin: 0; --color: #88DCCC; font-size: 16px; height: 32px; width: 32px;">
-                        <ion-icon name="pencil-outline"></ion-icon>
-                      </ion-button>
-                      <ion-button fill="clear" (click)="deleteCategory(cat)" style="margin: 0; --color: #ff6b6b; font-size: 16px; height: 32px; width: 32px;">
-                        <ion-icon name="trash-outline"></ion-icon>
-                      </ion-button>
-                    </div>
-                  }
-                </ion-item>
+                <app-category-list-item 
+                  [category]="cat" 
+                  [isAdmin]="isAdmin()"
+                  (edit)="openEditCategory($event)"
+                  (delete)="deleteCategory($event)">
+                </app-category-list-item>
               }
             </ion-list>
           </ion-card-content>
@@ -369,8 +350,8 @@
       <div class="tab-pane">
         <ion-card class="settings-card">
           <ion-card-content>
-            <div class="pane-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-              <h3 style="margin: 0; font-size: 1.1rem; font-weight: 700; color: #ffffff;">Categorías de Ingresos</h3>
+            <div class="pane-header settings-pane-header">
+              <h3 class="settings-pane-title">Categorías de Ingresos</h3>
               @if (isAdmin()) {
                 <ion-button (click)="openAddCategory(CategoryType.INCOME)" class="add-btn" size="small">
                   <ion-icon name="add-outline" slot="start"></ion-icon>
@@ -380,35 +361,17 @@
             </div>
 
             @if (!isAdmin()) {
-              <div style="background: rgba(136, 220, 204, 0.05); border: 1px solid rgba(136, 220, 204, 0.15); border-radius: 8px; padding: 12px; margin-bottom: 16px; font-size: 12px; color: #88DCCC;">
-                ℹ️ Solo los administradores del hogar pueden crear, editar o eliminar categorías.
-              </div>
+              <app-admin-warning></app-admin-warning>
             }
 
             <ion-list class="settings-list" lines="none">
               @for (cat of incomeCategories(); track cat.id) {
-                <ion-item class="settings-item" style="border-radius: 12px; margin-bottom: 8px; --background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.03);">
-                  <div class="category-icon-wrapper" style="width: 32px; height: 32px; border-radius: 8px; background: rgba(136, 220, 204, 0.1); display: flex; align-items: center; justify-content: center; color: #88DCCC; margin-right: 12px;">
-                    <ion-icon [name]="cat.icon || 'list-outline'" class="cat-icon"></ion-icon>
-                  </div>
-                  <ion-label>
-                    <span style="font-weight: 600; color: #ffffff;">{{ cat.name }}</span>
-                    @if (cat.isGlobal) {
-                      <span class="global-badge" style="background: rgba(255,255,255,0.1); color: #fff; font-size: 8px; padding: 1px 4px; border-radius: 4px; margin-left: 8px; font-weight: bold; text-transform: uppercase;">Global</span>
-                    }
-                  </ion-label>
-
-                  @if (isAdmin() && !cat.isGlobal) {
-                    <div slot="end" class="action-buttons" style="display: flex; gap: 8px;">
-                      <ion-button fill="clear" (click)="openEditCategory(cat)" style="margin: 0; --color: #88DCCC; font-size: 16px; height: 32px; width: 32px;">
-                        <ion-icon name="pencil-outline"></ion-icon>
-                      </ion-button>
-                      <ion-button fill="clear" (click)="deleteCategory(cat)" style="margin: 0; --color: #ff6b6b; font-size: 16px; height: 32px; width: 32px;">
-                        <ion-icon name="trash-outline"></ion-icon>
-                      </ion-button>
-                    </div>
-                  }
-                </ion-item>
+                <app-category-list-item 
+                  [category]="cat" 
+                  [isAdmin]="isAdmin()"
+                  (edit)="openEditCategory($event)"
+                  (delete)="deleteCategory($event)">
+                </app-category-list-item>
               }
             </ion-list>
           </ion-card-content>
@@ -432,35 +395,33 @@
       </ion-header>
 
       <ion-content class="modal-content">
-        <form [formGroup]="categoryForm" (ngSubmit)="saveCategory()" class="modal-form" style="padding: 16px;">
-          <div class="input-wrapper" style="margin-bottom: 16px;">
-            <label class="input-label" style="font-size: 12px; color: #a1a1aa; font-weight: 600; display: block; margin-bottom: 6px;">Nombre de Categoría</label>
-            <div class="input-field" style="display: flex; align-items: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 4px 12px;">
-              <ion-icon name="list-outline" class="field-icon" style="font-size: 18px; color: #a1a1aa; margin-right: 8px;"></ion-icon>
-              <ion-input type="text" placeholder="Ej. Entretenimiento" formControlName="name" class="premium-input" style="--padding-start: 0; color: #fff;"></ion-input>
+        <form [formGroup]="categoryForm" (ngSubmit)="saveCategory()" class="modal-form settings-modal-form">
+          <div class="input-wrapper settings-input-wrapper">
+            <label class="input-label settings-input-label">Nombre de Categoría</label>
+            <div class="input-field settings-input-field">
+              <ion-icon name="list-outline" class="field-icon settings-field-icon"></ion-icon>
+              <ion-input type="text" placeholder="Ej. Entretenimiento" formControlName="name" class="premium-input settings-premium-input"></ion-input>
             </div>
           </div>
 
-          <div class="input-wrapper" style="margin-bottom: 16px;">
-            <label class="input-label" style="font-size: 12px; color: #a1a1aa; font-weight: 600; display: block; margin-bottom: 6px;">Tipo de Categoría</label>
-            <div class="input-field" style="display: flex; align-items: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 4px 12px;">
-              <ion-icon name="swap-horizontal-outline" class="field-icon" style="font-size: 18px; color: #a1a1aa; margin-right: 8px;"></ion-icon>
-              <ion-select interface="popover" formControlName="type" class="premium-select" style="width: 100%; color: #fff;">
+          <div class="input-wrapper settings-input-wrapper">
+            <label class="input-label settings-input-label">Tipo de Categoría</label>
+            <div class="input-field settings-input-field">
+              <ion-icon name="swap-horizontal-outline" class="field-icon settings-field-icon"></ion-icon>
+              <ion-select interface="popover" formControlName="type" class="premium-select settings-premium-select">
                 <ion-select-option value="EXPENSE">Gasto</ion-select-option>
                 <ion-select-option value="INCOME">Ingreso</ion-select-option>
               </ion-select>
             </div>
           </div>
 
-          <div class="icon-selection-wrapper" style="margin-bottom: 24px;">
-            <label class="input-label" style="font-size: 12px; color: #a1a1aa; font-weight: 600; display: block; margin-bottom: 8px;">Seleccionar Icono</label>
-            <div class="icon-grid" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px;">
+          <div class="icon-selection-wrapper settings-icon-wrapper">
+            <label class="input-label settings-input-label">Seleccionar Icono</label>
+            <div class="icon-grid settings-icon-grid">
               @for (iconName of availableIcons; track iconName) {
                 <div 
                   class="icon-grid-item" 
-                  [style.border]="categoryForm.get('icon')?.value === iconName ? '2px solid #88DCCC' : '1px solid rgba(255,255,255,0.08)'"
-                  [style.background]="categoryForm.get('icon')?.value === iconName ? 'rgba(136, 220, 204, 0.15)' : 'rgba(255,255,255,0.02)'"
-                  style="aspect-ratio: 1; border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #88DCCC; font-size: 20px;"
+                  [class.icon-grid-item--selected]="categoryForm.get('icon')?.value === iconName"
                   (click)="categoryForm.patchValue({ icon: iconName })">
                   <ion-icon [name]="iconName" class="grid-icon"></ion-icon>
                 </div>
@@ -468,7 +429,7 @@
             </div>
           </div>
 
-          <ion-button type="submit" expand="block" [disabled]="categoryForm.invalid" class="modal-save-btn" style="--border-radius: 12px; font-weight: bold; margin-top: 16px;">
+          <ion-button type="submit" expand="block" [disabled]="categoryForm.invalid" class="modal-save-btn settings-modal-save-btn">
             Guardar Categoría
           </ion-button>
         </form>

@@ -1,5 +1,5 @@
 // frontend/src/app/presentation/pages/savings/savings.page.ts
-import { ChangeDetectionStrategy, Component, OnInit, signal, computed, effect } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, signal, effect, inject } from '@angular/core';
 import { TransactionEventService } from '../../../core/services/transaction-event.service';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -50,6 +50,8 @@ import { AuthService } from '../../../core/services/auth.service';
 import { SavingsGoal, Account, User } from '@shared/index';
 import { MoneyMaskDirective } from '../../directives/money-mask.directive';
 import { BlockScientificNotationDirective } from '../../directives/block-scientific-notation.directive';
+import { SavingsStore } from './savings.store';
+import { SavingsProgressComponent } from '../../../shared/components/savings-progress/savings-progress.component';
 
 @Component({
   selector: 'app-savings',
@@ -81,52 +83,43 @@ import { BlockScientificNotationDirective } from '../../directives/block-scienti
     IonTextarea,
     IonToggle,
     MoneyMaskDirective,
-    BlockScientificNotationDirective
+    BlockScientificNotationDirective,
+    SavingsProgressComponent
   ],
+  providers: [SavingsStore],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SavingsPage implements OnInit {
-  // State Signals
-  public savingsGoals = this.savingsService.savingsGoals;
+  /** Inyección del store localizado de ahorros */
+  public store = inject(SavingsStore);
+  private savingsService = inject(SavingsService);
+
+  // State Signals (Delegadas al Store)
+  public activeSavingsGoals = this.store.activeSavingsGoals;
+  public totalSaved = this.store.totalSaved;
+  public totalTarget = this.store.totalTarget;
+  public globalProgress = this.store.globalProgress;
+
   public accounts = this.accountService.accounts;
   public currentUser = this.authService.currentUser;
   
   public householdMembers = signal<any[]>([]);
   public selectedGoal = signal<SavingsGoal | null>(null);
-
-  // Active savings goals computed (current amount < target amount)
-  public activeSavingsGoals = computed(() => {
-    return this.savingsGoals().filter((g) => Number(g.currentAmount) < Number(g.targetAmount));
-  });
   
   // Modal Signals
   public isCreateModalOpen = signal(false);
   public isDepositModalOpen = signal(false);
   public isSubmitting = signal(false);
-  public readonly Number = Number;
-  public readonly Math = Math;
 
   // Forms
   public savingsForm!: FormGroup;
   public depositForm!: FormGroup;
 
-  // Computed totals for dashboard stats based on active goals
-  public totalTarget = computed(() => {
-    return this.activeSavingsGoals().reduce((sum, goal) => sum + Number(goal.targetAmount), 0);
-  });
-
-  public totalSaved = computed(() => {
-    return this.activeSavingsGoals().reduce((sum, goal) => sum + Number(goal.currentAmount), 0);
-  });
-
-  public globalProgress = computed(() => {
-    const target = this.totalTarget();
-    if (target === 0) return 0;
-    return Math.min(100, (this.totalSaved() / target) * 100);
-  });
+  // Expose global namespaces to templates
+  public readonly Number = Number;
+  public readonly Math = Math;
 
   constructor(
-    private readonly savingsService: SavingsService,
     private readonly accountService: AccountService,
     private readonly authService: AuthService,
     private readonly fb: FormBuilder,
@@ -151,10 +144,11 @@ export class SavingsPage implements OnInit {
     effect(() => {
       const changeCount = this.transactionEventService.transactionSaved();
       if (changeCount > 0) {
-        this.savingsService.loadSavingsGoals(true).then((goals) => {
+        this.store.loadSavings(true).then(() => {
+          const goals = this.store.activeSavingsGoals();
           const current = this.selectedGoal();
           if (current) {
-            const updated = goals.find(g => g.id === current.id);
+            const updated = goals.find((g: SavingsGoal) => g.id === current.id);
             if (updated) {
               this.selectedGoal.set(updated);
             }
@@ -192,15 +186,18 @@ export class SavingsPage implements OnInit {
     });
   }
 
+  /**
+   * Carga los datos iniciales de la vista.
+   */
   private async loadData() {
     try {
       await Promise.all([
-        this.savingsService.loadSavingsGoals(true),
+        this.store.loadSavings(true),
         this.accountService.loadAccounts(true),
         this.loadMembers(),
       ]);
     } catch (err) {
-      console.error('Error loading page data:', err);
+      console.error('Error loading savings page data:', err);
     }
   }
 
@@ -276,7 +273,7 @@ export class SavingsPage implements OnInit {
     this.isSubmitting.set(true);
     try {
       const dto = this.depositForm.value;
-      await firstValueFrom(this.savingsService.depositToSavingsGoal(goal.id, dto));
+      await this.savingsService.depositToSavingsGoal(goal.id, dto);
       this.closeDepositModal();
       // Reload accounts since balance changed
       await this.accountService.loadAccounts(true);

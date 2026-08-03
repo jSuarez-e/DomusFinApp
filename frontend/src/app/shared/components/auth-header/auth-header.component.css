@@ -1,0 +1,46 @@
+:host {
+  display: block;
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.app-logo {
+  width: 64px;
+  height: 64px;
+  background: rgba(136, 220, 204, 0.1);
+  border: 1px solid rgba(136, 220, 204, 0.2);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px auto;
+  box-shadow: 0 8px 24px rgba(136, 220, 204, 0.15);
+}
+
+.logo-icon {
+  font-size: 2rem;
+  color: #88DCCC;
+}
+
+.auth-header h1 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin: 0;
+  background: linear-gradient(135deg, #ffffff 0%, #88DCCC 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px;
+}
+
+.auth-subtitle {
+  font-size: 0.9rem;
+  color: #4C6793;
+  margin: 8px 0 0 0;
+  max-width: 260px;
+  line-height: 1.4;
+  margin-left: auto;
+  margin-right: auto;
+}

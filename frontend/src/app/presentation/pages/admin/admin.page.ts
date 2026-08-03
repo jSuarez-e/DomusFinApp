@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, signal, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -60,6 +60,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { Category, PaymentMethod, CategoryType } from '@shared/index';
 import { environment } from 'src/environments/environment'; // Import environment config for API URL
 import { MoneyMaskDirective } from '../../directives/money-mask.directive';
+import { AdminStore } from './admin.store';
 
 @Component({
   selector: 'app-admin',
@@ -95,65 +96,17 @@ import { MoneyMaskDirective } from '../../directives/money-mask.directive';
     MoneyMaskDirective,
     IonSearchbar
   ],
+  providers: [AdminStore],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AdminPage implements OnInit {
-  public activeTab = signal<'categories' | 'payments' | 'budget' | 'account' | 'members'>('categories');
+  public store = inject(AdminStore);
   
-  // Search state
-  public searchTerm = signal('');
-  
-  // Data lists
-  public categories = signal<Category[]>([]);
-  public paymentMethods = signal<PaymentMethod[]>([]);
-  public members = signal<any[]>([]);
   public household = this.householdService.household;
   public currentUser = this.authService.currentUser;
 
   // Enum reference for template
   public CategoryType = CategoryType;
-
-  // Split Category computed signals
-  public expenseCategories = computed(() => this.categories().filter((c) => c.type === CategoryType.EXPENSE || !c.type));
-  public incomeCategories = computed(() => this.categories().filter((c) => c.type === CategoryType.INCOME));
-
-  // Filtered computed signals for lists
-  public filteredExpenseCategories = computed(() => {
-    const term = this.searchTerm().toLowerCase().trim();
-    const list = this.expenseCategories();
-    if (!term) return list;
-    return list.filter(c => c.name.toLowerCase().includes(term));
-  });
-
-  public filteredIncomeCategories = computed(() => {
-    const term = this.searchTerm().toLowerCase().trim();
-    const list = this.incomeCategories();
-    if (!term) return list;
-    return list.filter(c => c.name.toLowerCase().includes(term));
-  });
-
-  public filteredPaymentMethods = computed(() => {
-    const term = this.searchTerm().toLowerCase().trim();
-    const list = this.paymentMethods();
-    if (!term) return list;
-    return list.filter(pm => pm.name.toLowerCase().includes(term));
-  });
-
-  public filteredMembers = computed(() => {
-    const term = this.searchTerm().toLowerCase().trim();
-    const list = this.members();
-    if (!term) return list;
-    return list.filter(m => 
-      (m.name || '').toLowerCase().includes(term) || 
-      (m.email || '').toLowerCase().includes(term)
-    );
-  });
-
-  // Modals status
-  public isCategoryModalOpen = signal(false);
-  public isPaymentModalOpen = signal(false);
-  public isCategoryEdit = signal(false);
-  public isPaymentEdit = signal(false);
 
   // Reactivo Forms
   public categoryForm!: FormGroup;
@@ -251,20 +204,12 @@ export class AdminPage implements OnInit {
   }
 
   // --- Data Loading API ---
-  public loadCategories() {
-    // Update to use environment.apiUrl for fetching categories
-    this.http.get<Category[]>(`${environment.apiUrl}/categories`).subscribe({
-      next: (data) => this.categories.set(data || []),
-      error: (err) => console.error('Failed to load categories:', err)
-    });
+  public loadCategories(): void {
+    this.store.loadCategories();
   }
 
-  public loadPaymentMethods() {
-    // Update to use environment.apiUrl for fetching payment methods
-    this.http.get<PaymentMethod[]>(`${environment.apiUrl}/payment-methods`).subscribe({
-      next: (data) => this.paymentMethods.set(data || []),
-      error: (err) => console.error('Failed to load payment methods:', err)
-    });
+  public loadPaymentMethods(): void {
+    this.store.loadPaymentMethods();
   }
 
   public loadHouseholdInfo() {
@@ -279,42 +224,41 @@ export class AdminPage implements OnInit {
     }
   }
 
-  public onTabChange(event: any) {
-    this.activeTab.set(event.detail.value);
-    this.searchTerm.set('');
+  public onTabChange(event: any): void {
+    this.store.setActiveTab(event.detail.value);
   }
 
-  public onSearch(event: any) {
-    this.searchTerm.set(event.detail.value ?? '');
+  public onSearch(event: any): void {
+    this.store.setSearchTerm(event.detail.value ?? '');
   }
 
   // --- Category Actions ---
-  public openAddCategory(defaultType = CategoryType.EXPENSE) {
-    this.isCategoryEdit.set(false);
+  public openAddCategory(defaultType = CategoryType.EXPENSE): void {
+    this.store.setCategoryEdit(false);
     this.categoryForm.reset({ name: '', icon: 'list-outline', type: defaultType });
-    this.isCategoryModalOpen.set(true);
+    this.store.setCategoryModalOpen(true);
   }
 
-  public openEditCategory(cat: Category) {
-    this.isCategoryEdit.set(true);
+  public openEditCategory(cat: Category): void {
+    this.store.setCategoryEdit(true);
     this.currentEditingCategoryId = cat.id;
     this.categoryForm.setValue({
       name: cat.name,
       icon: cat.icon || 'list-outline',
       type: cat.type || CategoryType.EXPENSE
     });
-    this.isCategoryModalOpen.set(true);
+    this.store.setCategoryModalOpen(true);
   }
 
-  public closeCategoryModal() {
-    this.isCategoryModalOpen.set(false);
+  public closeCategoryModal(): void {
+    this.store.setCategoryModalOpen(false);
   }
 
-  public saveCategory() {
+  public saveCategory(): void {
     if (this.categoryForm.invalid) return;
 
     const val = this.categoryForm.value;
-    if (this.isCategoryEdit()) {
+    if (this.store.isCategoryEdit()) {
       // Update to use environment.apiUrl for category updates
       this.http.put(`${environment.apiUrl}/categories/${this.currentEditingCategoryId}`, val).subscribe({
         next: () => {
@@ -376,28 +320,28 @@ export class AdminPage implements OnInit {
   }
 
   // --- Payment Method Actions ---
-  public openAddPayment() {
-    this.isPaymentEdit.set(false);
+  public openAddPayment(): void {
+    this.store.setPaymentEdit(false);
     this.paymentForm.reset({ name: '' });
-    this.isPaymentModalOpen.set(true);
+    this.store.setPaymentModalOpen(true);
   }
 
-  public openEditPayment(pm: PaymentMethod) {
-    this.isPaymentEdit.set(true);
+  public openEditPayment(pm: PaymentMethod): void {
+    this.store.setPaymentEdit(true);
     this.currentEditingPaymentId = pm.id;
     this.paymentForm.setValue({ name: pm.name });
-    this.isPaymentModalOpen.set(true);
+    this.store.setPaymentModalOpen(true);
   }
 
-  public closePaymentModal() {
-    this.isPaymentModalOpen.set(false);
+  public closePaymentModal(): void {
+    this.store.setPaymentModalOpen(false);
   }
 
-  public savePayment() {
+  public savePayment(): void {
     if (this.paymentForm.invalid) return;
 
     const val = this.paymentForm.value;
-    if (this.isPaymentEdit()) {
+    if (this.store.isPaymentEdit()) {
       // Update to use environment.apiUrl for payment method updates
       this.http.put(`${environment.apiUrl}/payment-methods/${this.currentEditingPaymentId}`, val).subscribe({
         next: () => {
@@ -459,22 +403,22 @@ export class AdminPage implements OnInit {
   }
 
   // --- Budget Goal Actions ---
-  public saveBudgetGoal() {
+  public async saveBudgetGoal(): Promise<void> {
     if (this.budgetForm.invalid) return;
 
     const val = this.budgetForm.value;
-    this.householdService.updateHouseholdBudget(val.monthlyBudget).subscribe({
-      next: () => {
-        this.loadHouseholdInfo();
-        this.triggerAlert('Éxito', 'Meta de presupuesto mensual actualizada correctamente.');
-      },
-      error: (err) => console.error('Failed to update household budget goal:', err)
-    });
+    try {
+      await this.householdService.updateHouseholdBudget(val.monthlyBudget);
+      this.loadHouseholdInfo();
+      this.triggerAlert('Éxito', 'Meta de presupuesto mensual actualizada correctamente.');
+    } catch (err) {
+      console.error('Failed to update household budget goal:', err);
+    }
   }
 
   // --- Member Suspension Actions ---
-  public getOtherMembers() {
-    return this.members().filter(m => m.id !== this.currentUser()?.id && m.isActive !== false);
+  public getOtherMembers(): any[] {
+    return this.store.members().filter(m => m.id !== this.currentUser()?.id && m.isActive !== false);
   }
 
   public async submitSuspendMember(): Promise<void> {
@@ -483,7 +427,7 @@ export class AdminPage implements OnInit {
     }
 
     const memberId = this.suspendMemberForm.value.memberId;
-    const member = this.members().find((m) => m.id === memberId);
+    const member = this.store.members().find((m) => m.id === memberId);
     if (!member) {
       return;
     }
@@ -577,12 +521,8 @@ export class AdminPage implements OnInit {
     await alert.present();
   }
 
-  public loadMembers() {
-    // Update to use environment.apiUrl for loading household members
-    this.http.get<any[]>(`${environment.apiUrl}/users/members`).subscribe({
-      next: (data) => this.members.set(data || []),
-      error: (err) => console.error('Failed to load members:', err)
-    });
+  public loadMembers(): void {
+    this.store.loadMembers();
   }
 
   public toggleMemberRole(member: any) {

@@ -1,0 +1,36 @@
+.legend-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.legend-color-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.legend-label {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 500;
+  color: #e5e7eb;
+}
+
+.legend-percentage {
+  font-size: 13px;
+  font-weight: 700;
+  color: #9ca3af;
+  margin-right: 12px;
+}
+
+.legend-value {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+}

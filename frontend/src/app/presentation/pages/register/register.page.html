@@ -3,13 +3,11 @@
   <div class="glow-bg"></div>
 
   <div class="auth-wrapper">
-    <div class="auth-header">
-      <div class="app-logo">
-        <ion-icon name="person-outline" class="logo-icon"></ion-icon>
-      </div>
-      <h1>Crear Cuenta</h1>
-      <p class="auth-subtitle">Únete y empieza a colaborar en la economía de tu hogar</p>
-    </div>
+    <app-auth-header
+      icon="person-outline"
+      title="Crear Cuenta"
+      subtitle="Únete y empieza a colaborar en la economía de tu hogar">
+    </app-auth-header>
 
     <ion-card class="auth-card">
       <ion-card-content>
@@ -53,29 +51,16 @@
           </div>
 
           <!-- Password Input & Strength Indicator -->
-          <div class="input-wrapper">
-            <label class="input-label">Contraseña</label>
-            <div class="input-field">
-              <ion-icon name="lock-closed-outline" class="field-icon"></ion-icon>
-              <ion-input
-                [type]="showPassword() ? 'text' : 'password'"
-                placeholder="Crea una contraseña segura"
-                formControlName="password"
-                class="premium-input">
-              </ion-input>
-              <ion-button fill="clear" size="small" (click)="showPassword.set(!showPassword())" style="margin: 0; color: #a1a1aa; --padding-start: 4px; --padding-end: 4px; z-index: 10;">
-                <ion-icon [name]="showPassword() ? 'eye-outline' : 'eye-off-outline'" slot="icon-only" style="font-size: 18px;"></ion-icon>
-              </ion-button>
-            </div>
-            @if (registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
-              <div class="error-text">
-                La contraseña es obligatoria.
-              </div>
-            }
+          <app-password-input
+            [parentForm]="registerForm"
+            controlName="password"
+            label="Contraseña"
+            placeholder="Crea una contraseña segura"
+            errorMessage="La contraseña es obligatoria.">
             <!-- Real-time strength validator component -->
             <app-password-strength [password]="registerForm.get('password')?.value || ''">
             </app-password-strength>
-          </div>
+          </app-password-input>
 
           <!-- Invitation Toggle -->
           <ion-item class="toggle-item" lines="none">

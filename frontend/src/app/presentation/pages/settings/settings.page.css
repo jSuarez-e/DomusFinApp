@@ -314,3 +314,169 @@ ion-select::part(icon) {
   --background-activated: #b91c1c !important;
   --color: #ffffff !important;
 }
+
+/* 
+ * ----------------------------------------------------
+ * Refactored BEM classes replacing inline styles
+ * ----------------------------------------------------
+ */
+
+.settings-segment {
+  margin-bottom: 24px;
+}
+
+.password-toggle-btn {
+  margin-top: 14px;
+  margin-bottom: 0;
+  color: #a1a1aa;
+  z-index: 10;
+}
+
+.password-toggle-icon {
+  font-size: 18px;
+}
+
+.settings-strength-meter {
+  padding: 0 16px;
+  margin: 8px 0;
+}
+
+.strength-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  margin-bottom: 4px;
+}
+
+.strength-title {
+  color: #a1a1aa;
+}
+
+.strength-value {
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.settings-strength-bar {
+  border-radius: 4px;
+  height: 6px;
+}
+
+.settings-item--inline {
+  margin-top: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.settings-item__label--bold {
+  font-weight: 600;
+  margin: 0;
+}
+
+.settings-item--spaced {
+  margin-top: 16px;
+}
+
+.settings-currency-value {
+  font-size: 14px;
+  font-weight: bold;
+  color: #88DCCC;
+  margin-top: 8px;
+}
+
+.settings-currency-desc {
+  font-size: 11px;
+  color: #a1a1aa;
+  margin: 4px 0 0 0;
+}
+
+.settings-pane-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.settings-pane-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+/* Modal form refactored styles */
+.settings-modal-form {
+  padding: 16px;
+}
+
+.settings-input-wrapper {
+  margin-bottom: 16px;
+}
+
+.settings-input-label {
+  font-size: 12px;
+  color: #a1a1aa;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.settings-input-field {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 4px 12px;
+}
+
+.settings-field-icon {
+  font-size: 18px;
+  color: #a1a1aa;
+  margin-right: 8px;
+}
+
+.settings-premium-input {
+  --padding-start: 0;
+  color: #fff;
+}
+
+.settings-premium-select {
+  width: 100%;
+  color: #fff;
+}
+
+.settings-icon-wrapper {
+  margin-bottom: 24px;
+}
+
+.settings-icon-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+.icon-grid-item {
+  aspect-ratio: 1;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #88DCCC;
+  font-size: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.icon-grid-item--selected {
+  border: 2px solid #88DCCC;
+  background: rgba(136, 220, 204, 0.15);
+}
+
+.settings-modal-save-btn {
+  --border-radius: 12px;
+  font-weight: bold;
+  margin-top: 16px;
+}

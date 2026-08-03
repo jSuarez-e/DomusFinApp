@@ -3,12 +3,13 @@
   <div class="glow-bg"></div>
 
   <div class="auth-wrapper">
-    <div class="auth-header">
-      <div class="app-logo">
-        <ion-icon name="log-in-outline" class="logo-icon"></ion-icon>
-      </div>
-      <h1>DomusFin</h1>
-      <p class="auth-subtitle">Gestiona tus finanzas familiares en un solo lugar</p>
+    <!-- <app-auth-header
+      icon="log-in-outline"
+      title="DomusFin"
+      subtitle="Gestiona tus finanzas familiares en un solo lugar">
+    </app-auth-header> -->
+    <div class="logo-container">
+      <img src="/assets/logo.png" alt="Nexo Logo" class="logo">
     </div>
 
     <ion-card class="auth-card">
@@ -34,26 +35,13 @@
           </div>
 
           <!-- Password Input -->
-          <div class="input-wrapper">
-            <label class="input-label">Contraseña</label>
-            <div class="input-field">
-              <ion-icon name="lock-closed-outline" class="field-icon"></ion-icon>
-              <ion-input
-                [type]="showPassword() ? 'text' : 'password'"
-                placeholder="Ingresa tu contraseña"
-                formControlName="password"
-                class="premium-input">
-              </ion-input>
-              <ion-button fill="clear" size="small" (click)="showPassword.set(!showPassword())" style="margin: 0; color: #a1a1aa; --padding-start: 4px; --padding-end: 4px; z-index: 10;">
-                <ion-icon [name]="showPassword() ? 'eye-outline' : 'eye-off-outline'" slot="icon-only" style="font-size: 18px;"></ion-icon>
-              </ion-button>
-            </div>
-            @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
-              <div class="error-text">
-                La contraseña es obligatoria (mínimo 6 caracteres).
-              </div>
-            }
-          </div>
+          <app-password-input
+            [parentForm]="loginForm"
+            controlName="password"
+            label="Contraseña"
+            placeholder="Ingresa tu contraseña"
+            errorMessage="La contraseña es obligatoria (mínimo 6 caracteres).">
+          </app-password-input>
 
           <!-- Remember Me & Forgot Password -->
           <div class="form-options">

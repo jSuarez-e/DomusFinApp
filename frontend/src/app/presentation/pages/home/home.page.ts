@@ -62,6 +62,10 @@ import { TransactionFormComponent } from '../../components/transaction-form/tran
 import { TransactionEventService } from '../../../core/services/transaction-event.service';
 import { Movement, MonthlySummaryDto } from '@shared/index';
 
+/**
+ * @class HomePage
+ * @description Main presentation page for the dashboard, displaying financial KPIs, recent movements, and quick actions.
+ */
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
@@ -279,6 +283,9 @@ export class HomePage implements OnInit {
     }
   }
 
+  /**
+   * Loads the financial summary and dashboard metrics for the selected month.
+   */
   public loadDashboardData() {
     const month = this.selectedMonth();
     this.movementService.getMonthlySummary(month).subscribe({
@@ -300,6 +307,10 @@ export class HomePage implements OnInit {
     });
   }
 
+  /**
+   * Handles the month selection change event and reloads the dashboard data.
+   * @param event The ionChange event containing the new month value.
+   */
   public onMonthChange(event: any) {
     const newMonth = event.detail.value;
     if (newMonth) {
@@ -331,7 +342,10 @@ export class HomePage implements OnInit {
     this.themeService.toggleTheme(!this.isDarkTheme());
   }
 
-  // Open transaction creation modal with dynamic defaultType input
+  /**
+   * Opens the transaction creation modal.
+   * @param defaultType Optional default transaction type to pre-select.
+   */
   public async openAddModal(defaultType?: string) {
     const modal = await this.modalCtrl.create({
       component: TransactionFormComponent,

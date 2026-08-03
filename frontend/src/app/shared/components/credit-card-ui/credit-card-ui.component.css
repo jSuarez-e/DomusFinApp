@@ -1,0 +1,88 @@
+.cc-physical-card__glass {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
+  z-index: 1;
+}
+
+.cc-physical-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.cc-physical-card__bank {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  opacity: 0.9;
+  display: flex;
+  align-items: center;
+}
+
+.cc-physical-card__secure-badge {
+  font-size: 9px;
+  opacity: 0.9;
+  color: #88DCCC;
+  margin-left: 8px;
+}
+
+.cc-physical-card__logo {
+  font-size: 24px;
+  opacity: 0.8;
+}
+
+.cc-physical-card__chip {
+  width: 38px;
+  height: 28px;
+  background: linear-gradient(135deg, #e0b467 0%, #c49646 100%);
+  border-radius: 6px;
+  position: relative;
+  z-index: 2;
+  margin: 16px 0 12px 0;
+  box-shadow: inset 0 0 4px rgba(0,0,0,0.4);
+}
+
+.cc-physical-card__number {
+  font-size: 20px;
+  font-family: monospace;
+  letter-spacing: 3px;
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 2;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.cc-physical-card__footer {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  z-index: 2;
+}
+
+.cc-physical-card__label {
+  font-size: 9px;
+  opacity: 0.7;
+  margin-bottom: 2px;
+}
+
+.cc-physical-card__val {
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.cc-physical-card__debt {
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.cc-physical-card__align-right {
+  text-align: right;
+}

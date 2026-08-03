@@ -103,20 +103,7 @@
 
               <!-- Card Progress Bar -->
               <div class="savings-card__progress-container">
-                <div class="savings-progress-bar">
-                  <div class="savings-progress-bar__fill" [style.width.%]="getProgressPercentage(goal)"></div>
-                </div>
-                <div class="savings-card__progress-text">
-                  <span>Progreso: {{ getProgressPercentage(goal) | number:'1.0-1' }}%</span>
-                  @if (!goal.isPrivate && goal.participants && goal.participants.length > 0) {
-                    <div class="savings-card__participants-list" style="display: flex; gap: 4px; align-items: center; flex-wrap: wrap; margin-top: 6px;">
-                      <span style="font-size: 9px; color: #a1a1aa; text-transform: uppercase; font-weight: 700;">Compartido:</span>
-                      @for (p of goal.participants; track p.id) {
-                        <ion-badge color="tertiary" style="font-size: 9px; padding: 2px 6px; border-radius: 6px;">👤 {{ p.name }}</ion-badge>
-                      }
-                    </div>
-                  }
-                </div>
+                <app-savings-progress [goal]="goal"></app-savings-progress>
               </div>
 
               <!-- Card Actions -->

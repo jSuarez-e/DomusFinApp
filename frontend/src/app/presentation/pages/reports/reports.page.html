@@ -63,12 +63,12 @@
     </ion-segment>
 
     <!-- Capital Movements Toggle Filter -->
-    <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 12px; margin: 16px 0; display: flex; justify-content: space-between; align-items: center;">
-      <div style="display: flex; flex-direction: column; gap: 4px;">
-        <span style="font-size: 13px; font-weight: 700; color: #ffffff;">Excluir Movimientos de Capital</span>
-        <span style="font-size: 11px; color: #9ca3af; line-height: 1.3;">Oculta abonos a metas de ahorro y pagos de deudas para ver solo gastos operativos reales.</span>
+    <div class="reports-filter-toggle">
+      <div class="reports-filter-toggle__text">
+        <span class="reports-filter-toggle__title">Excluir Movimientos de Capital</span>
+        <span class="reports-filter-toggle__desc">Oculta abonos a metas de ahorro y pagos de deudas para ver solo gastos operativos reales.</span>
       </div>
-      <ion-toggle [checked]="excludeCapitalMovements()" (ionChange)="excludeCapitalMovements.set($event.detail.checked)" color="primary"></ion-toggle>
+      <ion-toggle [checked]="store.excludeCapitalMovements()" (ionChange)="onExcludeCapitalChange($event)" color="primary"></ion-toggle>
     </div>
 
     <!-- Consolidated KPI Grid -->
@@ -116,14 +116,14 @@
           </div>
 
           <div class="chart-legend">
-            @for (cat of byCategory(); track cat.categoryId; let idx = $index) {
+            @for (cat of store.byCategory(); track cat.categoryId; let idx = $index) {
               @if (cat.categoryId !== 0 && cat.amount > 0) {
-                <div class="legend-item">
-                  <span class="legend-color-dot" [style.background-color]="getCategoryColor(idx)"></span>
-                  <span class="legend-label">{{ cat.categoryName }}</span>
-                  <span class="legend-percentage">{{ cat.percentage }}%</span>
-                  <span class="legend-value">{{ cat.amount | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
-                </div>
+                <app-report-legend
+                  [categoryName]="cat.categoryName"
+                  [percentage]="cat.percentage"
+                  [amount]="cat.amount"
+                  [color]="getCategoryColor(idx)">
+                </app-report-legend>
               }
             }
           </div>
@@ -165,16 +165,15 @@
                 <!-- ZONA IZQUIERDA: Icono Circular -->
                 <div slot="start" 
                      class="icon-circle" 
-                     [style.background-color]="m.isPrivate && activeType() !== 'Privado' ? 'rgba(239, 68, 68, 0.15)' : getCategoryColorById(m.categoryId) + '33'"
-                     [style.color]="m.isPrivate && activeType() !== 'Privado' ? '#ef4444' : getCategoryColorById(m.categoryId)">
-                  <ion-icon [name]="m.isPrivate && activeType() !== 'Privado' ? 'lock-closed' : (getMovementIcon(m) || 'cash-outline')"></ion-icon>
+                     [ngClass]="getMovementIconClass(m)">
+                  <ion-icon [name]="m.isPrivate && store.activeType() !== 'Privado' ? 'lock-closed' : (getMovementIcon(m) || 'cash-outline')"></ion-icon>
                 </div>
 
                 <!-- ZONA CENTRAL: Título y Descripción -->
                 <ion-label class="item-body">
                   <div class="item-title-row">
                     <h3 class="item-title">
-                      @if (m.isPrivate && activeType() !== 'Privado') {
+                      @if (m.isPrivate && store.activeType() !== 'Privado') {
                         Movimiento Privado
                       } @else {
                         {{ m.categoryName || m.type }}
@@ -185,8 +184,8 @@
                     }
                   </div>
                   <p class="item-desc">
-                    @if (m.isPrivate && activeType() !== 'Privado') {
-                      Oculto por {{ m.userName?.split(' ')[0] || 'Miembro' }}
+                    @if (m.isPrivate && store.activeType() !== 'Privado') {
+                      Oculto por {{ m.userName?.split(' ')?.[0] || 'Miembro' }}
                     } @else {
                       {{ m.description || 'General' }}
                     }
@@ -206,7 +205,10 @@
                     @if (m.is_auto_captured) {
                       <span class="auto-lightning" title="Captura Automática">⚡</span>
                     }
-                    <span class="item-user">{{ m.userName?.split(' ')[0] || 'Miembro' }}</span>
+                    <span class="end-meta">
+                      <ion-icon name="person-outline" class="item-user"></ion-icon>
+                      <span class="item-user">{{ m.userName?.split(' ')?.[0] || 'Miembro' }}</span>
+                    </span>
                   </div>
                 </div>
 

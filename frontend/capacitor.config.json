@@ -2,5 +2,15 @@
   "appId": "com.domusfin.app",
   "appName": "DomusFinApp",
   "webDir": "dist/app/browser",
-  "bundledWebRuntime": false
+  "bundledWebRuntime": false,
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 2000,
+      "launchAutoHide": false,
+      "backgroundColor": "#09090b",
+      "showSpinner": false,
+      "splashFullScreen": true,
+      "splashImmersive": true
+    }
+  }
 }

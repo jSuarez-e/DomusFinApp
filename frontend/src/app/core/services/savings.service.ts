@@ -59,18 +59,22 @@ export class SavingsService {
    * 
    * @param id ID de la meta de ahorro.
    * @param dto Datos del aporte (cuenta origen y monto).
-   * @returns Observable con la respuesta del aporte.
+   * @returns {Promise<SavingsGoal>} Promesa con la respuesta del aporte.
+   * @throws {Error} Si falla la petición HTTP.
    */
-  depositToSavingsGoal(id: number, dto: DepositSavingsGoalDto): Observable<SavingsGoal> {
-    const obs = this.http.post<SavingsGoal>(`${this.apiUrl}/${id}/deposit`, dto);
-    obs.subscribe({
-      next: (updatedGoal) => {
-        this.savingsGoalsState.update((current) =>
-          current.map((g) => (g.id === id ? updatedGoal : g))
-        );
-      },
-    });
-    return obs;
+  async depositToSavingsGoal(id: number, dto: DepositSavingsGoalDto): Promise<SavingsGoal> {
+    try {
+      const updatedGoal = await firstValueFrom(
+        this.http.post<SavingsGoal>(`${this.apiUrl}/${id}/deposit`, dto)
+      );
+      this.savingsGoalsState.update((current) =>
+        current.map((g) => (g.id === id ? updatedGoal : g))
+      );
+      return updatedGoal;
+    } catch (error) {
+      console.error('Error depositing to savings goal:', error);
+      throw error;
+    }
   }
 
   /**

@@ -1,0 +1,48 @@
+.savings-progress {
+  width: 100%;
+}
+
+.savings-progress__bar {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.savings-progress__fill {
+  height: 100%;
+  background: var(--ion-color-primary, #3880ff);
+  transition: width 0.3s ease;
+  border-radius: 4px;
+}
+
+.savings-progress__text {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  color: #a1a1aa;
+  margin-top: 6px;
+}
+
+.savings-progress__participants {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.savings-progress__participants-label {
+  font-size: 9px;
+  color: #a1a1aa;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.savings-progress__badge {
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: var(--ion-color-tertiary, #5260ff);
+  color: white;
+}

@@ -1,5 +1,5 @@
 // frontend/src/app/presentation/pages/reset-password/reset-password.page.ts
-import { ChangeDetectionStrategy, Component, Input, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -18,8 +18,10 @@ import {
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { lockClosedOutline, checkmarkCircleOutline, eyeOutline, eyeOffOutline } from 'ionicons/icons';
-import { AuthService } from '../../../core/services/auth.service';
 import { PasswordStrengthComponent } from '../../components/password-strength/password-strength.component';
+import { AuthHeaderComponent } from '../../../shared/components/auth-header/auth-header.component';
+import { PasswordInputComponent } from '../../../shared/components/password-input/password-input.component';
+import { ResetPasswordStore } from './reset-password.store';
 
 @Component({
   selector: 'app-reset-password',
@@ -40,8 +42,11 @@ import { PasswordStrengthComponent } from '../../components/password-strength/pa
     IonText,
     IonIcon,
     IonLabel,
-    PasswordStrengthComponent
+    PasswordStrengthComponent,
+    AuthHeaderComponent,
+    PasswordInputComponent
   ],
+  providers: [ResetPasswordStore],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResetPasswordPage implements OnInit {
@@ -49,14 +54,11 @@ export class ResetPasswordPage implements OnInit {
   @Input() token!: string;
 
   public resetForm: FormGroup;
-  public showPassword = signal(false);
-  public showConfirmPassword = signal(false);
+  public store = inject(ResetPasswordStore);
 
   constructor(
     private fb: FormBuilder,
-    private authService: AuthService,
-    private router: Router,
-    private alertController: AlertController
+    private router: Router
   ) {
     addIcons({ lockClosedOutline, checkmarkCircleOutline, eyeOutline, eyeOffOutline });
 
@@ -66,9 +68,9 @@ export class ResetPasswordPage implements OnInit {
     }, { validators: this.passwordMatchValidator });
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     if (!this.token) {
-      this.showErrorAlert('Token de restablecimiento no detectado en el enlace. Por favor, solicita uno nuevo.');
+      // Usar en un store global si es necesario, pero como navegamos, basta con redirigir
       this.router.navigate(['/forgot-password']);
     }
   }
@@ -88,45 +90,15 @@ export class ResetPasswordPage implements OnInit {
   }
 
   /**
-   * Ejecuta la solicitud de cambio de contraseña.
+   * Ejecuta la solicitud de cambio de contraseña delegando al Store local.
+   * @returns {Promise<void>} Resolutor vacío
    */
-  async handleResetPassword() {
+  async handleResetPassword(): Promise<void> {
     if (this.resetForm.invalid || !this.token) {
       return;
     }
 
     const { newPassword } = this.resetForm.value;
-
-    try {
-      await this.authService.resetPassword({
-        token: this.token,
-        newPassword
-      });
-      await this.showSuccessAlert();
-      this.router.navigate(['/login']);
-    } catch (err: any) {
-      const errMsg = err?.error?.message || 'No se pudo restablecer la contraseña.';
-      await this.showErrorAlert(errMsg);
-    }
-  }
-
-  private async showSuccessAlert() {
-    const alert = await this.alertController.create({
-      header: 'Contraseña Actualizada',
-      message: 'Tu contraseña ha sido cambiada. Ya puedes ingresar con tu nueva clave.',
-      buttons: ['Ok'],
-      cssClass: 'premium-alert'
-    });
-    await alert.present();
-  }
-
-  private async showErrorAlert(message: string) {
-    const alert = await this.alertController.create({
-      header: 'Fallo al Restablecer',
-      message: message,
-      buttons: ['Ok'],
-      cssClass: 'premium-alert'
-    });
-    await alert.present();
+    await this.store.resetPassword(this.token, newPassword);
   }
 }

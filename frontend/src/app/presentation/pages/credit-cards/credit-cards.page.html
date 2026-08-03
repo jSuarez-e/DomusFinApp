@@ -43,23 +43,7 @@
             class="cc-physical-card" 
             [class.cc-physical-card--active]="selectedCard()?.id === card.id"
             (click)="selectCard(card)">
-            <div class="cc-physical-card__glass"></div>
-            <div class="cc-physical-card__header">
-              <span class="cc-physical-card__bank">DOMUSFIN PREMIUM <span style="font-size: 9px; opacity: 0.9; color: #88DCCC; margin-left: 8px;">🔒 Privada y Segura</span></span>
-              <ion-icon name="card-outline" class="cc-physical-card__logo"></ion-icon>
-            </div>
-            <div class="cc-physical-card__chip"></div>
-            <div class="cc-physical-card__number">•••• •••• •••• {{ card.lastFourDigits }}</div>
-            <div class="cc-physical-card__footer">
-              <div>
-                <div class="cc-physical-card__label">TARJETA</div>
-                <div class="cc-physical-card__val">{{ card.aliasName }}</div>
-              </div>
-              <div class="cc-physical-card__align-right">
-                <div class="cc-physical-card__label">DEUDA ACTUAL</div>
-                <div class="cc-physical-card__debt">{{ card.currentDebt | currency:'COP':'symbol-narrow':'1.0-0' }}</div>
-              </div>
-            </div>
+            <app-credit-card-ui [creditCard]="card"></app-credit-card-ui>
           </div>
         }
       </div>
@@ -80,11 +64,11 @@
           <div class="cc-tab-content">
             <ion-card class="cc-detail-card">
               <ion-card-content>
-                <div class="cc-detail-row" style="border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 12px; margin-bottom: 12px;">
-                  <span class="cc-detail-label" style="color: #88DCCC; font-weight: bold; display: flex; align-items: center; gap: 4px;">
+                <div class="cc-detail-row cc-detail-row--privacy">
+                  <span class="cc-detail-label cc-detail-label--highlight">
                     <ion-icon name="lock-closed-outline"></ion-icon> Privacidad de Tarjeta
                   </span>
-                  <span class="cc-detail-val" style="background: rgba(136, 220, 204, 0.1); color: #88DCCC; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: bold;">
+                  <span class="cc-detail-val cc-detail-val--badge">
                     Privada y Segura
                   </span>
                 </div>

@@ -1,0 +1,39 @@
+:host {
+  display: block;
+}
+
+.capture-item {
+  --background: rgba(255, 255, 255, 0.02);
+  --border-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  margin-bottom: 12px;
+  --padding-start: 12px;
+  --inner-padding-end: 12px;
+}
+
+.capture-item__icon {
+  color: #4c6793;
+  font-size: 22px;
+  margin-right: 12px;
+}
+
+.capture-item__label h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0 0 4px 0;
+}
+
+.capture-item__label p {
+  font-size: 0.78rem;
+  color: #a1a1aa;
+  margin: 0;
+}
+
+.premium-toggle {
+  --background: rgba(255, 255, 255, 0.08);
+  --handle-background: #71717a;
+  --background-checked: #88DCCC;
+  --handle-background-checked: #09090b;
+}

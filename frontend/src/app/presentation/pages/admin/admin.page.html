@@ -14,7 +14,7 @@
   <div class="glow-bg"></div>
 
   <div class="content-container">
-    <ion-segment scrollable="true" [value]="activeTab()" (ionChange)="onTabChange($event)" class="tab-segment">
+    <ion-segment scrollable="true" [value]="store.activeTab()" (ionChange)="onTabChange($event)" class="tab-segment">
       <ion-segment-button value="categories">
         <ion-label>Categorías</ion-label>
       </ion-segment-button>
@@ -33,15 +33,14 @@
     </ion-segment>
 
     <!-- TAB: CATEGORIES -->
-    @if (activeTab() === 'categories') {
+    @if (store.activeTab() === 'categories') {
       <div class="tab-pane">
         <!-- Search bar -->
         <ion-searchbar 
           placeholder="Buscar categorías..." 
-          [value]="searchTerm()"
+          [value]="store.searchTerm()"
           (ionInput)="onSearch($event)"
-          class="premium-searchbar"
-          style="--background: rgba(255,255,255,0.05); --color: #fff; --placeholder-color: #a1a1aa; --border-radius: 12px; margin-bottom: 16px;">
+          class="premium-searchbar spaced-searchbar">
         </ion-searchbar>
 
         <!-- Card: Categorías de Gastos -->
@@ -56,7 +55,7 @@
             </div>
 
             <ion-list class="admin-list" lines="none">
-              @for (cat of filteredExpenseCategories(); track cat.id) {
+              @for (cat of store.filteredExpenseCategories(); track cat.id) {
                 <ion-item class="admin-item">
                   <div class="category-icon-wrapper">
                     <ion-icon [name]="cat.icon || 'list-outline'" class="cat-icon"></ion-icon>
@@ -96,7 +95,7 @@
             </div>
 
             <ion-list class="admin-list" lines="none">
-              @for (cat of filteredIncomeCategories(); track cat.id) {
+              @for (cat of store.filteredIncomeCategories(); track cat.id) {
                 <ion-item class="admin-item">
                   <div class="category-icon-wrapper">
                     <ion-icon [name]="cat.icon || 'list-outline'" class="cat-icon"></ion-icon>
@@ -127,15 +126,14 @@
     }
 
     <!-- TAB: PAYMENT METHODS -->
-    @if (activeTab() === 'payments') {
+    @if (store.activeTab() === 'payments') {
       <div class="tab-pane">
         <!-- Search bar -->
         <ion-searchbar 
           placeholder="Buscar medios de pago..." 
-          [value]="searchTerm()"
+          [value]="store.searchTerm()"
           (ionInput)="onSearch($event)"
-          class="premium-searchbar"
-          style="--background: rgba(255,255,255,0.05); --color: #fff; --placeholder-color: #a1a1aa; --border-radius: 12px; margin-bottom: 16px;">
+          class="premium-searchbar spaced-searchbar">
         </ion-searchbar>
 
         <ion-card class="admin-card">
@@ -149,7 +147,7 @@
             </div>
 
             <ion-list class="admin-list" lines="none">
-              @for (pm of filteredPaymentMethods(); track pm.id) {
+              @for (pm of store.filteredPaymentMethods(); track pm.id) {
                 <ion-item class="admin-item">
                   <div class="payment-icon-wrapper">
                     <ion-icon name="card-outline" class="pm-icon"></ion-icon>
@@ -177,15 +175,14 @@
     }
 
     <!-- TAB: MEMBERS -->
-    @if (activeTab() === 'members') {
+    @if (store.activeTab() === 'members') {
       <div class="tab-pane">
         <!-- Search bar -->
         <ion-searchbar 
           placeholder="Buscar miembros..." 
-          [value]="searchTerm()"
+          [value]="store.searchTerm()"
           (ionInput)="onSearch($event)"
-          class="premium-searchbar"
-          style="--background: rgba(255,255,255,0.05); --color: #fff; --placeholder-color: #a1a1aa; --border-radius: 12px; margin-bottom: 16px;">
+          class="premium-searchbar spaced-searchbar">
         </ion-searchbar>
 
         <ion-card class="admin-card">
@@ -195,15 +192,15 @@
             </div>
 
             <ion-list class="admin-list" lines="none">
-              @for (m of filteredMembers(); track m.id) {
+              @for (m of store.filteredMembers(); track m.id) {
                 <ion-item class="admin-item">
                   <div class="category-icon-wrapper">
                     <ion-icon name="person-outline" class="cat-icon"></ion-icon>
                   </div>
                   <ion-label>
                     <span class="item-name">{{ m.name }}</span>
-                    <p style="margin: 4px 0 0 0; color: #a1a1aa; font-size: 0.8rem;">
-                      {{ m.email }} • Rol: <strong style="color: #88DCCC;">{{ m.role | uppercase }}</strong>
+                    <p class="member-role-desc">
+                      {{ m.email }} • Rol: <strong class="member-role-badge">{{ m.role | uppercase }}</strong>
                     </p>
                   </ion-label>
 
@@ -256,7 +253,7 @@
               <div class="input-wrapper">
                 <label class="input-label">Correo Electrónico del Invitado</label>
                 <div class="invite-form-row">
-                  <div class="input-field" style="flex: 1; margin-bottom: 0;">
+                  <div class="input-field input-field--flexible">
                     <ion-icon name="mail-outline" class="field-icon"></ion-icon>
                     <ion-input 
                       type="email" 
@@ -277,7 +274,7 @@
     }
 
     <!-- TAB: BUDGET -->
-    @if (activeTab() === 'budget') {
+    @if (store.activeTab() === 'budget') {
       <div class="tab-pane">
         <ion-card class="admin-card">
           <ion-card-header>
@@ -313,7 +310,7 @@
     }
 
     <!-- TAB: SAFETY/SUSPEND MEMBER -->
-    @if (activeTab() === 'account') {
+    @if (store.activeTab() === 'account') {
       <div class="tab-pane">
         <ion-card class="admin-card danger-card">
           <ion-card-header>
@@ -344,7 +341,7 @@
                   </ion-select>
                 </div>
                 @if (getOtherMembers().length === 0) {
-                  <p style="color: #ef4444; font-size: 0.8rem; margin-top: 8px; margin-bottom: 0;">
+                  <p class="warning-text-small">
                     ⚠️ No hay otros miembros activos en el hogar para suspender.
                   </p>
                 }
@@ -362,11 +359,11 @@
   </div>
 
   <!-- MODAL: ADD/EDIT CATEGORY -->
-  <ion-modal [isOpen]="isCategoryModalOpen()" (didDismiss)="closeCategoryModal()" class="admin-modal">
+  <ion-modal [isOpen]="store.isCategoryModalOpen()" (didDismiss)="closeCategoryModal()" class="admin-modal">
     <ng-template>
       <ion-header>
         <ion-toolbar class="modal-toolbar">
-          <ion-title>{{ isCategoryEdit() ? 'Editar Categoría' : 'Nueva Categoría' }}</ion-title>
+          <ion-title>{{ store.isCategoryEdit() ? 'Editar Categoría' : 'Nueva Categoría' }}</ion-title>
           <ion-buttons slot="end">
             <ion-button (click)="closeCategoryModal()">
               <ion-icon name="close-outline"></ion-icon>
@@ -419,11 +416,11 @@
   </ion-modal>
 
   <!-- MODAL: ADD/EDIT PAYMENT METHOD -->
-  <ion-modal [isOpen]="isPaymentModalOpen()" (didDismiss)="closePaymentModal()" class="admin-modal">
+  <ion-modal [isOpen]="store.isPaymentModalOpen()" (didDismiss)="closePaymentModal()" class="admin-modal">
     <ng-template>
       <ion-header>
         <ion-toolbar class="modal-toolbar">
-          <ion-title>{{ isPaymentEdit() ? 'Editar Medio' : 'Nuevo Medio de Pago' }}</ion-title>
+          <ion-title>{{ store.isPaymentEdit() ? 'Editar Medio' : 'Nuevo Medio de Pago' }}</ion-title>
           <ion-buttons slot="end">
             <ion-button (click)="closePaymentModal()">
               <ion-icon name="close-outline"></ion-icon>

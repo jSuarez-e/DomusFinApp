@@ -1,0 +1,27 @@
+:host {
+  display: block;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #a1a1aa;
+}
+
+.empty-state__icon {
+  font-size: 48px;
+  color: #3f3f46;
+  margin-bottom: 12px;
+}
+
+.empty-state__title {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 15px;
+  margin: 0 0 4px 0;
+}
+
+.empty-state__message {
+  font-size: 13px;
+  margin: 0;
+}

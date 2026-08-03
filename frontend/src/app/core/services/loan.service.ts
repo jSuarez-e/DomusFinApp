@@ -58,30 +58,47 @@ export class LoanService {
    * 
    * @param id ID del crédito.
    * @param dto Datos del pago (cuenta origen, capital e interés).
-   * @returns Observable con el crédito actualizado.
+   * @returns {Promise<Loan>} Promesa con el crédito actualizado.
+   * @throws {Error} Si falla la petición HTTP.
    */
-  payLoan(id: number, dto: PayLoanDto): Observable<Loan> {
-    const obs = this.http.post<Loan>(`${this.apiUrlLoans}/${id}/pay`, dto);
-    obs.subscribe({
-      next: (updatedLoan) => {
-        this.loansState.update((current) =>
-          current.map((l) => (l.id === id ? updatedLoan : l))
-        );
-      },
-    });
-    return obs;
+  async payLoan(id: number, dto: PayLoanDto): Promise<Loan> {
+    try {
+      const updatedLoan = await firstValueFrom(
+        this.http.post<Loan>(`${this.apiUrlLoans}/${id}/pay`, dto)
+      );
+      this.loansState.update((current) =>
+        current.map((l) => (l.id === id ? updatedLoan : l))
+      );
+      return updatedLoan;
+    } catch (error) {
+      console.error('Error paying loan:', error);
+      throw error;
+    }
   }
 
   /**
    * Simula tabla de amortización para préstamos.
+   *
+   * @param amount Monto del préstamo.
+   * @param interestRate Tasa de interés.
+   * @param installments Número de cuotas.
+   * @returns {Promise<AmortizationPeriod[]>} Promesa con la tabla de amortización simulada.
+   * @throws {Error} Si falla la petición HTTP.
    */
-  simulateInstallments(amount: number, interestRate: number, installments: number): Observable<AmortizationPeriod[]> {
+  async simulateInstallments(amount: number, interestRate: number, installments: number): Promise<AmortizationPeriod[]> {
     const params = {
       amount: amount.toString(),
       interestRate: interestRate.toString(),
       installments: installments.toString(),
     };
-    return this.http.get<AmortizationPeriod[]>(`${this.apiUrlLoans}/simulate`, { params });
+    try {
+      return await firstValueFrom(
+        this.http.get<AmortizationPeriod[]>(`${this.apiUrlLoans}/simulate`, { params })
+      );
+    } catch (error) {
+      console.error('Error simulating installments:', error);
+      throw error;
+    }
   }
 
   /**

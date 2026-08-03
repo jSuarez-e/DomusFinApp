@@ -89,74 +89,7 @@
   padding: 0;
 }
 
-.expense-item {
-  --background: #121212;
-  --border-color: transparent;
-  --inner-padding-end: 16px;
-  --padding-start: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 12px;
-  margin-bottom: 12px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-  transition: transform 0.2s ease, border-color 0.2s ease;
-}
-
-.expense-item:hover {
-  border-color: rgba(136, 220, 204, 0.3);
-}
-
-.expense-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 6px;
-  gap: 8px;
-}
-
-.expense-description {
-  color: #ffffff;
-  font-size: 0.95rem;
-  font-weight: 600;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-  flex: 1;
-}
-
-.private-text {
-  color: #a6a6a6;
-  font-style: italic;
-}
-
-.privacy-badge {
-  font-size: 0.7rem;
-  font-weight: 600;
-  padding: 4px 8px;
-  border-radius: 12px;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.expense-meta {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.75rem;
-  color: #a6a6a6;
-}
-
-.expense-category {
-  color: #4C6793;
-  font-weight: 600;
-}
-
-.expense-amount {
-  color: #ef4444;
-  font-size: 1.1rem;
-  font-weight: 700;
-  text-align: right;
-}
-
+/* Styles moved to expense-item component */
 .empty-state {
   text-align: center;
   padding: 40px 20px;

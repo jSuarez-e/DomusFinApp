@@ -1,5 +1,5 @@
 // frontend/src/app/presentation/pages/login/login.page.ts
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -23,7 +23,9 @@ import {
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { logInOutline, personOutline, lockClosedOutline, eyeOutline, eyeOffOutline } from 'ionicons/icons';
-import { AuthService } from '../../../core/services/auth.service';
+import { AuthHeaderComponent } from '../../../shared/components/auth-header/auth-header.component';
+import { PasswordInputComponent } from '../../../shared/components/password-input/password-input.component';
+import { LoginStore } from './login.store';
 
 @Component({
   selector: 'app-login',
@@ -48,22 +50,24 @@ import { AuthService } from '../../../core/services/auth.service';
     IonCheckbox,
     IonText,
     IonIcon,
-    IonLabel
+    IonLabel,
+    AuthHeaderComponent,
+    PasswordInputComponent
   ],
+  providers: [LoginStore],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginPage {
   public loginForm!: FormGroup;
-  public showPassword = signal(false);
+  public store = inject(LoginStore);
 
   constructor(
     private fb: FormBuilder,
-    private authService: AuthService,
-    private router: Router,
-    private alertController: AlertController
+    private router: Router
   ) {
-    // Auto-redirect to dashboard if already authenticated (Remember Me logic)
-    if (this.authService.isAuthenticated()) {
+    // Si ya está autenticado, redirigir (se asume que AuthService u otro guard lo maneja globalmente, pero por seguridad temporal)
+    const token = localStorage.getItem('access_token');
+    if (token) {
       this.router.navigate(['/dashboard']);
       return;
     }
@@ -81,35 +85,15 @@ export class LoginPage {
   }
 
   /**
-   * Procesa la solicitud de login.
+   * Procesa la solicitud de login delegando al Store local.
+   * @returns {Promise<void>} Resolutor vacío
    */
-  async handleLogin() {
+  async handleLogin(): Promise<void> {
     if (this.loginForm.invalid) {
       return;
     }
 
     const { usernameOrEmail, password, rememberMe } = this.loginForm.value;
-
-    try {
-      await this.authService.login(usernameOrEmail, password, rememberMe);
-      this.router.navigate(['/dashboard']);
-    } catch (err: any) {
-      const errMsg = err?.error?.message || 'Error de red o servidor no disponible';
-      await this.showErrorAlert(errMsg);
-    }
-  }
-
-  /**
-   * Muestra ventana emergente de error de autenticación (estilo Swal).
-   */
-  private async showErrorAlert(message: string) {
-    const alert = await this.alertController.create({
-      header: 'Fallo de Autenticación',
-      subHeader: 'No se pudo iniciar sesión',
-      message: message,
-      buttons: ['Entendido'],
-      cssClass: 'premium-alert'
-    });
-    await alert.present();
+    await this.store.login(usernameOrEmail, password, rememberMe);
   }
 }

@@ -289,3 +289,21 @@
   box-shadow: 0 6px 20px rgba(136, 220, 204, 0.25);
   height: 48px;
 }
+
+/* --- Accounts Item Customizations --- */
+.accounts-item__content { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 4px 0; }
+.accounts-item__name { font-size: 15px; font-weight: 600; color: #ffffff; }
+.accounts-item__balance { font-size: 18px; font-weight: 700; color: #88DCCC; margin-top: 4px; }
+.accounts-item__meta { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.accounts-item__type-badge { font-size: 9px; padding: 3px 6px; border-radius: 6px; text-transform: uppercase; }
+.accounts-item__privacy-badge { font-size: 10px; padding: 3px 6px; border-radius: 6px; display: flex; align-items: center; justify-content: center; width: fit-content; }
+.accounts-item__privacy-badge--private { --background: rgba(92, 46, 126, 0.15); --color: #a78bfa; }
+.accounts-item__privacy-badge--shared { --background: rgba(136, 220, 204, 0.12); --color: #88dccc; }
+.accounts-item__privacy-icon { font-size: 11px; }
+
+/* --- Accounts Form Toggle --- */
+.accounts-form__field--toggle { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 12px; margin-bottom: 20px; }
+.accounts-form__toggle-wrapper { display: flex; justify-content: space-between; align-items: center; }
+.accounts-form__toggle-texts { display: flex; flex-direction: column; gap: 4px; padding-right: 12px; }
+.accounts-form__toggle-title { font-size: 13px; font-weight: 700; color: #ffffff; }
+.accounts-form__toggle-desc { font-size: 11px; color: #9ca3af; line-height: 1.3; }

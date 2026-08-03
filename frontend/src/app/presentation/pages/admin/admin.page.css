@@ -458,3 +458,34 @@
   height: 44px;
   margin: 0;
 }
+
+/* BEM Extracted Styles */
+.spaced-searchbar {
+  --background: rgba(255,255,255,0.05);
+  --color: #fff;
+  --placeholder-color: #a1a1aa;
+  --border-radius: 12px;
+  margin-bottom: 16px;
+}
+
+.member-role-desc {
+  margin: 4px 0 0 0;
+  color: #a1a1aa;
+  font-size: 0.8rem;
+}
+
+.member-role-badge {
+  color: #88DCCC;
+}
+
+.input-field--flexible {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.warning-text-small {
+  color: #ef4444;
+  font-size: 0.8rem;
+  margin-top: 8px;
+  margin-bottom: 0;
+}

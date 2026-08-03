@@ -49,21 +49,45 @@ export class CreditCardService {
 
   /**
    * Simula tabla de amortización para compras.
+   *
+   * @param amount Monto de la compra.
+   * @param interestRate Tasa de interés.
+   * @param installments Número de cuotas.
+   * @returns {Promise<AmortizationPeriod[]>} Promesa con la tabla de amortización simulada.
+   * @throws {Error} Si falla la petición HTTP.
    */
-  simulateInstallments(amount: number, interestRate: number, installments: number): Observable<AmortizationPeriod[]> {
+  async simulateInstallments(amount: number, interestRate: number, installments: number): Promise<AmortizationPeriod[]> {
     const params = {
       amount: amount.toString(),
       interestRate: interestRate.toString(),
       installments: installments.toString(),
     };
-    return this.http.get<AmortizationPeriod[]>(`${this.apiUrlCreditCards}/simulate`, { params });
+    try {
+      return await firstValueFrom(
+        this.http.get<AmortizationPeriod[]>(`${this.apiUrlCreditCards}/simulate`, { params })
+      );
+    } catch (error) {
+      console.error('Error simulating credit card installments:', error);
+      throw error;
+    }
   }
 
   /**
    * Paga deuda de una tarjeta de crédito debitando saldo de una cuenta.
+   *
+   * @param dto Datos del pago a procesar.
+   * @returns {Promise<any>} Promesa con la respuesta del pago.
+   * @throws {Error} Si falla la petición HTTP.
    */
-  payCreditCard(dto: PayCreditCardDto): Observable<any> {
-    return this.http.post<any>(`${this.apiUrlCreditCards}/pay`, dto);
+  async payCreditCard(dto: PayCreditCardDto): Promise<any> {
+    try {
+      return await firstValueFrom(
+        this.http.post<any>(`${this.apiUrlCreditCards}/pay`, dto)
+      );
+    } catch (error) {
+      console.error('Error paying credit card:', error);
+      throw error;
+    }
   }
 
   /**

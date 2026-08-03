@@ -40,43 +40,11 @@
       }
 
       @for (expense of expenses(); track expense.id) {
-        <ion-item class="expense-item">
-          <ion-label>
-            <div class="expense-header">
-              <!-- Check if the expense is private and created by someone else -->
-              @if (expense.isPrivate) {
-                @if (expense.userId !== currentUser().id) {
-                  <span class="expense-description private-text">Gasto Privado</span>
-                  <ion-badge color="tertiary" class="privacy-badge">
-                    <ion-icon name="lock-closed-outline"></ion-icon>
-                    Privado (Anónimo)
-                  </ion-badge>
-                } @else {
-                  <span class="expense-description">{{ expense.description }}</span>
-                  <ion-badge color="warning" class="privacy-badge">
-                    <ion-icon name="eye-off-outline"></ion-icon>
-                    Privado (Tuyo)
-                  </ion-badge>
-                }
-              } @else {
-                <span class="expense-description">{{ expense.description }}</span>
-                <ion-badge color="secondary" class="privacy-badge">
-                  <ion-icon name="globe-outline"></ion-icon>
-                  Público
-                </ion-badge>
-              }
-            </div>
-
-            <div class="expense-meta">
-              <span class="expense-category">{{ getCategoryName(expense.categoryId) }}</span>
-              <span class="expense-date">{{ expense.date | date:(currentUser()?.dateFormat === 'MM/DD/YYYY' ? 'MM/dd/yyyy, h:mm a' : 'dd/MM/yyyy, h:mm a') }}</span>
-            </div>
-          </ion-label>
-
-          <span class="expense-amount" slot="end">
-            {{ expense.amount | currency:'USD':'symbol':'1.2-2' }}
-          </span>
-        </ion-item>
+        <app-expense-item 
+          [expense]="expense"
+          [categoryName]="getCategoryName(expense.categoryId)"
+          [currentUser]="currentUser()">
+        </app-expense-item>
       }
     </ion-list>
   </div>

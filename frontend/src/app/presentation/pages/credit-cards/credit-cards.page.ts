@@ -1,5 +1,5 @@
 // frontend/src/app/presentation/pages/credit-cards/credit-cards.page.ts
-import { ChangeDetectionStrategy, Component, OnInit, signal, computed, effect } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, signal, effect, inject } from '@angular/core';
 import { TransactionEventService } from '../../../core/services/transaction-event.service';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -50,6 +50,8 @@ import { AccountService } from '../../../core/services/account.service';
 import { CreditCard, Account, AmortizationPeriod } from '@shared/index';
 import { MoneyMaskDirective } from '../../directives/money-mask.directive';
 import { BlockScientificNotationDirective } from '../../directives/block-scientific-notation.directive';
+import { CreditCardsStore } from './credit-cards.store';
+import { CreditCardUiComponent } from '../../../shared/components/credit-card-ui/credit-card-ui.component';
 
 @Component({
   selector: 'app-credit-cards',
@@ -82,14 +84,24 @@ import { BlockScientificNotationDirective } from '../../directives/block-scienti
     IonSegmentButton,
     IonToggle,
     MoneyMaskDirective,
-    BlockScientificNotationDirective
+    BlockScientificNotationDirective,
+    CreditCardUiComponent
   ],
+  providers: [CreditCardsStore],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreditCardsPage implements OnInit {
+  public store = inject(CreditCardsStore);
+  private transactionEventService = inject(TransactionEventService);
+  private creditCardService = inject(CreditCardService);
+
+  // Reemplazo de los Signals directos por los consumidos desde la tienda localizada
+  public creditCards = this.store.creditCards;
+  public totalDebt = this.store.totalDebt;
+  public isSubmitting = signal(false);
+
   // Signals state
-  public creditCards = this.creditCardService.creditCards;
-  public accounts = this.accountService.accounts;
+  public accounts = inject(AccountService).accounts;
   public selectedCard = signal<CreditCard | null>(null);
 
   // Modals state
@@ -106,20 +118,11 @@ export class CreditCardsPage implements OnInit {
   public simInstallments = signal<number>(12);
   public amortizationPlan = signal<AmortizationPeriod[]>([]);
 
-  public isSubmitting = signal(false);
-
-  // Total household credit debt
-  public totalDebt = computed(() =>
-    this.creditCards().reduce((sum, cc) => sum + Number(cc.currentDebt), 0)
-  );
-
   constructor(
-    private readonly creditCardService: CreditCardService,
-    private readonly accountService: AccountService,
-    private readonly fb: FormBuilder,
-    private readonly alertCtrl: AlertController,
-    private readonly toastCtrl: ToastController,
-    private readonly transactionEventService: TransactionEventService
+    private accountService: AccountService,
+    private fb: FormBuilder,
+    private alertCtrl: AlertController,
+    private toastCtrl: ToastController
   ) {
     addIcons({
       addOutline,
@@ -262,33 +265,27 @@ export class CreditCardsPage implements OnInit {
     this.isSubmitting.set(true);
     try {
       const val = this.payForm.value;
-      this.creditCardService.payCreditCard({
+      await this.creditCardService.payCreditCard({
         creditCardId: card.id,
         accountId: Number(val.accountId),
         amount: Number(val.amount)
-      }).subscribe({
-        next: async () => {
-          // Refresh list to update debts
-          await this.creditCardService.loadCreditCards(true);
-          await this.accountService.loadAccounts(true);
-          
-          // Select updated card
-          const updatedCard = this.creditCards().find(c => c.id === card.id);
-          if (updatedCard) {
-            this.selectedCard.set(updatedCard);
-          }
-          this.closePayModal();
-          await this.showToast('Pago registrado correctamente');
-          this.transactionEventService.emitTransactionSaved();
-          this.isSubmitting.set(false);
-        },
-        error: async (err) => {
-          const msg = err?.error?.message || 'Error al procesar el pago';
-          await this.showToast(msg, 'danger');
-          this.isSubmitting.set(false);
-        }
       });
-    } catch (e) {
+      // Refresh list to update debts
+      await this.creditCardService.loadCreditCards(true);
+      await this.accountService.loadAccounts(true);
+      
+      // Select updated card
+      const updatedCard = this.creditCards().find(c => c.id === card.id);
+      if (updatedCard) {
+        this.selectedCard.set(updatedCard);
+      }
+      this.closePayModal();
+      await this.showToast('Pago registrado correctamente');
+      this.transactionEventService.emitTransactionSaved();
+    } catch (err: any) {
+      const msg = err?.error?.message || 'Error al procesar el pago';
+      await this.showToast(msg, 'danger');
+    } finally {
       this.isSubmitting.set(false);
     }
   }
@@ -317,22 +314,21 @@ export class CreditCardsPage implements OnInit {
     }
   }
 
-  private runSimulation() {
+  private async runSimulation() {
     const card = this.selectedCard();
     if (!card) return;
 
-    this.creditCardService.simulateInstallments(
-      this.simAmount(),
-      card.interestRate,
-      this.simInstallments()
-    ).subscribe({
-      next: (plan) => {
-        this.amortizationPlan.set(plan || []);
-      },
-      error: () => {
-        this.amortizationPlan.set([]);
-      }
-    });
+    try {
+      const plan = await this.creditCardService.simulateInstallments(
+        this.simAmount(),
+        card.interestRate,
+        this.simInstallments()
+      );
+      this.amortizationPlan.set(plan || []);
+    } catch (err) {
+      console.error('Error simulating plan:', err);
+      await this.showToast('Error al simular la tabla de amortización.', 'danger');
+    }
   }
 
   private async showToast(message: string, color: string = 'success') {

@@ -1,5 +1,5 @@
 // frontend/src/app/presentation/pages/capture-settings/capture-settings.page.ts
-import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { 
   IonContent, 
@@ -29,6 +29,8 @@ import {
   settingsOutline
 } from 'ionicons/icons';
 import { AuthService } from '../../../core/services/auth.service';
+import { CaptureSettingsStore } from './capture-settings.store';
+import { CaptureChannelItemComponent } from '../../../shared/components/capture-channel-item/capture-channel-item.component';
 
 @Component({
   selector: 'app-capture-settings',
@@ -52,14 +54,18 @@ import { AuthService } from '../../../core/services/auth.service';
     IonCardContent,
     IonButtons,
     IonMenuButton,
-    IonButton
+    IonButton,
+    CaptureChannelItemComponent
   ],
+  providers: [CaptureSettingsStore],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CaptureSettingsPage implements OnInit {
-  public isSmsEnabled = signal(true);
-  public isPushEnabled = signal(true);
-  public isBackgroundSyncEnabled = signal(true);
+  public store = inject(CaptureSettingsStore);
+  
+  public isSmsEnabled = this.store.isSmsEnabled;
+  public isPushEnabled = this.store.isPushEnabled;
+  public isBackgroundSyncEnabled = this.store.isBackgroundSyncEnabled;
 
   constructor(
     private readonly authService: AuthService,
@@ -75,37 +81,47 @@ export class CaptureSettingsPage implements OnInit {
   }
 
   ngOnInit(): void {
-    // Cargar configuraciones guardadas localmente si existen
-    const savedSms = localStorage.getItem('sms_capture_enabled');
-    const savedPush = localStorage.getItem('push_capture_enabled');
-    const savedBg = localStorage.getItem('bg_sync_enabled');
-
-    if (savedSms !== null) this.isSmsEnabled.set(savedSms === 'true');
-    if (savedPush !== null) this.isPushEnabled.set(savedPush === 'true');
-    if (savedBg !== null) this.isBackgroundSyncEnabled.set(savedBg === 'true');
+    // El store maneja la inicialización mediante withHooks
   }
 
+  /**
+   * Maneja el cambio del toggle de SMS
+   * @param event - Evento del componente IonToggle
+   * @returns {Promise<void>} Resolutor
+   */
   public async toggleSms(event: any): Promise<void> {
     const val = event.detail.checked;
-    this.isSmsEnabled.set(val);
-    localStorage.setItem('sms_capture_enabled', String(val));
+    this.store.toggleSms(val);
     await this.showToast(val ? 'Lectura de SMS activada' : 'Lectura de SMS desactivada');
   }
 
+  /**
+   * Maneja el cambio del toggle de Push
+   * @param event - Evento del componente IonToggle
+   * @returns {Promise<void>} Resolutor
+   */
   public async togglePush(event: any): Promise<void> {
     const val = event.detail.checked;
-    this.isPushEnabled.set(val);
-    localStorage.setItem('push_capture_enabled', String(val));
+    this.store.togglePush(val);
     await this.showToast(val ? 'Escucha de Notificaciones activada' : 'Escucha de Notificaciones desactivada');
   }
 
+  /**
+   * Maneja el cambio del toggle de Background Sync
+   * @param event - Evento del componente IonToggle
+   * @returns {Promise<void>} Resolutor
+   */
   public async toggleBgSync(event: any): Promise<void> {
     const val = event.detail.checked;
-    this.isBackgroundSyncEnabled.set(val);
-    localStorage.setItem('bg_sync_enabled', String(val));
+    this.store.toggleBgSync(val);
     await this.showToast(val ? 'Sincronización en segundo plano activada' : 'Sincronización en segundo plano desactivada');
   }
 
+  /**
+   * Solicita al plugin nativo abrir la configuración de acceso a notificaciones.
+   * @returns {Promise<void>} Resolutor
+   * @throws Puede lanzar error si no se encuentra en un entorno nativo (Capacitor).
+   */
   public async requestNotificationPermission(): Promise<void> {
     try {
       const { registerPlugin } = await import('@capacitor/core');
@@ -121,6 +137,11 @@ export class CaptureSettingsPage implements OnInit {
     }
   }
 
+  /**
+   * Muestra un toast visual de éxito
+   * @param {string} message - Mensaje a mostrar
+   * @returns {Promise<void>}
+   */
   private async showToast(message: string): Promise<void> {
     const toast = await this.toastController.create({
       message,
