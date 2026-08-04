@@ -26,7 +26,7 @@ export class DatabaseSeederService implements OnApplicationBootstrap {
   ) {}
 
   async onApplicationBootstrap(): Promise<void> {
-    // await this.clearFinancialData();
+    await this.clearFinancialData();
     await this.seedGlobalCategories();
     await this.seedGlobalPaymentMethods();
     await this.ensureHouseholdAdmins();
@@ -52,6 +52,9 @@ export class DatabaseSeederService implements OnApplicationBootstrap {
         // Limpiar categorías y medios de pago para que el seeder los vuelva a generar limpios
         await manager.query('DELETE FROM categories;');
         await manager.query('DELETE FROM payment_methods;');
+        await manager.query('DELETE FROM loan_participants;');
+        await manager.query('DELETE FROM savings_participants;');
+        await manager.query('DELETE FROM users;');
         
         await manager.query('SET FOREIGN_KEY_CHECKS = 1;');
       });

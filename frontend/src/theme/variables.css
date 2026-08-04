@@ -1,13 +1,13 @@
 /* frontend/src/theme/variables.css */
 
 :root {
-  /** Primary Accent: Soft Pastel Blue **/
-  --ion-color-primary: #5DADE2;
-  --ion-color-primary-rgb: 93, 173, 226;
-  --ion-color-primary-contrast: #1E293B;
-  --ion-color-primary-contrast-rgb: 30, 41, 59;
-  --ion-color-primary-shade: #4A97CB;
-  --ion-color-primary-tint: #7BBCEB;
+  /** Primary Accent: Soft Pastel Teal based on image **/
+  --ion-color-primary: #59C3A6;
+  --ion-color-primary-rgb: 89, 195, 166;
+  --ion-color-primary-contrast: #FFFFFF;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #4EB095;
+  --ion-color-primary-tint: #6BC8AF;
 
   /** Secondary Supporting: Soft Pastel Teal **/
   --ion-color-secondary: #48C9B0;
@@ -64,11 +64,12 @@
 
 /* Light Theme (Default) */
 body {
-  --ion-background-color: #F8FAFC;
-  --ion-background-color-rgb: 248, 250, 252;
+  --ion-background-color: #F4F7F6;
+  --ion-background-color-rgb: 244, 247, 246;
 
   --ion-text-color: #1E293B;
   --ion-text-color-rgb: 30, 41, 59;
+  --text-secondary: #64748B;
 
   --ion-border-color: #E2E8F0;
 
@@ -100,8 +101,9 @@ body.dark {
   --ion-background-color: #0F172A;
   --ion-background-color-rgb: 15, 23, 42;
 
-  --ion-text-color: #E2E8F0;
-  --ion-text-color-rgb: 226, 232, 240;
+  --ion-text-color: #F8FAFC;
+  --ion-text-color-rgb: 248, 250, 252;
+  --text-secondary: #94A3B8;
 
   --ion-border-color: rgba(255, 255, 255, 0.08);
 
@@ -124,7 +126,30 @@ body.dark {
   --ion-color-step-550: #e0eaf0;
 }
 
-/* Global utility overrides for components to respect the modern border radius */
+/* Global utility overrides for forms and components */
 ion-card, ion-item, ion-button, ion-input, ion-textarea, ion-select {
   --border-radius: var(--border-radius-medium);
+}
+
+/* Global Form Colors (Inputs, Selects, Textareas, Checkboxes) */
+ion-item, ion-input, ion-textarea, ion-select, ion-checkbox {
+  --background: #FFFFFF;
+  --color: #1E293B;
+  --placeholder-color: #64748B;
+  --border-color: #E2E8F0;
+  --border-radius: 12px;
+}
+
+/* Global Checkbox Style */
+ion-checkbox {
+  --checkbox-background-checked: var(--ion-color-primary);
+  --border-color-checked: var(--ion-color-primary);
+  --checkmark-color: var(--ion-color-primary-contrast);
+}
+
+body.dark ion-item, body.dark ion-input, body.dark ion-textarea, body.dark ion-select, body.dark ion-checkbox {
+  --background: #1E293B;
+  --color: #F8FAFC;
+  --placeholder-color: #94A3B8;
+  --border-color: rgba(255, 255, 255, 0.08);
 }
