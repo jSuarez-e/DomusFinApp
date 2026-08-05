@@ -34,6 +34,6 @@
 .premium-toggle {
   --background: rgba(255, 255, 255, 0.08);
   --handle-background: #71717a;
-  --background-checked: #88DCCC;
+  --background-checked: var(--ion-color-primary);
   --handle-background-checked: #09090b;
 }

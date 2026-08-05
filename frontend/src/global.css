@@ -155,7 +155,7 @@ ion-item, .admin-item, .settings-item, .movement-item, .accounts-item {
   background: var(--ion-item-background) !important;
   --color: var(--ion-text-color) !important;
   color: var(--ion-text-color) !important;
-  border-bottom: 1px solid var(--ion-border-color) !important;
+  /*border-bottom: 1px solid var(--ion-border-color) !important;*/
   --border-color: var(--ion-border-color) !important;
 }
 

@@ -13,7 +13,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #88DCCC;
+  color: var(--ion-color-primary);
   margin-right: 12px;
 }
 
@@ -46,7 +46,7 @@
 }
 
 .category-item__btn--edit {
-  --color: #88DCCC;
+  --color: var(--ion-color-primary);
 }
 
 .category-item__btn--delete {

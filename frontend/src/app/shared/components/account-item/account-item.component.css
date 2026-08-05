@@ -46,7 +46,7 @@
 .accounts-item__balance {
   font-size: 18px;
   font-weight: 700;
-  color: #88DCCC;
+  color: var(--ion-color-primary);
   margin-top: 4px;
 }
 
@@ -81,7 +81,7 @@
 
 .accounts-item__privacy-badge--shared {
   --background: rgba(136, 220, 204, 0.12);
-  --color: #88dccc;
+  --color: var(--ion-color-primary);
 }
 
 .accounts-item__privacy-icon {

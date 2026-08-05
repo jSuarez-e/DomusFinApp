@@ -54,7 +54,7 @@
 .accounts-summary__value {
   font-size: 2rem;
   font-weight: 800;
-  color: #88DCCC;
+  color: var(--ion-color-primary);
   letter-spacing: -0.5px;
 }
 
@@ -151,7 +151,7 @@
 .accounts-item__balance {
   font-size: 1.1rem;
   font-weight: 700;
-  color: #88DCCC;
+  color: var(--ion-color-primary);
 }
 
 /* --- Empty State --- */
@@ -191,9 +191,9 @@
 
 /* --- FAB --- */
 .accounts-fab {
-  --background: #88DCCC;
-  --background-hover: #78c2b4;
-  --background-activated: #78c2b4;
+  --background: var(--ion-color-primary);
+  --background-hover: var(--ion-color-primary-shade);
+  --background-activated: var(--ion-color-primary-shade);
   --color: #121212;
   box-shadow: 0 6px 24px rgba(136, 220, 204, 0.3);
 }
@@ -243,7 +243,7 @@
 }
 
 .accounts-form__input-wrapper:focus-within {
-  border-color: #88DCCC;
+  border-color: var(--ion-color-primary);
   box-shadow: 0 0 8px rgba(136, 220, 204, 0.2);
 }
 
@@ -279,9 +279,9 @@
 }
 
 .accounts-form__submit {
-  --background: #88DCCC;
-  --background-hover: #78c2b4;
-  --background-activated: #78c2b4;
+  --background: var(--ion-color-primary);
+  --background-hover: var(--ion-color-primary-shade);
+  --background-activated: var(--ion-color-primary-shade);
   --color: #121212;
   font-weight: 700;
   --border-radius: 12px;
@@ -293,12 +293,12 @@
 /* --- Accounts Item Customizations --- */
 .accounts-item__content { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 4px 0; }
 .accounts-item__name { font-size: 15px; font-weight: 600; color: #ffffff; }
-.accounts-item__balance { font-size: 18px; font-weight: 700; color: #88DCCC; margin-top: 4px; }
+.accounts-item__balance { font-size: 18px; font-weight: 700; color: var(--ion-color-primary); margin-top: 4px; }
 .accounts-item__meta { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
 .accounts-item__type-badge { font-size: 9px; padding: 3px 6px; border-radius: 6px; text-transform: uppercase; }
 .accounts-item__privacy-badge { font-size: 10px; padding: 3px 6px; border-radius: 6px; display: flex; align-items: center; justify-content: center; width: fit-content; }
 .accounts-item__privacy-badge--private { --background: rgba(92, 46, 126, 0.15); --color: #a78bfa; }
-.accounts-item__privacy-badge--shared { --background: rgba(136, 220, 204, 0.12); --color: #88dccc; }
+.accounts-item__privacy-badge--shared { --background: rgba(var(--ion-color-primary-rgb), 0.12); --color: var(--ion-color-primary); }
 .accounts-item__privacy-icon { font-size: 11px; }
 
 /* --- Accounts Form Toggle --- */

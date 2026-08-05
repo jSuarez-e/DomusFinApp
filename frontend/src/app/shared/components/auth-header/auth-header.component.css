@@ -10,7 +10,7 @@
 .app-logo {
   width: 64px;
   height: 64px;
-  background: rgba(136, 220, 204, 0.1);
+  background: rgba(50, 160, 113, 0.2);
   border: 1px solid rgba(136, 220, 204, 0.2);
   border-radius: 16px;
   display: flex;
@@ -22,14 +22,14 @@
 
 .logo-icon {
   font-size: 2rem;
-  color: #88DCCC;
+  color: #32A071;
 }
 
 .auth-header h1 {
   font-size: 2.2rem;
   font-weight: 800;
   margin: 0;
-  background: linear-gradient(135deg, #ffffff 0%, #88DCCC 100%);
+  background: #1E293B;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   letter-spacing: -0.5px;

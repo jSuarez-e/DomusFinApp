@@ -28,7 +28,7 @@
 .cc-physical-card__secure-badge {
   font-size: 9px;
   opacity: 0.9;
-  color: #88DCCC;
+  color: var(--ion-color-primary);
   margin-left: 8px;
 }
 

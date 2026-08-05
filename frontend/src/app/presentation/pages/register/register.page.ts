@@ -115,7 +115,7 @@ export class RegisterPage {
       username,
       email,
       password,
-      invitationCode: isInvited ? invitationCode.trim() : undefined
+      invitationCode: isInvited ? invitationCode.trim().toUpperCase() : undefined
     };
 
     await this.store.register(payload);

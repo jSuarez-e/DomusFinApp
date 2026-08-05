@@ -58,27 +58,29 @@
             placeholder="Crea una contraseña segura"
             errorMessage="La contraseña es obligatoria.">
             <!-- Real-time strength validator component -->
-            <app-password-strength [password]="registerForm.get('password')?.value || ''">
-            </app-password-strength>
+            @if (registerForm.get('password')?.value !== '') {
+              <app-password-strength [password]="registerForm.get('password')?.value || ''">
+              </app-password-strength>
+            }
           </app-password-input>
 
           <!-- Invitation Toggle -->
           <ion-item class="toggle-item" lines="none">
-            <ion-label class="toggle-label">¿Te invitaron a un hogar?</ion-label>
-            <ion-toggle formControlName="isInvited" color="primary"></ion-toggle>
+            <ion-label class="toggle-label ion-text-wrap">¿Te invitaron a un hogar?</ion-label>
+            <ion-toggle slot="end" formControlName="isInvited" color="primary"></ion-toggle>
           </ion-item>
 
           <!-- Invitation Code Input -->
           @if (registerForm.get('isInvited')?.value) {
             <div class="input-wrapper input-wrapper--animated">
-              <label class="input-label">Código del Hogar (Tenant)</label>
+              <label class="input-label">Código del Hogar</label>
               <div class="input-field">
                 <ion-icon name="key-outline" class="field-icon"></ion-icon>
                 <ion-input
                   type="text"
                   placeholder="Ej. HOGAR-1"
                   formControlName="invitationCode"
-                  class="premium-input">
+                  class="premium-input uppercase-input">
                 </ion-input>
               </div>
               @if (registerForm.get('invitationCode')?.invalid && registerForm.get('invitationCode')?.touched) {

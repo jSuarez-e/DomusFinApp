@@ -63,33 +63,38 @@
 </ion-menu>
 
 <!-- Main App Content with Bottom Tabs -->
-<ion-tabs id="main-content">
-  <ion-tab-bar slot="bottom" class="glass-tab-bar">
-    <ion-tab-button tab="inicio" layout="icon-top">
-      <ion-icon name="home-outline"></ion-icon>
-      <ion-label>Inicio</ion-label>
-    </ion-tab-button>
+<ion-tabs id="main-content" (ionTabsDidChange)="onTabsDidChange($event)">
+  <div class="floating-tab-bar-container" slot="bottom">
+    <div class="tab-indicator" [style.transform]="'translateX(' + (activeTabIndex() * 100) + '%)'">
+      <div class="indicator-dot"></div>
+    </div>
+    <ion-tab-bar class="floating-tab-bar">
+      <ion-tab-button tab="inicio" layout="icon-top" [class.tab-active]="activeTabIndex() === 0">
+        <ion-icon name="home-outline"></ion-icon>
+        <ion-label>Inicio</ion-label>
+      </ion-tab-button>
 
-    <ion-tab-button tab="accounts" layout="icon-top">
-      <ion-icon name="wallet-outline"></ion-icon>
-      <ion-label>Cuentas</ion-label>
-    </ion-tab-button>
+      <ion-tab-button tab="accounts" layout="icon-top" [class.tab-active]="activeTabIndex() === 1">
+        <ion-icon name="wallet-outline"></ion-icon>
+        <ion-label>Cuentas</ion-label>
+      </ion-tab-button>
 
-    <ion-tab-button tab="expenses" layout="icon-top">
-      <ion-icon name="cash-outline"></ion-icon>
-      <ion-label>Movimientos</ion-label>
-    </ion-tab-button>
+      <ion-tab-button tab="expenses" layout="icon-top" [class.tab-active]="activeTabIndex() === 2">
+        <ion-icon name="cash-outline"></ion-icon>
+        <ion-label>Movimientos</ion-label>
+      </ion-tab-button>
 
-    <ion-tab-button tab="reports" layout="icon-top">
-      <ion-icon name="bar-chart-outline"></ion-icon>
-      <ion-label>Reportes</ion-label>
-    </ion-tab-button>
+      <ion-tab-button tab="reports" layout="icon-top" [class.tab-active]="activeTabIndex() === 3">
+        <ion-icon name="bar-chart-outline"></ion-icon>
+        <ion-label>Reportes</ion-label>
+      </ion-tab-button>
 
-    <ion-tab-button (click)="openMenu(); $event.preventDefault(); $event.stopPropagation();" layout="icon-top">
-      <ion-icon name="menu-outline"></ion-icon>
-      <ion-label>Más</ion-label>
-    </ion-tab-button>
-  </ion-tab-bar>
+      <ion-tab-button (click)="openMenu(); $event.preventDefault(); $event.stopPropagation();" layout="icon-top" [class.tab-active]="activeTabIndex() === 4" (mousedown)="activeTabIndex.set(4)">
+        <ion-icon name="menu-outline"></ion-icon>
+        <ion-label>Más</ion-label>
+      </ion-tab-button>
+    </ion-tab-bar>
+  </div>
 </ion-tabs>
 
 <!-- Acerca de Modal -->

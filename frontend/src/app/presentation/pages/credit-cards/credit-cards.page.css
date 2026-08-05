@@ -52,7 +52,7 @@
 .cc-summary__value {
   font-size: 2.2rem;
   font-weight: 800;
-  color: #88DCCC;
+  color: var(--ion-color-primary);
   letter-spacing: -0.5px;
 }
 
@@ -80,7 +80,7 @@
 
 .cc-section-badge {
   --background: rgba(136, 220, 204, 0.2);
-  --color: #88DCCC;
+  --color: var(--ion-color-primary);
   font-size: 0.7rem;
   font-weight: 700;
   padding: 4px 10px;
@@ -137,7 +137,7 @@
 
 .cc-physical-card--active {
   transform: translateY(-4px);
-  border-color: #88DCCC;
+  border-color: var(--ion-color-primary);
   box-shadow: 0 12px 28px rgba(136, 220, 204, 0.15);
 }
 
@@ -174,7 +174,7 @@
 
 .cc-physical-card__logo {
   font-size: 1.4rem;
-  color: #88DCCC;
+  color: var(--ion-color-primary);
 }
 
 .cc-physical-card__chip {
@@ -215,7 +215,7 @@
 .cc-physical-card__debt {
   font-size: 0.95rem;
   font-weight: 700;
-  color: #88DCCC;
+  color: var(--ion-color-primary);
 }
 
 .cc-physical-card__align-right {
@@ -233,7 +233,7 @@
 .cc-segment ion-segment-button {
   --color: #a6a6a6;
   --color-checked: #121212;
-  --indicator-color: #88DCCC;
+  --indicator-color: var(--ion-color-primary);
   border-radius: 10px;
   font-weight: 600;
 }
@@ -269,7 +269,7 @@
 }
 
 .cc-pay-btn {
-  --background: #88DCCC;
+  --background: var(--ion-color-primary);
   --color: #121212;
   --border-radius: 12px;
   margin-top: 20px;
@@ -282,7 +282,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  color: #88DCCC;
+  color: var(--ion-color-primary);
   font-size: 0.85rem;
   padding: 12px 0;
   margin-top: 10px;
@@ -409,7 +409,7 @@
 
 .cc-sim-total {
   font-weight: 700;
-  color: #88DCCC;
+  color: var(--ion-color-primary);
 }
 
 /* Empty State */
@@ -454,9 +454,9 @@
 
 /* FAB */
 .cc-fab {
-  --background: #88DCCC;
-  --background-hover: #78c2b4;
-  --background-activated: #78c2b4;
+  --background: var(--ion-color-primary);
+  --background-hover: var(--ion-color-primary-shade);
+  --background-activated: var(--ion-color-primary-shade);
   --color: #121212;
   box-shadow: 0 6px 24px rgba(136, 220, 204, 0.3);
 }
@@ -506,7 +506,7 @@
 }
 
 .cc-form__input-wrapper:focus-within {
-  border-color: #88DCCC;
+  border-color: var(--ion-color-primary);
   box-shadow: 0 0 8px rgba(136, 220, 204, 0.2);
 }
 

@@ -34,19 +34,19 @@
 }
 
 .menu-option-item:hover .option-icon {
-  color: #88DCCC !important;
+  color: var(--ion-color-primary) !important;
 }
 
 .menu-option-item.active-item {
   --background: rgba(136, 220, 204, 0.08) !important;
   background: rgba(136, 220, 204, 0.08) !important;
-  --color: #88DCCC !important;
-  color: #88DCCC !important;
+  --color: var(--ion-color-primary) !important;
+  color: var(--ion-color-primary) !important;
   font-weight: 700 !important;
 }
 
 .menu-option-item.active-item .option-icon {
-  color: #88DCCC !important;
+  color: var(--ion-color-primary) !important;
 }
 
 .option-icon {

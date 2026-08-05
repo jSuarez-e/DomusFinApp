@@ -113,7 +113,7 @@ body.dark .kpi-card {
   letter-spacing: -0.5px;
 }
 
-.text-success { color: var(--ion-color-success) !important; }
+.text-success { color: var(--ion-color-primary) !important; }
 .text-danger { color: var(--ion-color-danger) !important; }
 
 /* ------------------------------------
@@ -197,7 +197,7 @@ body.dark .kpi-card {
 }
 
 /* Hacemos los fondos ligeramente más vibrantes */
-.bg-success-light { background: rgba(var(--ion-color-success-rgb), 0.15); color: var(--ion-color-success);}
+.bg-success-light { background: rgba(var(--ion-color-primary-rgb), 0.15); color: var(--ion-color-primary);}
 .bg-danger-light { background: rgba(var(--ion-color-danger-rgb), 0.15); color: var(--ion-color-danger);}
 
 .cashflow-details {
@@ -311,7 +311,7 @@ body.dark .kpi-card {
   font-size: 0.95rem;
 }
 
-.item-amount.income { color: var(--ion-color-success) !important; } /* Verde */
+.item-amount.income { color: var(--ion-color-primary) !important; } /* Verde */
 .item-amount.expense { color: var(--ion-color-danger) !important; } /* Rojo */
 .item-amount.transfer { color: var(--ion-color-tertiary) !important; } /* Morado */
 
@@ -396,6 +396,6 @@ body.dark .kpi-card {
 /* Classes for FAB */
 .home-fab { margin-bottom: 12px; margin-right: 12px; }
 .home-fab__btn--expense { --background: var(--ion-color-danger); --color: var(--ion-color-primary-contrast); }
-.home-fab__btn--income { --background: var(--ion-color-success); --color: var(--ion-color-primary-contrast); }
+.home-fab__btn--income { --background: var(--ion-color-primary); --color: var(--ion-color-primary-contrast); }
 .home-fab__btn--transfer { --background: var(--ion-color-tertiary); --color: var(--ion-color-primary-contrast); }
 .home-fab__btn--savings { --background: var(--ion-color-primary); --color: var(--ion-color-primary-contrast); }

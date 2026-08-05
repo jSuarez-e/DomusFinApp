@@ -1,5 +1,5 @@
 // frontend/src/app/presentation/pages/layout/layout.page.ts
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
@@ -81,6 +81,16 @@ import { MenuOptionItemComponent } from '../../../shared/components/menu-option-
 export class LayoutPage implements OnInit {
   public currentUser = this.authService.currentUser;
   public store = inject(LayoutStore);
+  public activeTabIndex = signal<number>(0);
+
+  // Mapeo de rutas a índices para el cutout
+  private tabIndexMap: Record<string, number> = {
+    'inicio': 0,
+    'accounts': 1,
+    'expenses': 2,
+    'reports': 3,
+    'mas': 4 // The "Más" button doesn't route, but we handle its active state visually if needed, though it's usually just a trigger
+  };
 
   constructor(
     private authService: AuthService,
@@ -179,5 +189,17 @@ export class LayoutPage implements OnInit {
       cssClass: 'premium-alert'
     });
     await alert.present();
+  }
+
+  /**
+   * Actualiza el índice activo cuando cambia la pestaña para animar el cutout
+   * @param event - Evento ionTabsDidChange
+   */
+  onTabsDidChange(event: any): void {
+    const tabName = event.tab;
+    const newIndex = this.tabIndexMap[tabName];
+    if (newIndex !== undefined) {
+      this.activeTabIndex.set(newIndex);
+    }
   }
 }
