@@ -158,64 +158,10 @@ export class HomePage implements OnInit {
   });
 
   // 1. Featured Savings Goal (Closest to completion (<100%))
-  public featuredGoal = computed(() => {
-    const goals = this.savingsGoals().filter(g => g.status !== 'ARCHIVED');
-    if (goals.length === 0) return null;
-    
-    let bestGoal: any = null;
-    let bestProgress = -1;
-    
-    for (const goal of goals) {
-      const target = Number(goal.targetAmount);
-      if (target <= 0) continue;
-      const progress = (Number(goal.currentAmount) / target) * 100;
-      
-      if (progress < 100 && progress > bestProgress) {
-        bestProgress = progress;
-        bestGoal = goal;
-      }
-    }
-    
-    return bestGoal || goals[0];
-  });
-
-  public getGoalProgress(goal: any): number {
-    const target = Number(goal.targetAmount);
-    if (target <= 0) return 0;
-    return Math.min(100, (Number(goal.currentAmount) / target) * 100);
-  }
+  public featuredGoal = this.savingsService.featuredGoal;
 
   // 2. Upcoming Payment Alerts (Credit Card due within 5 days)
-  public upcomingAlerts = computed(() => {
-    const alerts: { name: string; amount: number; dueDays: number }[] = [];
-    const cards = this.creditCards();
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const currentDay = today.getDate();
-    
-    for (const card of cards) {
-      if (Number(card.currentDebt) <= 0) continue;
-      
-      const targetDay = Number(card.paymentDueDate);
-      let dueDate = new Date(today.getFullYear(), today.getMonth(), targetDay);
-      if (currentDay > targetDay) {
-        dueDate = new Date(today.getFullYear(), today.getMonth() + 1, targetDay);
-      }
-      dueDate.setHours(0, 0, 0, 0);
-      
-      const timeDiff = dueDate.getTime() - today.getTime();
-      const diffDays = Math.round(timeDiff / (1000 * 3600 * 24));
-      
-      if (diffDays >= 0 && diffDays <= 5) {
-        alerts.push({
-          name: card.aliasName,
-          amount: Number(card.currentDebt),
-          dueDays: diffDays
-        });
-      }
-    }
-    return alerts;
-  });
+  public upcomingAlerts = this.creditCardService.upcomingAlerts;
 
   constructor(
     private readonly movementService: MovementService,

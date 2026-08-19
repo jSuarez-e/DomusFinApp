@@ -1,5 +1,5 @@
 // frontend/src/app/core/services/savings.service.ts
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom, Observable } from 'rxjs';
 import { SavingsGoal, CreateSavingsGoalDto, DepositSavingsGoalDto } from '@shared/index';
@@ -14,6 +14,28 @@ export class SavingsService {
 
   private savingsGoalsState = signal<SavingsGoal[]>([]);
   public savingsGoals = this.savingsGoalsState.asReadonly();
+
+  /** Meta de ahorro destacada (más cercana a completarse, <100%) */
+  public featuredGoal = computed(() => {
+    const goals = this.savingsGoalsState().filter((g) => g.status !== 'ARCHIVED');
+    if (goals.length === 0) return null;
+    
+    let bestGoal: SavingsGoal | null = null;
+    let bestProgress = -1;
+    
+    for (const goal of goals) {
+      const target = Number(goal.targetAmount);
+      if (target <= 0) continue;
+      const progress = (Number(goal.currentAmount) / target) * 100;
+      
+      if (progress < 100 && progress > bestProgress) {
+        bestProgress = progress;
+        bestGoal = goal;
+      }
+    }
+    
+    return bestGoal || goals[0];
+  });
 
   private isLoaded = false;
 

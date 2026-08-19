@@ -1,5 +1,5 @@
 // frontend/src/app/core/services/credit-card.service.ts
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom, Observable } from 'rxjs';
 import { CreditCard, CreateCreditCardDto, PayCreditCardDto, AmortizationPeriod } from '@shared/index';
@@ -14,6 +14,38 @@ export class CreditCardService {
 
   private creditCardsState = signal<CreditCard[]>([]);
   public creditCards = this.creditCardsState.asReadonly();
+
+  /** Alertas de pagos próximos (vencimiento en 5 días o menos) */
+  public upcomingAlerts = computed(() => {
+    const alerts: { name: string; amount: number; dueDays: number }[] = [];
+    const cards = this.creditCardsState();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const currentDay = today.getDate();
+    
+    for (const card of cards) {
+      if (Number(card.currentDebt) <= 0) continue;
+      
+      const targetDay = Number(card.paymentDueDate);
+      let dueDate = new Date(today.getFullYear(), today.getMonth(), targetDay);
+      if (currentDay > targetDay) {
+        dueDate = new Date(today.getFullYear(), today.getMonth() + 1, targetDay);
+      }
+      dueDate.setHours(0, 0, 0, 0);
+      
+      const timeDiff = dueDate.getTime() - today.getTime();
+      const diffDays = Math.round(timeDiff / (1000 * 3600 * 24));
+      
+      if (diffDays >= 0 && diffDays <= 5) {
+        alerts.push({
+          name: card.aliasName,
+          amount: Number(card.currentDebt),
+          dueDays: diffDays
+        });
+      }
+    }
+    return alerts;
+  });
 
   private isLoaded = false;
 

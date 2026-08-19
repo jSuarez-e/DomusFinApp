@@ -26,7 +26,7 @@ export class DatabaseSeederService implements OnApplicationBootstrap {
   ) {}
 
   async onApplicationBootstrap(): Promise<void> {
-    await this.clearFinancialData();
+    // await this.clearFinancialData(); Habilitar para limpieza de datos
     await this.seedGlobalCategories();
     await this.seedGlobalPaymentMethods();
     await this.ensureHouseholdAdmins();
