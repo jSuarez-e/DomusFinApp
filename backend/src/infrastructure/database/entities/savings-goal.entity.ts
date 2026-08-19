@@ -45,6 +45,9 @@ export class SavingsGoalDbEntity {
   })
   participants: UserDbEntity[];
 
+  @Column({ type: 'varchar', length: 20, default: 'ACTIVE' })
+  status: 'ACTIVE' | 'ARCHIVED';
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 

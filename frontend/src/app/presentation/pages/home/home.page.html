@@ -1,296 +1,276 @@
 <!-- frontend/src/app/presentation/pages/home/home.page.html -->
-<ion-header [translucent]="true">
-  <ion-toolbar class="home-header__toolbar glass-toolbar">
-    <ion-title class="home-header__title">Hola, {{ currentUser()?.name || 'Jaime' }} 👋</ion-title>
-    
-    <ion-buttons slot="end" class="home-header__buttons">
-      <!-- Theme Switcher Button -->
-      <ion-button fill="clear" (click)="toggleTheme()" class="home-header__theme-btn">
-        <ion-icon [name]="isDarkTheme() ? 'sunny-outline' : 'moon-outline'" slot="icon-only" class="home-header__theme-icon"></ion-icon>
-      </ion-button>
+<ion-header class="ion-no-border">
+  <ion-toolbar class="transparent-toolbar">
+    <div class="header-content">
+      <!-- Left side: Date and Title -->
+      <div class="header-left">
+        <ion-select 
+          [value]="selectedMonth()" 
+          (ionChange)="onMonthChange($event)" 
+          interface="popover" 
+          class="month-selector">
+          @for (m of availableMonths; track m.value) {
+            <ion-select-option [value]="m.value">{{ m.label }} {{ currentDate().getFullYear() }}</ion-select-option>
+          }
+        </ion-select>
+        <h1 class="header-title">Mis finanzas</h1>
+      </div>
       
-      <!-- Month Select -->
-      <ion-select 
-        [value]="selectedMonth()" 
-        (ionChange)="onMonthChange($event)" 
-        interface="popover" 
-        class="home-header__month-select premium-month-select">
-        @for (m of availableMonths; track m.value) {
-          <ion-select-option [value]="m.value">{{ m.label }}</ion-select-option>
-        }
-      </ion-select>
-    </ion-buttons>
+      <!-- Right side: Net Worth -->
+      <div class="header-right">
+        <span class="net-worth-label">Patrimonio neto</span>
+        <span class="net-worth-value">{{ netWorth() | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+      </div>
+    </div>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="premium-content">
-  <div class="glow-bg"></div>
-
-  <div class="content-container">
-    <!-- 2. Hero Cards: Separación Lógica (Patrimonio vs Flujo Mensual) -->
+<ion-content [fullscreen]="true" class="dashboard-content">
+  <div class="dashboard-container">
     
-    <!-- TARJETA A: Estado Global (Patrimonio) -->
-    <ion-card class="kpi-card">
-      <ion-card-header>
-        <ion-card-title class="kpi-title">Estado Patrimonial</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <div class="kpi-header-stats">
-          <div class="kpi-header-stat">
-            <span class="kpi-stat-label">Liquidez Disponible</span>
-            <span class="kpi-stat-val text-success">
-              {{ (dashboardData()?.total_liquidity || 0) | currency:'COP':'symbol-narrow':'1.0-0' }}
-            </span>
-          </div>
-          <div class="kpi-header-stat">
-            <span class="kpi-stat-label">Deuda Activa</span>
-            <span class="kpi-stat-val text-danger">
-              {{ (dashboardData()?.total_debt || 0) | currency:'COP':'symbol-narrow':'1.0-0' }}
-            </span>
-          </div>
-        </div>
-      </ion-card-content>
-    </ion-card>
-
-    <!-- TARJETA B: Flujo del Mes (Presupuesto y Movimientos) -->
-    <ion-card class="kpi-card">
-      <ion-card-header>
-        <ion-card-title class="kpi-title">Resumen del Mes</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        
-        <!-- Barra de Presupuesto -->
-        <div class="kpi-progress-section">
-          <div class="kpi-progress-labels">
-            <span class="progress-subtext">Presupuesto Gastado</span>
-            <span class="progress-percentage">{{ spentRatio() * 100 | number:'1.0-0' }}%</span>
-          </div>
-          <ion-progress-bar 
-            [value]="spentRatio()" 
-            [color]="progressBarColor()" 
-            class="kpi-progress-bar">
-          </ion-progress-bar>
-          <div class="progress-amounts">
-            <span>{{ totalSpent() | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
-            <span>de {{ budget() | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
-          </div>
-        </div>
-
-        <!-- Ingresos vs Gastos -->
-        <div class="kpi-cashflow-grid">
-          <div class="cashflow-item">
-            <div class="icon-box bg-success-light">
-              <ion-icon name="trending-up-outline" class="text-success"></ion-icon>
-            </div>
-            <div class="cashflow-details">
-              <span class="cf-label">Ingresos</span>
-              <span class="cf-value text-success">{{ income() | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
-            </div>
-          </div>
-          
-          <div class="cashflow-item">
-            <div class="icon-box bg-danger-light">
-              <ion-icon name="trending-down-outline" class="text-danger"></ion-icon>
-            </div>
-            <div class="cashflow-details">
-              <span class="cf-label">Gastos</span>
-              <span class="cf-value text-danger">{{ totalSpent() | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
-            </div>
-          </div>
-        </div>
-        
-      </ion-card-content>
-    </ion-card>
-
-    <!-- 3. Carrusel Rápido de Cuentas (Horizontal Scroll Slider) -->
-    <div class="home-section__header">
-      <h2 class="home-section__title">Cuentas Bancarias</h2>
-    </div>
-    
-    <div class="home-accounts__slider quick-accounts-slider">
-      @if (accounts().length === 0) {
-        <div class="home-accounts__empty">No hay cuentas registradas.</div>
-      }
-      
-      @for (acc of accounts(); track acc.id) {
-        <div class="home-accounts__card account-mini-card">
-          <div class="home-accounts__card-header">
-            <span class="home-accounts__card-title">
-              {{ acc.name }}
-            </span>
-            @if (acc.isPrivate) {
-              <ion-badge class="home-accounts__card-badge">
-                <ion-icon name="lock-closed-outline" class="home-accounts__card-badge-icon"></ion-icon>
-              </ion-badge>
-            }
-          </div>
-          <span class="home-accounts__card-balance">
-            {{ acc.currentBalance | currency:'COP':'symbol-narrow':'1.0-0' }}
-          </span>
-        </div>
-      }
-    </div>
-
-    <!-- 4. Sección de Alertas: "Próximos Pagos" (Proactividad) -->
-    @if (upcomingAlerts().length > 0) {
-      <div class="home-alerts alert-section">
-        <div class="home-section__header">
-          <h2 class="home-section__title home-section__title--danger">Próximos Pagos de Tarjetas</h2>
-        </div>
-        @for (alert of upcomingAlerts(); track alert.name) {
-          <div class="home-alerts__item urgent-payment-alert">
-            <ion-icon name="alert-circle-outline" class="home-alerts__icon"></ion-icon>
-            <div class="home-alerts__details">
-              <span class="home-alerts__name">
-                Pago de TC: {{ alert.name }}
-              </span>
-              <span class="home-alerts__amount">
-                {{ alert.amount | currency:'COP':'symbol-narrow':'1.0-0' }} vence en {{ alert.dueDays }} {{ alert.dueDays === 1 ? 'día' : 'días' }}
-              </span>
-            </div>
-          </div>
-        }
-      </div>
-    }
-
-    <!-- 5. Resumen de Metas (Ahorros) -->
-    @if (featuredGoal(); as goal) {
-      <div class="home-section__header">
-        <h2 class="home-section__title">Ahorros en Progreso</h2>
-      </div>
-      
-      <ion-card class="featured-goal-card">
-        <ion-card-content class="home-goals__content">
-          <div class="home-goals__header">
-            <div class="home-goals__title-wrapper">
-              <span class="home-goals__title">{{ goal.title }}</span>
-              @if (!goal.isPrivate && goal.participants && goal.participants.length > 0) {
-                <ion-badge color="tertiary" class="home-goals__badge">
-                  <ion-icon name="people-outline" class="home-goals__badge-icon"></ion-icon>
-                  Compartido
-                </ion-badge>
-              }
-              @if (goal.isPrivate) {
-                <ion-badge class="home-goals__badge home-goals__badge--private">
-                  <ion-icon name="lock-closed-outline" class="home-goals__badge-icon"></ion-icon>
-                  Privado
-                </ion-badge>
-              }
-            </div>
-            <span class="home-goals__progress-text">
-              {{ getGoalProgress(goal) | number:'1.0-0' }}%
-            </span>
-          </div>
-          
-          <ion-progress-bar 
-            [value]="getGoalProgress(goal) / 100" 
-            color="primary" 
-            class="home-goals__progress-bar">
-          </ion-progress-bar>
-          
-          <div class="home-goals__amounts">
-            <span>Ahorrado: <strong>{{ Number(goal.currentAmount) | currency:'COP':'symbol-narrow':'1.0-0' }}</strong></span>
-            <span>Meta: <strong>{{ Number(goal.targetAmount) | currency:'COP':'symbol-narrow':'1.0-0' }}</strong></span>
-          </div>
+    <!-- 1. KPIs Superiores -->
+    <div class="kpi-grid">
+      <ion-card class="dashboard-card kpi-card">
+        <ion-card-content>
+          <span class="kpi-label">LIQUIDEZ</span>
+          <span class="kpi-value text-success">{{ (dashboardData()?.total_liquidity || 0) | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
         </ion-card-content>
       </ion-card>
-    }
-
-    <!-- 6. Lista: Últimos 5 Movimientos (TARJETAS PROFESIONALES) -->
-    <div class="home-section__header home-section__header--flex">
-      <h2 class="home-section__title">Últimos 5 Movimientos</h2>
-      <ion-badge color="dark" class="home-section__badge">Hogar</ion-badge>
+      
+      <ion-card class="dashboard-card kpi-card">
+        <ion-card-content>
+          <span class="kpi-label">DEUDA ACTIVA</span>
+          <span class="kpi-value text-danger">{{ (dashboardData()?.total_debt || 0) | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+        </ion-card-content>
+      </ion-card>
     </div>
 
-    <ion-list class="home-movements movements-list" lines="none">
-      @if (recentMovements().length === 0) {
-        <div class="home-movements__empty empty-state-container">
-          <div class="home-movements__empty-icon-bg empty-state-icon-bg">
-            <ion-icon name="wallet-outline" class="home-movements__empty-icon"></ion-icon>
+    <!-- 2. Resumen del Mes -->
+    <ion-card class="dashboard-card full-card">
+      <ion-card-content>
+        <div class="card-header-row">
+          <div class="card-title-group">
+            <ion-icon name="receipt-outline" class="card-icon"></ion-icon>
+            <span class="card-title">RESUMEN DEL MES</span>
           </div>
-          <h3 class="home-movements__empty-title">Sin Movimientos</h3>
-          <p class="home-movements__empty-desc">No se encontraron movimientos registrados en este hogar.</p>
+          <span class="progress-percent">{{ spentRatio() * 100 | number:'1.0-0' }}%</span>
         </div>
-      }
-
-      @for (m of recentMovements(); track m.id) {
-        <ion-item class="movement-item" lines="none">
-          
-          <!-- ZONA IZQUIERDA: Icono Circular -->
-          <div slot="start" 
-               class="icon-circle" 
-               [class.home-movements__icon--private]="m.isPrivateRedacted || m.isPrivate"
-               [class.home-movements__icon--public]="!(m.isPrivateRedacted || m.isPrivate)">
-            <ion-icon [name]="(m.isPrivateRedacted || m.isPrivate) ? 'lock-closed' : (getMovementIcon(m) || 'cash-outline')"></ion-icon>
+        
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill" 
+               [style.width.%]="spentRatio() * 100"
+               [class.bg-success]="progressBarColor() === 'success'"
+               [class.bg-warning]="progressBarColor() === 'warning'"
+               [class.bg-danger]="progressBarColor() === 'danger'">
           </div>
+        </div>
+        
+        <div class="progress-amounts-row">
+          <span class="amount-spent">{{ totalSpent() | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+          <span class="amount-budget">{{ budget() | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+        </div>
+      </ion-card-content>
+    </ion-card>
 
-          <!-- ZONA CENTRAL: Título y Subtítulo -->
-          <ion-label class="item-body">
-            <div class="item-title-row">
-              <h3 class="item-title">
-                @if (m.isPrivateRedacted || m.isPrivate) {
-                  Movimiento Privado
-                } @else {
-                  <!-- Usamos description o type, que sí existen en Movement -->
-                  {{ m.description || m.type }}
-                }
-              </h3>
-              @if (m.isPrivateRedacted || m.isPrivate) {
-                <ion-icon name="lock-closed" class="mini-lock"></ion-icon>
-              }
-            </div>
-            <p class="item-desc">
-              @if (m.isPrivateRedacted || m.isPrivate) {
-                <!-- Evitamos el .split() para no disparar el error de objeto indefinido -->
-                Oculto por {{ m.user?.name || 'Miembro' }}
-              } @else {
-                <!-- Mostramos la fecha como subtítulo -->
-                {{ m.transactionDate | date:(currentUser()?.dateFormat === 'MM/DD/YYYY' ? 'MM/dd/yyyy' : 'dd/MM/yyyy') }}
-              }
-            </p>
-          </ion-label>
-
-          <!-- ZONA DERECHA: Monto y Usuario -->
-          <div slot="end" class="item-end">
-            <span class="item-amount"
-                  [class.income]="m.type === 'Ingreso'"
-                  [class.expense]="m.type === 'Gasto'"
-                  [class.transfer]="m.type === 'Ahorro' || m.type === 'Pago Crédito' || m.type === 'Pago TC' || m.type === 'Transferencia'">
-              {{ m.type === 'Ingreso' ? '+' : '-' }}{{ m.amount | currency:'COP':'symbol-narrow':'1.0-0' }}
-            </span>
-            
-            <div class="end-meta">
-              @if (m.is_auto_captured) {
-                <span class="auto-lightning" title="Captura Automática (⚡)">⚡</span>
-              }
-              <span class="item-user">{{ m.user?.name || 'Miembro' }}</span>
-            </div>
+    <!-- 3. Balance (Ingresos vs Gastos) -->
+    <ion-card class="dashboard-card full-card">
+      <ion-card-content>
+        <div class="card-title-group mb-12">
+          <ion-icon name="wallet-outline" class="card-icon"></ion-icon>
+          <span class="card-title">BALANCE</span>
+        </div>
+        
+        <div class="balance-grid">
+          <div class="balance-box">
+            <span class="balance-label">INGRESOS</span>
+            <span class="balance-value text-success">{{ income() | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+            <div class="mini-bar bg-success"></div>
           </div>
+          <div class="balance-box">
+            <span class="balance-label">GASTOS</span>
+            <span class="balance-value text-danger">{{ totalSpent() | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+            <div class="mini-bar bg-danger"></div>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
 
-        </ion-item>
-      }
-    </ion-list>
+    <!-- 4. Cuentas Bancarias -->
+    <ion-card class="dashboard-card full-card list-card">
+      <ion-card-content>
+        <div class="card-title-group list-header">
+          <ion-icon name="business-outline" class="card-icon"></ion-icon>
+          <span class="card-title">CUENTAS BANCARIAS</span>
+        </div>
+        
+        <ion-list lines="none" class="dashboard-list">
+          @for (acc of accounts(); track acc.id) {
+            <ion-item class="dashboard-item">
+              <ion-label>
+                <h3 class="item-title">{{ acc.name }}</h3>
+                <p class="item-subtitle">{{ acc.type || 'Cuenta' }}</p>
+              </ion-label>
+              <span slot="end" class="item-value">{{ acc.currentBalance | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+            </ion-item>
+            @if (acc.id !== accounts()[accounts().length - 1].id) {
+              <hr>
+            }
+          }
+          @if (accounts().length === 0) {
+            <div class="empty-state">No hay cuentas bancarias</div>
+          }
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- 5. Ahorros -->
+    <ion-card class="dashboard-card full-card list-card">
+      <ion-card-content>
+        <div class="card-title-group list-header">
+          <ion-icon name="star-outline" class="card-icon"></ion-icon>
+          <span class="card-title">AHORROS</span>
+        </div>
+        
+        <div class="savings-list">
+          @for (goal of savingsGoals(); track goal.id) {
+            <div class="savings-item">
+              <div class="savings-header">
+                <span class="item-title">{{ goal.title }}</span>
+                <span class="item-value text-success">
+                  {{ Number(goal.currentAmount) | currency:'COP':'symbol-narrow':'1.0-0' }} / 
+                  {{ Number(goal.targetAmount) | currency:'COP':'symbol-narrow':'1.0-0' }}
+                </span>
+              </div>
+              <div class="progress-bar-container mini">
+                <div class="progress-bar-fill bg-success" [style.width.%]="getGoalProgress(goal)"></div>
+              </div>
+            </div>
+            @if (goal.id !== savingsGoals()[savingsGoals().length - 1].id) {
+              <hr>
+            }
+          }
+          @if (savingsGoals().length === 0) {
+            <div class="empty-state">No hay metas de ahorro</div>
+          }
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- 6. Créditos -->
+    <ion-card class="dashboard-card full-card list-card">
+      <ion-card-content>
+        <div class="card-title-group list-header">
+          <ion-icon name="card-outline" class="card-icon"></ion-icon>
+          <span class="card-title">CRÉDITOS</span>
+        </div>
+        
+        <ion-list lines="none" class="dashboard-list">
+          @for (card of creditCards(); track card.id) {
+            <ion-item class="dashboard-item">
+              <ion-label>
+                <h3 class="item-title">{{ card.aliasName }}</h3>
+                <p class="item-subtitle">
+                  Corte: Día {{ card.cutDate }}
+                </p>
+              </ion-label>
+              <span slot="end" class="item-value text-success">{{ card.currentDebt | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+            </ion-item>
+            @if (card.id !== creditCards()[creditCards().length - 1].id) {
+              <hr>
+            }
+          }
+          @if (creditCards().length === 0) {
+            <div class="empty-state">No hay créditos activos</div>
+          }
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- 7. Últimos Movimientos -->
+    <ion-card class="dashboard-card full-card list-card">
+      <ion-card-content>
+        <div class="card-title-group list-header" style="justify-content: space-between; display: flex;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <ion-icon name="list-outline" class="card-icon"></ion-icon>
+            <span class="card-title">ÚLTIMOS MOVIMIENTOS</span>
+          </div>
+          <ion-badge color="light" class="home-section__badge">Hogar</ion-badge>
+        </div>
+        
+        <ion-list lines="none" class="dashboard-list">
+          @for (m of recentMovements(); track m.id) {
+            <ion-item class="dashboard-item">
+              <!-- ZONA IZQUIERDA: Icono Circular -->
+              <div slot="start" 
+                   class="icon-circle" 
+                   [class.icon-circle-private]="m.isPrivateRedacted || m.isPrivate"
+                   [class.icon-circle-public]="!(m.isPrivateRedacted || m.isPrivate)">
+                <ion-icon [name]="(m.isPrivateRedacted || m.isPrivate) ? 'lock-closed' : (getMovementIcon(m) || 'cash-outline')"></ion-icon>
+              </div>
+
+              <!-- ZONA CENTRAL -->
+              <ion-label>
+                <div style="display: flex; align-items: center; gap: 4px;">
+                  <h3 class="item-title">
+                    @if (m.isPrivateRedacted || m.isPrivate) {
+                      Movimiento Privado
+                    } @else {
+                      {{ m.description || m.type }}
+                    }
+                  </h3>
+                  @if (m.isPrivateRedacted || m.isPrivate) {
+                    <ion-icon name="lock-closed" style="font-size: 0.8rem; color: var(--text-secondary);"></ion-icon>
+                  }
+                </div>
+                <p class="item-subtitle">
+                  @if (m.isPrivateRedacted || m.isPrivate) {
+                    Oculto por {{ m.user?.name || 'Miembro' }}
+                  } @else {
+                    {{ m.transactionDate | date:(currentUser()?.dateFormat === 'MM/DD/YYYY' ? 'MM/dd/yyyy' : 'dd/MM/yyyy') }}
+                  }
+                </p>
+              </ion-label>
+
+              <!-- ZONA DERECHA -->
+              <div slot="end" style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
+                 <span class="item-value"
+                      [class.text-success]="m.type === 'Ingreso'"
+                      [class.text-danger]="m.type === 'Gasto'">
+                  {{ m.type === 'Ingreso' ? '+' : (m.type === 'Gasto' ? '-' : '') }}{{ m.amount | currency:'COP':'symbol-narrow':'1.0-0' }}
+                </span>
+                
+                <div class="item-subtitle" style="display: flex; align-items: center; gap: 4px; font-size: 0.75rem;">
+                  @if (m.is_auto_captured) {
+                    <span title="Captura Automática (⚡)">⚡</span>
+                  }
+                  <span>{{ m.user?.name || 'Miembro' }}</span>
+                </div>
+              </div>
+            </ion-item>
+          }
+          @if (recentMovements().length === 0) {
+            <div class="empty-state">No se encontraron movimientos registrados.</div>
+          }
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
   </div>
 
-  <!-- 7. El FAB (Floating Action Button) de Acciones Rápidas (Speed Dial) -->
+  <!-- El FAB (Floating Action Button) -->
   <ion-fab vertical="bottom" horizontal="end" slot="fixed" class="home-fab">
     <ion-fab-button color="primary">
       <ion-icon name="add-outline"></ion-icon>
     </ion-fab-button>
     <ion-fab-list side="top">
-      <!-- 📉 Registrar Gasto -->
       <ion-fab-button (click)="openAddModal('Gasto')" title="Registrar Gasto" class="home-fab__btn--expense">
         <ion-icon name="trending-down-outline"></ion-icon>
       </ion-fab-button>
-      <!-- 📈 Registrar Ingreso -->
       <ion-fab-button (click)="openAddModal('Ingreso')" title="Registrar Ingreso" class="home-fab__btn--income">
         <ion-icon name="trending-up-outline"></ion-icon>
       </ion-fab-button>
-      <!-- 🔄 Transferencia -->
       <ion-fab-button (click)="openAddModal('Transferencia')" title="Transferencia entre Cuentas" class="home-fab__btn--transfer">
         <ion-icon name="swap-horizontal-outline"></ion-icon>
       </ion-fab-button>
-      <!-- 🏦 Aporte Ahorro -->
       <ion-fab-button (click)="openAddModal('Ahorro')" title="Aporte de Ahorro" class="home-fab__btn--savings">
         <ion-icon name="cash-outline"></ion-icon>
       </ion-fab-button>

@@ -85,6 +85,23 @@ export class SavingsService {
   }
 
   /**
+   * Archiva una meta de ahorro (la oculta de las vistas principales).
+   * 
+   * @param id ID de la meta a archivar.
+   */
+  async archiveGoal(id: number): Promise<void> {
+    try {
+      const archivedGoal = await firstValueFrom(this.http.patch<SavingsGoal>(`${this.apiUrl}/${id}/archive`, {}));
+      this.savingsGoalsState.update((current) =>
+        current.map((g) => (g.id === id ? archivedGoal : g))
+      );
+    } catch (error) {
+      console.error('Error archiving savings goal:', error);
+      throw error;
+    }
+  }
+
+  /**
    * Elimina una meta de ahorro y actualiza el estado local.
    * 
    * @param id ID de la meta a eliminar.

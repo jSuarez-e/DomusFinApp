@@ -4,6 +4,11 @@
   <ion-header>
     <ion-toolbar class="menu-toolbar">
       <ion-title>Menú General</ion-title>
+      <ion-buttons slot="end">
+        <ion-button fill="clear" (click)="toggleTheme()">
+          <ion-icon [name]="isDarkTheme() ? 'sunny-outline' : 'moon-outline'" slot="icon-only"></ion-icon>
+        </ion-button>
+      </ion-buttons>
     </ion-toolbar>
   </ion-header>
 
@@ -104,7 +109,7 @@
       <ion-toolbar class="about-toolbar">
         <ion-title>Acerca de DomusFin</ion-title>
         <ion-buttons slot="end">
-          <ion-button (click)="closeAboutModal()" color="light">Cerrar</ion-button>
+          <ion-button (click)="closeAboutModal()" color="primary">Cerrar</ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
@@ -117,23 +122,33 @@
         <h2>DomusFinApp</h2>
         <p class="about-version">Versión 1.0.0 (Beta)</p>
         
-        <div class="about-card">
-          <h3>Nuestra Misión</h3>
-          <p>
-            DomusFin es una plataforma diseñada para simplificar y unificar la gestión de finanzas compartidas, permitiendo colaborar en tiempo real y registrar gastos de forma inteligente y segura.
-          </p>
-        </div>
+        <ion-card class="dashboard-card full-card ion-text-left">
+          <ion-card-content>
+            <div class="card-title-group card-title-group--spaced">
+              <ion-icon name="rocket-outline" class="card-icon card-icon--primary"></ion-icon>
+              <span class="card-title">NUESTRA MISIÓN</span>
+            </div>
+            <p class="about-desc">
+              DomusFin es una plataforma diseñada para simplificar y unificar la gestión de finanzas compartidas, permitiendo colaborar en tiempo real y registrar gastos de forma inteligente y segura.
+            </p>
+          </ion-card-content>
+        </ion-card>
 
-        <div class="about-card">
-          <h3>Soporte y Contacto</h3>
-          <p>¿Tienes dudas o sugerencias? Contáctanos a través de nuestros canales oficiales:</p>
-          <div class="about-contact-item">
-            <strong>Email:</strong> support&#64;domusfin.com
-          </div>
-          <div class="about-contact-item">
-            <strong>Sitio Web:</strong> www.domusfin.com
-          </div>
-        </div>
+        <ion-card class="dashboard-card full-card ion-text-left">
+          <ion-card-content>
+            <div class="card-title-group card-title-group--spaced">
+              <ion-icon name="headset-outline" class="card-icon card-icon--preferences"></ion-icon>
+              <span class="card-title">SOPORTE Y CONTACTO</span>
+            </div>
+            <p class="about-desc">¿Tienes dudas o sugerencias? Contáctanos a través de nuestros canales oficiales:</p>
+            <div class="about-contact-item">
+              <strong>Email:</strong> support&#64;domusfin.com
+            </div>
+            <div class="about-contact-item">
+              <strong>Sitio Web:</strong> www.domusfin.com
+            </div>
+          </ion-card-content>
+        </ion-card>
 
         <p class="about-copy">&copy; 2026 DomusFin. Todos los derechos reservados.</p>
       </div>

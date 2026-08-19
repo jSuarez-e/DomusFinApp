@@ -27,7 +27,8 @@ import {
   IonItemOption,
   IonToggle,
   AlertController,
-  ToastController
+  ToastController,
+  IonMenuButton
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -41,7 +42,8 @@ import {
   closeOutline,
   checkmarkOutline,
   lockClosedOutline,
-  peopleOutline
+  peopleOutline,
+  businessOutline
 } from 'ionicons/icons';
 
 import { AccountType, Account } from '@shared/index';
@@ -81,6 +83,7 @@ import { BlockScientificNotationDirective } from '../../directives/block-scienti
     IonItemOptions,
     IonItemOption,
     IonToggle,
+    IonMenuButton,
     MoneyMaskDirective,
     BlockScientificNotationDirective,
     AccountItemComponent
@@ -116,7 +119,8 @@ export class AccountsPage implements OnInit {
       closeOutline,
       checkmarkOutline,
       lockClosedOutline,
-      peopleOutline
+      peopleOutline,
+      businessOutline
     });
 
     this.accountForm = this.fb.group({

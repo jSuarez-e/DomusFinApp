@@ -1,5 +1,5 @@
 // frontend/src/app/presentation/pages/expenses/expenses.page.ts
-import { ChangeDetectionStrategy, Component, effect, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, OnInit } from '@angular/core';
 import { TransactionEventService } from '../../../core/services/transaction-event.service';
 import { CommonModule } from '@angular/common';
 import { 
@@ -20,6 +20,8 @@ import {
   IonFabButton,
   IonText,
   IonIcon,
+  IonMenuButton,
+  IonButtons,
   ModalController
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
@@ -55,6 +57,8 @@ import { ExpensesStore } from './expenses.store';
     IonFabButton,
     IonText,
     IonIcon,
+    IonMenuButton,
+    IonButtons,
     ExpenseItemComponent
   ],
   providers: [ExpensesStore],
@@ -69,11 +73,16 @@ export class ExpensesPage implements OnInit {
   /** Hogar al que pertenece el usuario */
   public household = this.householdService.household;
   
-  /** Lista reactiva de gastos delegada al store */
-  public expenses = this.store.expenses;
+  /** Lista reactiva de gastos delegada al store y filtrada por el usuario actual */
+  public expenses = computed(() => {
+    const userId = this.currentUser()?.id;
+    return this.store.expenses().filter(e => e.userId === userId);
+  });
 
-  /** Total computado delegado al store */
-  public totalExpenses = this.store.totalExpenses;
+  /** Total computado basado en los gastos del usuario actual */
+  public totalExpenses = computed(() => {
+    return this.expenses().reduce((sum, item) => sum + Number(item.amount), 0);
+  });
 
   /** Categorías reactivas delegadas al store */
   public categories = this.store.categories;

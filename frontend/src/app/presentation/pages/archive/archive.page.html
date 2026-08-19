@@ -1,5 +1,5 @@
 <!-- frontend/src/app/presentation/pages/archive/archive.page.html -->
-<ion-header [translucent]="true">
+ <ion-header [translucent]="true">
   <ion-toolbar class="glass-toolbar">
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
@@ -8,27 +8,23 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="premium-content">
-  <div class="glow-bg"></div>
-
-  <div class="content-container">
+<ion-content [fullscreen]="true" class="dashboard-content">
+  <div class="dashboard-container">
     <!-- Intro Card -->
-    <ion-card class="archive-card">
-      <ion-card-content class="archive-card__content">
-        <div class="archive-card__icon-wrapper">
-          <ion-icon name="archive-outline"></ion-icon>
+    <ion-card class="dashboard-card full-card">
+      <ion-card-content class="archive-intro-content">
+        <div class="card-title-group">
+          <ion-icon name="archive-outline" class="card-icon"></ion-icon>
+          <span class="card-title">Historial</span>
         </div>
-        <div>
-          <h3 class="archive-card__title">Historial de Cuentas y Metas</h3>
-          <p class="archive-card__desc">
-            Aquí se listan en modo de solo lectura las metas de ahorro completadas, deudas liquidadas y tarjetas de crédito saldadas de tu hogar.
-          </p>
-        </div>
+        <p class="archive-intro-desc">
+          Aquí se listan en modo de solo lectura las metas de ahorro completadas, deudas liquidadas y tarjetas de crédito saldadas de tu hogar.
+        </p>
       </ion-card-content>
     </ion-card>
 
     <!-- Segment buttons -->
-    <ion-segment scrollable="true" [value]="store.activeSegment()" (ionChange)="onSegmentChange($event)" class="tab-segment">
+    <ion-segment scrollable="true" [value]="store.activeSegment()" (ionChange)="onSegmentChange($event)" class="archive-segment">
       <ion-segment-button value="savings">
         <ion-label>Ahorros ({{ store.completedSavings().length }})</ion-label>
       </ion-segment-button>
@@ -42,139 +38,146 @@
 
     <!-- TAB 1: SAVINGS -->
     @if (store.activeSegment() === 'savings') {
-      <div class="tab-pane">
-        @if (store.completedSavings().length === 0) {
-          <app-empty-state 
-            iconName="trending-up-outline" 
-            title="Sin Ahorros Archivados" 
-            message="No tienes metas de ahorro completadas o alcanzadas en este hogar.">
-          </app-empty-state>
-        } @else {
-          <div class="tab-pane">
-            @for (goal of store.completedSavings(); track goal.id) {
-              <ion-card class="item-card">
-                <ion-card-content class="item-card__content">
-                  <div class="item-card__header">
-                    <div>
-                      <h4 class="item-card__title">{{ goal.title }}</h4>
-                      <p class="item-card__subtitle">Creador: {{ goal.creatorId === currentUser()?.id ? 'Tú' : (goal.creator?.name || 'Miembro') }}</p>
-                    </div>
-                    <ion-badge color="success" class="item-card__badge">
-                      🎉 Completado
-                    </ion-badge>
+      @if (store.completedSavings().length === 0) {
+        <div class="empty-state">
+          <ion-icon name="trending-up-outline" class="empty-state-icon"></ion-icon>
+          <h3 class="empty-state-title">Sin Ahorros Archivados</h3>
+          <p class="empty-state-desc">No tienes metas de ahorro completadas o alcanzadas en este hogar.</p>
+        </div>
+      } @else {
+        <div class="archive-items-grid">
+          @for (goal of store.completedSavings(); track goal.id) {
+            <ion-card class="item-card">
+              <ion-card-content class="item-card__content">
+                
+                <div class="item-card__header">
+                  <div>
+                    <h3 class="item-card__title">{{ goal.title }}</h3>
+                    <p class="item-card__subtitle">Creador: {{ goal.creatorId === currentUser()?.id ? 'Tú' : (goal.creator?.name || 'Miembro') }}</p>
                   </div>
-                  
-                  <p class="item-card__desc">{{ goal.description || 'Sin descripción' }}</p>
+                  <div class="item-card__badge-area">
+                    <ion-badge class="item-card__badge item-card__badge--success">🎉 Completado</ion-badge>
+                  </div>
+                </div>
+                
+                @if (goal.description) {
+                  <p class="item-card__desc">{{ goal.description }}</p>
+                }
 
-                  <div class="item-card__stats">
-                    <span>META CUMPLIDA</span>
-                    <span class="item-card__stats--highlight">{{ Number(goal.currentAmount) | currency:'COP':'symbol-narrow':'1.0-0' }} / {{ Number(goal.targetAmount) | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+                <div class="item-card__amounts">
+                  <div>
+                    <span class="item-card__amount-label">META CUMPLIDA</span>
+                    <span class="item-card__amount-value item-card__amount-value--highlight">{{ Number(goal.currentAmount) | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
                   </div>
+                  <div class="item-card__amount-align-right">
+                    <span class="item-card__amount-label">META TOTAL</span>
+                    <span class="item-card__amount-value">{{ Number(goal.targetAmount) | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+                  </div>
+                </div>
 
-                  <div class="progress-bar">
-                    <div class="progress-bar__fill"></div>
-                  </div>
+                <div class="progress-bar">
+                  <div class="progress-bar__fill"></div>
+                </div>
 
-                  <div class="item-card__footer">
-                    <span>Alcanzado el: {{ goal.updatedAt | date:'mediumDate' }}</span>
-                    <span>100% de la meta</span>
-                  </div>
-                </ion-card-content>
-              </ion-card>
-            }
-          </div>
-        }
-      </div>
+                <div class="item-card__footer">
+                  <span>Alcanzado el: {{ goal.updatedAt | date:'mediumDate' }}</span>
+                  <span>100% de la meta</span>
+                </div>
+              </ion-card-content>
+            </ion-card>
+          }
+        </div>
+      }
     }
 
     <!-- TAB 2: LOANS -->
     @if (store.activeSegment() === 'loans') {
-      <div class="tab-pane">
-        @if (store.completedLoans().length === 0) {
-          <app-empty-state 
-            iconName="calculator-outline" 
-            title="Sin Créditos Archivados" 
-            message="No tienes préstamos o deudas liquidadas en este hogar.">
-          </app-empty-state>
-        } @else {
-          <div class="tab-pane">
-            @for (loan of store.completedLoans(); track loan.id) {
-              <ion-card class="item-card">
-                <ion-card-content class="item-card__content">
-                  <div class="item-card__header">
-                    <div>
-                      <h4 class="item-card__title">{{ loan.purposeDescription }}</h4>
-                      <p class="item-card__subtitle">Préstamo de: {{ loan.creatorId === currentUser()?.id ? 'ti' : (loan.creator?.name || 'Miembro') }}</p>
-                    </div>
-                    <ion-badge color="success" class="item-card__badge">
-                      ✅ Liquidado
-                    </ion-badge>
+      @if (store.completedLoans().length === 0) {
+        <div class="empty-state">
+          <ion-icon name="calculator-outline" class="empty-state-icon"></ion-icon>
+          <h3 class="empty-state-title">Sin Créditos Archivados</h3>
+          <p class="empty-state-desc">No tienes préstamos o deudas liquidadas en este hogar.</p>
+        </div>
+      } @else {
+        <div class="archive-items-grid">
+          @for (loan of store.completedLoans(); track loan.id) {
+            <ion-card class="item-card">
+              <ion-card-content class="item-card__content">
+                
+                <div class="item-card__header">
+                  <div>
+                    <h3 class="item-card__title">{{ loan.purposeDescription }}</h3>
+                    <p class="item-card__subtitle">Préstamo de: {{ loan.creatorId === currentUser()?.id ? 'ti' : (loan.creator?.name || 'Miembro') }}</p>
                   </div>
+                  <div class="item-card__badge-area">
+                    <ion-badge class="item-card__badge item-card__badge--success">✅ Liquidado</ion-badge>
+                  </div>
+                </div>
 
-                  <div class="item-card__grid">
-                    <div>
-                      <span class="item-card__stat-label">Capital Inicial</span>
-                      <span class="item-card__stat-value">{{ Number(loan.initialPrincipal) | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
-                    </div>
-                    <div>
-                      <span class="item-card__stat-label">Tasa Interés</span>
-                      <span class="item-card__stat-value">{{ loan.interestRate }}% E.M.</span>
-                    </div>
+                <div class="item-card__amounts">
+                  <div>
+                    <span class="item-card__amount-label">Capital Inicial</span>
+                    <span class="item-card__amount-value">{{ Number(loan.initialPrincipal) | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
                   </div>
+                  <div class="item-card__amount-align-right">
+                    <span class="item-card__amount-label">Tasa Interés</span>
+                    <span class="item-card__amount-value">{{ loan.interestRate }}% E.M.</span>
+                  </div>
+                </div>
 
-                  <div class="progress-bar progress-bar--margin-small">
-                    <div class="progress-bar__fill"></div>
-                  </div>
-                  
-                  <span class="item-card__footer item-card__footer--right">Saldado al 100%</span>
-                </ion-card-content>
-              </ion-card>
-            }
-          </div>
-        }
-      </div>
+                <div class="progress-bar progress-bar--margin-small">
+                  <div class="progress-bar__fill"></div>
+                </div>
+                
+                <div class="item-card__footer item-card__footer--right">
+                  <span>Saldado al 100%</span>
+                </div>
+              </ion-card-content>
+            </ion-card>
+          }
+        </div>
+      }
     }
 
     <!-- TAB 3: CREDIT CARDS -->
     @if (store.activeSegment() === 'cc') {
-      <div class="tab-pane">
-        @if (store.completedCreditCards().length === 0) {
-          <app-empty-state 
-            iconName="card-outline" 
-            title="Sin Tarjetas al Día" 
-            message="Todas tus tarjetas de crédito registradas tienen deuda acumulada activa.">
-          </app-empty-state>
-        } @else {
-          <div class="tab-pane">
-            @for (card of store.completedCreditCards(); track card.id) {
-              <ion-card class="item-card">
-                <ion-card-content class="item-card__content">
-                  <div class="item-card__header">
-                    <div>
-                      <h4 class="item-card__title">{{ card.aliasName }}</h4>
-                      <p class="item-card__subtitle">Número: •••• •••• •••• {{ card.lastFourDigits }}</p>
-                    </div>
-                    <ion-badge color="success" class="item-card__badge">
-                      💳 Sin Deuda
-                    </ion-badge>
+      @if (store.completedCreditCards().length === 0) {
+        <div class="empty-state">
+          <ion-icon name="card-outline" class="empty-state-icon"></ion-icon>
+          <h3 class="empty-state-title">Sin Tarjetas al Día</h3>
+          <p class="empty-state-desc">Todas tus tarjetas de crédito registradas tienen deuda acumulada activa.</p>
+        </div>
+      } @else {
+        <div class="archive-items-grid">
+          @for (card of store.completedCreditCards(); track card.id) {
+            <ion-card class="item-card">
+              <ion-card-content class="item-card__content">
+                
+                <div class="item-card__header">
+                  <div>
+                    <h3 class="item-card__title">{{ card.aliasName }}</h3>
+                    <p class="item-card__subtitle">Número: •••• •••• •••• {{ card.lastFourDigits }}</p>
                   </div>
+                  <div class="item-card__badge-area">
+                    <ion-badge class="item-card__badge item-card__badge--success">💳 Sin Deuda</ion-badge>
+                  </div>
+                </div>
 
-                  <div class="item-card__grid">
-                    <div>
-                      <span class="item-card__stat-label">Tasa Compras</span>
-                      <span class="item-card__stat-value">{{ card.interestRate }}% Mes Vencido</span>
-                    </div>
-                    <div>
-                      <span class="item-card__stat-label">Deuda Total</span>
-                      <span class="item-card__stat-value item-card__stat-value--highlight">$ 0 COP</span>
-                    </div>
+                <div class="item-card__amounts">
+                  <div>
+                    <span class="item-card__amount-label">Tasa Compras</span>
+                    <span class="item-card__amount-value">{{ card.interestRate }}% Mes Vencido</span>
                   </div>
-                </ion-card-content>
-              </ion-card>
-            }
-          </div>
-        }
-      </div>
+                  <div class="item-card__amount-align-right">
+                    <span class="item-card__amount-label">Deuda Total</span>
+                    <span class="item-card__amount-value item-card__amount-value--highlight">$ 0 COP</span>
+                  </div>
+                </div>
+              </ion-card-content>
+            </ion-card>
+          }
+        </div>
+      }
     }
   </div>
 </ion-content>

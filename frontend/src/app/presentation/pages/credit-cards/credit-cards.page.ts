@@ -24,6 +24,7 @@ import {
   IonSelect,
   IonSelectOption,
   IonSegment,
+  IonMenuButton,
   IonSegmentButton,
   IonToggle,
   AlertController,
@@ -83,6 +84,7 @@ import { CreditCardUiComponent } from '../../../shared/components/credit-card-ui
     IonSegment,
     IonSegmentButton,
     IonToggle,
+    IonMenuButton,
     MoneyMaskDirective,
     BlockScientificNotationDirective,
     CreditCardUiComponent
@@ -160,7 +162,8 @@ export class CreditCardsPage implements OnInit {
     effect(() => {
       const changeCount = this.transactionEventService.transactionSaved();
       if (changeCount > 0) {
-        this.creditCardService.loadCreditCards(true).then((cards) => {
+        this.store.loadCreditCards(true).then(() => {
+          const cards = this.store.creditCards();
           const current = this.selectedCard();
           if (current) {
             const updated = cards.find(c => c.id === current.id);
@@ -175,7 +178,7 @@ export class CreditCardsPage implements OnInit {
   }
 
   async ngOnInit() {
-    await this.creditCardService.loadCreditCards(true);
+    await this.store.loadCreditCards(true);
     await this.accountService.loadAccounts(true);
 
     // Select first card by default if available
@@ -271,7 +274,7 @@ export class CreditCardsPage implements OnInit {
         amount: Number(val.amount)
       });
       // Refresh list to update debts
-      await this.creditCardService.loadCreditCards(true);
+      await this.store.loadCreditCards(true);
       await this.accountService.loadAccounts(true);
       
       // Select updated card

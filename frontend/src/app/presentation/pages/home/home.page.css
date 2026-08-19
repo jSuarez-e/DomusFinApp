@@ -1,401 +1,334 @@
 /* frontend/src/app/presentation/pages/home/home.page.css */
 
-.premium-content {
-  --background: var(--ion-background-color) !important;
-  font-family: 'Outfit', 'Inter', sans-serif;
-  color: var(--ion-text-color) !important;
+/* --- General Layout --- */
+.transparent-toolbar {
+  --background: transparent;
+  --border-width: 0;
 }
 
-.glass-toolbar {
-  --background: var(--ion-toolbar-background) !important;
-  --border-color: var(--ion-border-color) !important;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+.dashboard-content {
+  --background: var(--ion-background-color, #f4f7f6);
 }
 
-.premium-month-select {
-  --background: rgba(0, 0, 0, 0.03);
-  --border-color: var(--ion-border-color);
-  --border-radius: 8px;
-  --placeholder-color: var(--ion-color-step-300);
-  color: var(--ion-text-color);
-  font-weight: 600;
-  background: rgba(0, 0, 0, 0.02);
-  border: 1px solid var(--ion-border-color);
-  transition: all 0.2s ease;
-}
-
-body.dark .premium-month-select {
-  --background: rgba(255, 255, 255, 0.03);
-  background: rgba(255, 255, 255, 0.02);
-}
-
-.premium-month-select:hover {
-  background: rgba(0, 0, 0, 0.05);
-  border-color: var(--ion-color-primary);
-}
-
-body.dark .premium-month-select:hover {
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.content-container {
+.dashboard-container {
+  padding: 12px;
   display: flex;
   flex-direction: column;
-  padding: 16px;
-  position: relative;
-  overflow: hidden;
-  z-index: 1;
+  gap: 12px;
+  padding-bottom: 80px; /* Space for FAB */
 }
 
-.kpi-card {
-  /* Fondo degradado de cristal muy sutil */
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 20px !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15) !important;
-  margin-bottom: 20px !important; /* Más respiro entre tarjetas */
+/* --- Header Section --- */
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 8px 16px 0;
 }
 
-body.dark .kpi-card {
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4) !important;
+.header-left {
+  display: flex;
+  flex-direction: column;
 }
 
-.kpi-card ion-card-header {
-  padding: 18px 20px 4px 20px;
+.month-selector {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-secondary, #64748b);
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 0;
+  --padding-bottom: 4px;
 }
 
-.kpi-title {
+.month-selector::part(icon) {
+  display: none; /* Hide standard dropdown icon if desired */
+}
+
+.header-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--ion-text-color, #1e293b);
+}
+
+.header-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.net-worth-label {
   font-size: 0.75rem;
+  color: var(--text-secondary, #64748b);
+}
+
+.net-worth-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--ion-color-success, #2dd36f);
+}
+
+/* --- Base Card Styles --- */
+.dashboard-card {
+  margin: 0;
+  border-radius: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  background: var(--ion-card-background, #ffffff);
+}
+
+.full-card {
+  width: 100%;
+}
+
+.card-title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-icon {
+  font-size: 1.2rem;
+  color: var(--ion-color-success, #2dd36f);
+}
+
+.card-title {
+  font-size: 0.8rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 1.5px;
-  color: var(--text-secondary); /* Un gris un poco más elegante */
+  letter-spacing: 0.5px;
+  color: var(--text-secondary, #64748b);
+}
+
+/* --- Text Colors --- */
+.text-success { color: var(--ion-color-success, #2dd36f) !important; }
+.text-danger { color: var(--ion-color-danger, #ff4961) !important; }
+.text-warning { color: var(--ion-color-warning, #ffc409) !important; }
+
+/* --- Background Colors for Bars --- */
+.bg-success { background: var(--ion-color-success, #2dd36f) !important; }
+.bg-danger { background: var(--ion-color-danger, #ff4961) !important; }
+.bg-warning { background: var(--ion-color-warning, #ffc409) !important; }
+
+/* --- KPIs Superiores --- */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
 }
 
 .kpi-card ion-card-content {
-  padding: 0 20px 20px 20px;
-}
-
-/* ------------------------------------
-   Tarjeta A: Estado Patrimonial
-   ------------------------------------ */
-.kpi-header-stats {
-  display: flex;
-  justify-content: space-between; /* Empuja los elementos a los bordes */
-  align-items: center;
-  background: transparent; /* ELIMINADA la caja interna oscura */
-  padding: 10px 0 0 0;
-  border: none; /* ELIMINADO el borde interno */
-}
-
-.kpi-header-stat {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-}
-
-/* Alinea la deuda a la derecha para equilibrar visualmente */
-.kpi-header-stat:last-child {
-  align-items: flex-end;
-  text-align: right;
-}
-
-.kpi-stat-label {
-  font-size: 0.75rem;
-  color: var(--text-secondary);
-  font-weight: 500;
-}
-
-.kpi-stat-val {
-  font-size: 1.6rem; /* Números más protagonistas */
-  font-weight: 800;
-  letter-spacing: -0.5px;
-}
-
-.text-success { color: var(--ion-color-primary) !important; }
-.text-danger { color: var(--ion-color-danger) !important; }
-
-/* ------------------------------------
-   Tarjeta B: Flujo Mensual
-   ------------------------------------ */
-.kpi-progress-section {
-  /* La caja interna oscura se traslada aquí para enmarcar el presupuesto */
-  background: rgba(0, 0, 0, 0.2); 
   padding: 16px;
-  border-radius: 16px;
-  margin-top: 10px;
-  margin-bottom: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.03);
 }
 
-.kpi-progress-labels {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-}
-
-.progress-subtext {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--ion-text-color);
-}
-
-.progress-percentage {
-  font-size: 0.85rem;
-  font-weight: 800;
-  color: var(--ion-color-primary-contrast);
-  /* Efecto de pastilla (pill) para el porcentaje */
-  background: rgba(255, 255, 255, 0.1);
-  padding: 4px 10px;
-  border-radius: 10px;
-}
-
-.kpi-progress-bar {
-  height: 8px;
-  border-radius: 4px;
-  margin-bottom: 10px;
-  --background: rgba(255, 255, 255, 0.08); /* Color del track vacío */
-}
-
-.progress-amounts {
-  display: flex;
-  justify-content: space-between;
+.kpi-label {
   font-size: 0.75rem;
-  color: var(--text-secondary);
-  font-weight: 500;
-}
-
-/* Grilla de Ingresos y Gastos */
-.kpi-cashflow-grid {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  padding-top: 8px;
-}
-
-.cashflow-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex: 1; /* Para que ambas mitades ocupen lo mismo */
-  justify-content: center;
-}
-
-.icon-box {
-  width: 42px; /* Cajas de iconos más grandes */
-  height: 42px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.icon-box ion-icon {
-  font-size: 1.4rem; /* Iconos más visibles */
-}
-
-/* Hacemos los fondos ligeramente más vibrantes */
-.bg-success-light { background: rgba(var(--ion-color-primary-rgb), 0.15); color: var(--ion-color-primary);}
-.bg-danger-light { background: rgba(var(--ion-color-danger-rgb), 0.15); color: var(--ion-color-danger);}
-
-.cashflow-details {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.cf-label {
-  font-size: 0.7rem;
-  color: var(--text-secondary);
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  color: var(--text-secondary, #64748b);
+  margin-bottom: 4px;
 }
 
-.cf-value {
-  font-size: 1.1rem;
+.kpi-value {
+  font-size: 1.3rem;
   font-weight: 800;
 }
 
-/* Alertas & Featured Card styles */
-.urgent-payment-alert {
-  animation: fadeIn 0.3s ease-out;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* =======================================================
-   DISEÑO DE TARJETAS DE MOVIMIENTOS (IDÉNTICO A REPORTES)
-   ======================================================= */
-.movement-item {
-  --background: rgba(255, 255, 255, 0.03); /* Fondo de tarjeta suave */
-  --padding-start: 12px;
-  --padding-end: 16px;
-  --inner-padding-end: 0;
-  margin-bottom: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.05) !important; /* Borde sutil activado */
-  border-radius: 12px !important;
-}
-
-/* Zona Izquierda: Icono */
-.icon-circle {
+/* --- Resumen del Mes --- */
+.card-header-row {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  margin-right: 14px;
-  flex-shrink: 0;
+  margin-bottom: 16px;
 }
 
-.icon-circle ion-icon {
-  font-size: 1.25rem;
+.progress-percent {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--text-secondary, #64748b);
 }
 
-/* Zona Central: Textos */
-.item-body {
+.progress-bar-container {
+  height: 8px;
+  background: var(--ion-background-color, #f4f7f6);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.progress-bar-container.mini {
+  height: 6px;
+  margin-bottom: 0;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.progress-amounts-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: var(--ion-text-color, #1e293b);
+  font-weight: 600;
+}
+
+.amount-budget {
+  color: var(--text-secondary, #64748b);
+}
+
+/* --- Balance Grid --- */
+.mb-12 { margin-bottom: 12px; }
+
+.balance-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.balance-box {
+  background: var(--ion-background-color, #f4f7f6);
+  border-radius: 12px;
+  padding: 12px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  margin: 0;
+  position: relative;
+  overflow: hidden;
 }
 
-.item-title-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
+.balance-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-secondary, #64748b);
+  margin-bottom: 4px;
+}
+
+.balance-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.mini-bar {
+  position: absolute;
+  bottom: 0;
+  left: 12px;
+  right: 12px;
+  height: 4px;
+  border-radius: 4px 4px 0 0;
+}
+
+/* --- Lists (Cuentas, Ahorros, Créditos) --- */
+.list-card ion-card-content {
+  padding: 0;
+}
+
+.list-header {
+  padding: 16px 16px 8px;
+}
+
+.dashboard-list {
+  background: transparent;
+  padding: 0;
+}
+
+.dashboard-item {
+  --padding-start: 16px;
+  --inner-padding-end: 16px;
+  --background: transparent;
+}
+
+.dashboard-list hr,
+.savings-list hr,
+.dashboard-list hr {
+  border-bottom: 1px dotted var(--text-secondary); 
+  width: 90%; 
+  margin: 0 auto;
 }
 
 .item-title {
-  font-weight: 700;
   font-size: 0.95rem;
-  color: var(--ion-text-color);
-  margin: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-weight: 600;
+  color: var(--ion-text-color, #1e293b);
+  margin-bottom: 2px;
 }
 
-.mini-lock {
+.item-subtitle {
   font-size: 0.8rem;
-  color: var(--ion-color-tertiary); /* Candadito morado */
+  color: var(--text-secondary, #64748b);
 }
 
-.item-desc {
-  font-size: 0.8rem;
-  color: var(--text-secondary);
-  margin: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.item-value {
+  font-size: 1rem;
+  font-weight: 700;
 }
 
-/* Zona Derecha: Montos y Usuario */
-.item-end {
+.empty-state {
+  padding: 16px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--text-secondary, #64748b);
+}
+
+/* --- Savings List Specifics --- */
+.savings-list {
+  padding: 8px 16px 20px;
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
-  justify-content: center;
-  gap: 4px;
-  margin-left: 12px;
+  gap: 20px;
 }
 
-.item-amount {
-  font-weight: 700;
-  font-size: 0.95rem;
+.savings-item {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.item-amount.income { color: var(--ion-color-primary) !important; } /* Verde */
-.item-amount.expense { color: var(--ion-color-danger) !important; } /* Rojo */
-.item-amount.transfer { color: var(--ion-color-tertiary) !important; } /* Morado */
+.savings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
 
-.end-meta {
+.savings-header .item-title {
+  flex: 1;
+  line-height: 1.3;
+  margin-bottom: 0;
+}
+
+.savings-header .item-value {
+  flex-shrink: 0;
+  text-align: right;
+}
+
+/* --- FAB Button --- */
+.home-fab {
+  margin-bottom: env(safe-area-inset-bottom);
+}
+
+/* --- Movements List Specifics --- */
+.icon-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
-  gap: 4px;
+  justify-content: center;
+  margin-right: 12px;
+  font-size: 1.2rem;
 }
 
-.item-user {
-  font-size: 0.75rem;
-  color: var(--text-secondary); /* Gris claro para el nombre de usuario */
+.icon-circle-public {
+  background: var(--ion-background-color, #f4f7f6);
+  color: var(--ion-color-primary, #3880ff);
 }
 
-/* Pulse animation for auto captured transactions */
-.auto-lightning {
-  font-size: 0.7rem;
-  color: var(--ion-color-warning);
-  animation: pulse 2.5s infinite;
-  display: inline-flex;
+.icon-circle-private {
+  background: var(--ion-color-light, #f4f5f8);
+  color: var(--text-secondary, #64748b);
 }
-
-/* =======================================================
-   BEM CLASSES REFACTORED FROM INLINE STYLES
-   ======================================================= */
-
-/* Classes for Header */
-.home-header__toolbar { display: flex; align-items: center; justify-content: space-between; }
-.home-header__title { font-weight: 800; }
-.home-header__buttons { display: flex; align-items: center; gap: 8px; margin-right: 12px; }
-.home-header__theme-btn { --color: var(--ion-text-color); margin: 0; --padding-start: 4px; --padding-end: 4px; }
-.home-header__theme-icon { font-size: 20px; }
-.home-header__month-select { margin: 0; padding: 4px 8px; font-size: 0.85rem; border-radius: 8px; }
-
-/* Classes for Sections */
-.home-section__header { margin-top: 16px; margin-bottom: 8px; padding: 0; }
-.home-section__header--flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-.home-section__title { font-size: 1.05rem; font-weight: 800; margin: 0; }
-.home-section__title--danger { color: var(--ion-color-danger); }
-.home-section__badge { font-size: 9px; border-radius: 4px; padding: 3px 6px; }
-
-/* Classes for Quick Accounts */
-.home-accounts__slider { display: flex; overflow-x: auto; gap: 10px; padding: 4px 0; margin-bottom: 16px; scrollbar-width: none; -ms-overflow-style: none; }
-.home-accounts__empty { font-size: 12px; color: var(--text-secondary); padding: 8px 0; }
-.home-accounts__card { flex: 0 0 160px; background: var(--ion-card-background); border: 1px solid var(--ion-border-color); border-radius: 16px; padding: 12px; display: flex; flex-direction: column; gap: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); position: relative; }
-.home-accounts__card-header { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-.home-accounts__card-title { font-size: 11px; font-weight: 700; color: var(--ion-text-color); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 105px; }
-.home-accounts__card-badge { --background: rgba(var(--ion-color-tertiary-rgb), 0.15); --color: var(--ion-color-tertiary); font-size: 8px; padding: 2px 4px; border-radius: 4px; display: flex; align-items: center; }
-.home-accounts__card-badge-icon { font-size: 9px; }
-.home-accounts__card-balance { font-size: 15px; font-weight: 800; color: var(--ion-color-primary); }
-
-/* Classes for Alerts */
-.home-alerts { margin-bottom: 16px; }
-.home-alerts__item { background: rgba(239, 68, 68, 0.06); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 16px; padding: 12px; display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-.home-alerts__icon { color: var(--ion-color-danger); font-size: 18px; }
-.home-alerts__details { display: flex; flex-direction: column; gap: 2px; flex: 1; }
-.home-alerts__name { font-size: 12px; font-weight: 700; }
-.home-alerts__amount { font-size: 11px; color: var(--ion-color-danger); font-weight: 500; }
-
-/* Classes for Goals */
-.home-goals__content { padding: 12px; }
-.home-goals__header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-.home-goals__title-wrapper { display: flex; align-items: center; gap: 6px; }
-.home-goals__title { font-size: 13px; font-weight: 700; }
-.home-goals__badge { font-size: 8px; display: flex; align-items: center; gap: 2px; padding: 2px 4px; border-radius: 4px; }
-.home-goals__badge--private { --background: rgba(var(--ion-color-tertiary-rgb), 0.15); --color: var(--ion-color-tertiary); }
-.home-goals__badge-icon { font-size: 9px; }
-.home-goals__progress-text { font-size: 12px; color: var(--ion-color-primary); font-weight: 700; }
-.home-goals__progress-bar { height: 6px; border-radius: 3px; margin-bottom: 8px; }
-.home-goals__amounts { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-secondary); }
-
-/* Classes for Movements List */
-.home-movements { background: transparent; padding: 0; margin-bottom: 24px; }
-.home-movements__empty { padding: 24px 12px; text-align: center; border: 1px dashed var(--ion-border-color); border-radius: 12px; background: rgba(255,255,255,0.01); }
-.home-movements__empty-icon-bg { width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: center; margin: 0 auto 10px auto; }
-.home-movements__empty-icon { font-size: 20px; color: var(--text-secondary); }
-.home-movements__empty-title { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
-.home-movements__empty-desc { font-size: 11px; color: var(--text-secondary); margin: 0; }
-.home-movements__icon--private { background: rgba(var(--ion-color-danger-rgb), 0.15) !important; color: var(--ion-color-danger) !important; }
-.home-movements__icon--public { background: rgba(136, 220, 204, 0.08) !important; color: var(--ion-color-primary) !important; }
-
-/* Classes for FAB */
-.home-fab { margin-bottom: 12px; margin-right: 12px; }
-.home-fab__btn--expense { --background: var(--ion-color-danger); --color: var(--ion-color-primary-contrast); }
-.home-fab__btn--income { --background: var(--ion-color-primary); --color: var(--ion-color-primary-contrast); }
-.home-fab__btn--transfer { --background: var(--ion-color-tertiary); --color: var(--ion-color-primary-contrast); }
-.home-fab__btn--savings { --background: var(--ion-color-primary); --color: var(--ion-color-primary-contrast); }

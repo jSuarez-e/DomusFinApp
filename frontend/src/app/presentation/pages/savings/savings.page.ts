@@ -29,6 +29,7 @@ import {
   IonTextarea,
   IonToggle,
   ToastController,
+  IonMenuButton
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -82,6 +83,7 @@ import { SavingsProgressComponent } from '../../../shared/components/savings-pro
     IonSelectOption,
     IonTextarea,
     IonToggle,
+    IonMenuButton,
     MoneyMaskDirective,
     BlockScientificNotationDirective,
     SavingsProgressComponent
@@ -96,6 +98,7 @@ export class SavingsPage implements OnInit {
 
   // State Signals (Delegadas al Store)
   public activeSavingsGoals = this.store.activeSavingsGoals;
+  public archivedSavingsGoals = this.store.archivedSavingsGoals;
   public totalSaved = this.store.totalSaved;
   public totalTarget = this.store.totalTarget;
   public globalProgress = this.store.globalProgress;
@@ -281,6 +284,20 @@ export class SavingsPage implements OnInit {
       this.transactionEventService.emitTransactionSaved();
     } catch (error: any) {
       const msg = error.error?.message || 'Error al registrar el aporte.';
+      this.presentToast(msg, 'danger');
+    } finally {
+      this.isSubmitting.set(false);
+    }
+  }
+
+  public async handleArchive(goal: SavingsGoal) {
+    this.isSubmitting.set(true);
+    try {
+      await this.savingsService.archiveGoal(goal.id);
+      await this.store.loadSavings(true);
+      this.presentToast('Meta movida al historial.', 'success');
+    } catch (error: any) {
+      const msg = error.error?.message || 'Error al archivar la meta.';
       this.presentToast(msg, 'danger');
     } finally {
       this.isSubmitting.set(false);

@@ -26,11 +26,32 @@ export const SavingsStore = signalStore(
   withState(initialState),
   withComputed((store) => ({
     /**
-     * Calcula las metas de ahorro activas (cuyo monto actual es menor a la meta).
-     * @returns {SavingsGoal[]} Arreglo de metas en curso
+     * Calcula las metas de ahorro activas y finalizadas que no han sido archivadas.
+     * Se ordenan colocando primero las metas en curso y luego las completadas.
+     * @returns {SavingsGoal[]} Arreglo de metas
      */
-    activeSavingsGoals: computed(() => 
-      store.savingsGoals().filter((g) => Number(g.currentAmount) < Number(g.targetAmount))
+    activeSavingsGoals: computed(() => {
+      const visible = store.savingsGoals().filter(g => g.status !== 'ARCHIVED');
+      return visible.sort((a, b) => {
+        const tA = Number(a.targetAmount) || 1;
+        const tB = Number(b.targetAmount) || 1;
+        const pA = (Number(a.currentAmount) / tA) * 100;
+        const pB = (Number(b.currentAmount) / tB) * 100;
+        const aCompleted = pA >= 100;
+        const bCompleted = pB >= 100;
+        
+        if (aCompleted && !bCompleted) return 1;
+        if (!aCompleted && bCompleted) return -1;
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      });
+    }),
+    /**
+     * Calcula las metas de ahorro que han sido archivadas.
+     * @returns {SavingsGoal[]} Arreglo de metas en el histórico
+     */
+    archivedSavingsGoals: computed(() => 
+      store.savingsGoals().filter(g => g.status === 'ARCHIVED')
+        .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
     ),
     /**
      * Calcula el total de dinero consolidado que se ha ahorrado en todas las metas.

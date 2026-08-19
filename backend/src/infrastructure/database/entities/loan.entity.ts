@@ -20,6 +20,9 @@ export class LoanDbEntity {
   @Column({ name: 'interest_rate', type: 'decimal', precision: 5, scale: 2 })
   interestRate: number; // e.g. 1.5 % monthly
 
+  @Column({ name: 'term_months', type: 'int', default: 12 })
+  termMonths: number;
+
   @Column({ name: 'handling_fee', type: 'decimal', precision: 10, scale: 2, default: 0 })
   handlingFee: number;
 

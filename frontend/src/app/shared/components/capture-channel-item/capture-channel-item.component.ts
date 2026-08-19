@@ -19,8 +19,7 @@ import { IonItem, IonIcon, IonLabel, IonToggle } from '@ionic/angular/standalone
       <ion-toggle 
         [checked]="enabled()" 
         (ionChange)="toggle.emit($event)" 
-        slot="end" 
-        class="premium-toggle">
+        slot="end">
       </ion-toggle>
     </ion-item>
   `,

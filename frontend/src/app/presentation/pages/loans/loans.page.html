@@ -1,14 +1,15 @@
 <!-- frontend/src/app/presentation/pages/loans/loans.page.html -->
 <ion-header [translucent]="true">
-  <ion-toolbar class="loans-toolbar">
+  <ion-toolbar class="glass-toolbar">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
     <ion-title>Créditos y Deudas</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="premium-content">
-  <div class="loans-glow-bg"></div>
-
-  <div class="loans-container">
+<ion-content [fullscreen]="true" class="dashboard-content">
+  <div class="dashboard-container">
     <!-- Segment Selection -->
     <ion-segment [value]="activeSegment()" (ionChange)="onSegmentChange($event)" class="loans-segment">
       <ion-segment-button value="debts">
@@ -22,15 +23,15 @@
     <!-- CONTENT 1: DEBTS LIST -->
     @if (activeSegment() === 'debts') {
       <div class="loans-tab-content">
-        <!-- Summary Card -->
-        <ion-card class="loans-summary-card">
-          <ion-card-content class="loans-summary-content">
+        <!-- Summary Stats Card -->
+        <ion-card class="dashboard-card full-card">
+          <ion-card-content>
             <div class="loans-summary__grid">
               <div class="loans-summary__item">
                 <span class="loans-summary__label">Saldo Pendiente</span>
                 <span class="loans-summary__value">{{ totalDebt() | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
               </div>
-              <div class="loans-summary__item">
+              <div class="loans-summary__item summary-item-right">
                 <span class="loans-summary__label">Principal Inicial</span>
                 <span class="loans-summary__value">{{ totalInitial() | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
               </div>
@@ -49,76 +50,91 @@
         </ion-card>
 
         <!-- Section Header -->
-        <div class="loans-section-header">
-          <h2>Créditos Activos</h2>
-          <ion-badge color="tertiary" class="loans-section-badge">{{ activeLoans().length }}</ion-badge>
+        <div class="list-header">
+          <span class="header-title list-header-title">Créditos Activos</span>
+          <ion-badge class="header-badge">{{ activeLoans().length }}</ion-badge>
         </div>
 
         @if (activeLoans().length === 0) {
-          <div class="loans-empty-state">
-            <div class="loans-empty-state__icon-bg">
-              <ion-icon name="calculator-outline" class="loans-empty-state__icon"></ion-icon>
-            </div>
-            <h3>Sin Créditos Registrados</h3>
-            <p>Aquí verás tus préstamos y deudas. Registra una nueva deuda para proyectar sus cuotas y abonar capital.</p>
-            <ion-button fill="outline" color="primary" class="loans-empty-state__btn" (click)="openCreateModal()">
+          <div class="empty-state">
+            <ion-icon name="calculator-outline" class="empty-state-icon"></ion-icon>
+            <h3 class="empty-state-title">Sin Créditos Registrados</h3>
+            <p class="empty-state-desc">Aquí verás tus préstamos y deudas. Registra una nueva deuda para proyectar sus cuotas y abonar capital.</p>
+            <ion-button fill="outline" color="primary" (click)="openCreateModal()">
               Registrar Deuda
             </ion-button>
           </div>
         } @else {
-          <div class="loans-grid">
+          <div class="loans-goals-grid">
             @for (loan of activeLoans(); track loan.id) {
-              <div class="loans-card-wrapper">
-                <!-- Physical style card -->
-                <div class="loans-physical-card" [class.loans-physical-card--private]="loan.isPrivate" [class.loans-physical-card--shared]="!loan.isPrivate">
-                  <div class="loans-physical-card__glass"></div>
-                  <div class="loans-physical-card__header">
-                    <span class="loans-physical-card__bank">DOMUSFIN LOAN 
-                      @if (loan.isPrivate) {
-                        <span class="loans-physical-card__badge loans-physical-card__badge--private">🔒 Privada</span>
-                      } @else {
-                        <span class="loans-physical-card__badge loans-physical-card__badge--shared">👥 Compartida</span>
-                      }
-                    </span>
-                    <ion-icon name="calculator-outline" class="loans-physical-card__logo"></ion-icon>
+              <ion-card class="loans-card" [class.loans-card--private]="loan.isPrivate">
+                <ion-card-content>
+                  
+                  <!-- Card Header -->
+                  <div class="loans-card__header">
+                    <div class="loans-card__title-area">
+                      <div class="loans-card__icon-wrapper" [class.loans-card__icon-wrapper--private]="loan.isPrivate">
+                        @if (loan.isPrivate) {
+                          <ion-icon name="lock-closed-outline"></ion-icon>
+                        } @else {
+                          <ion-icon name="people-outline"></ion-icon>
+                        }
+                      </div>
+                      <div>
+                        <p class="loans-card__creator">DOMUSFIN LOAN</p>
+                      </div>
+                    </div>
+
+                    <div class="loans-card__badge-area">
+                      <ion-badge color="primary" class="loans-badge">Activo</ion-badge>
+                    </div>
                   </div>
-                  <div class="loans-physical-card__chip"></div>
-                  <div class="loans-physical-card__number">{{ loan.purposeDescription }}</div>
-                  <div class="loans-physical-card__footer">
+
+                  <h3 class="loans-card__title">{{ loan.purposeDescription }}</h3>
+
+                  <!-- Card Amounts -->
+                  <div class="loans-card__amounts">
                     <div>
-                      <div class="loans-physical-card__label">TASA MENSUAL</div>
-                      <div class="loans-physical-card__val">{{ loan.interestRate }}% E.M.</div>
+                      <span class="loans-card__amount-label">SALDO PENDIENTE</span>
+                      <span class="loans-card__amount-value">{{ Number(loan.currentBalance) | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
                     </div>
-                    <div class="loans-physical-card__align-right">
-                      <div class="loans-physical-card__label">SALDO PENDIENTE</div>
-                      <div class="loans-physical-card__debt">{{ Number(loan.currentBalance) | currency:'COP':'symbol-narrow':'1.0-0' }}</div>
+                    <div class="loans-card__amount-align-right">
+                      <span class="loans-card__amount-label">TASA MENSUAL</span>
+                      <span class="loans-card__amount-value">{{ loan.interestRate }}% E.M.</span>
                     </div>
                   </div>
-                </div>
 
-                <!-- Progress Bar & Actions beneath it -->
-                <!-- Progress Bar & Actions beneath it -->
-                <app-loan-progress [loan]="loan"></app-loan-progress>
-                
-                <div class="loans-card__participants-container">
-                  @if (!loan.isPrivate && loan.participants && loan.participants.length > 0) {
-                    <div class="loans-card__participants-list">
-                      <span class="loans-card__participants-label">Participantes:</span>
-                      @for (p of loan.participants; track p.id) {
-                        <ion-badge color="tertiary" class="loans-card__participant-badge">👤 {{ p.name }}</ion-badge>
-                      }
-                    </div>
-                  }
-                </div>
+                  <!-- Card Progress Bar -->
+                  <div class="loans-card__progress-container">
+                    <app-loan-progress [loan]="loan"></app-loan-progress>
+                  </div>
 
-                <!-- Pay Button -->
-                <div class="loans-card__actions">
-                  <ion-button expand="block" size="small" class="loans-card__btn" (click)="openPayModal(loan)">
-                    <ion-icon name="cash-outline" slot="start"></ion-icon>
-                    Registrar Pago / Abono
-                  </ion-button>
-                </div>
-              </div>
+                  <!-- Participants -->
+                  <div class="loans-card__participants-container">
+                    @if (!loan.isPrivate && loan.participants && loan.participants.length > 0) {
+                      <div class="loans-card__participants-list">
+                        <span class="loans-card__participants-label">Participantes:</span>
+                        @for (p of loan.participants; track p.id) {
+                          <ion-badge color="medium" class="loans-card__participant-badge">👤 {{ p.name }}</ion-badge>
+                        }
+                      </div>
+                    }
+                  </div>
+
+                  <!-- Card Actions -->
+                  <div class="loans-card__actions">
+                    <ion-button expand="block" class="loans-card__btn" (click)="openPayModal(loan)">
+                      <ion-icon name="cash-outline" slot="start"></ion-icon>
+                      Registrar Pago / Abono
+                    </ion-button>
+                    <ion-button expand="block" fill="outline" color="primary" class="loans-card__btn loans-card__btn--secondary" (click)="openLoanSimModal(loan)">
+                      <ion-icon name="calculator-outline" slot="start"></ion-icon>
+                      Ver Simulación
+                    </ion-button>
+                  </div>
+
+                </ion-card-content>
+              </ion-card>
             }
           </div>
         }
@@ -128,8 +144,8 @@
     <!-- CONTENT 2: SIMULATOR -->
     @if (activeSegment() === 'simulator') {
       <div class="loans-tab-content">
-        <ion-card class="loans-sim-card">
-          <ion-card-content class="loans-sim-content">
+        <ion-card class="dashboard-card full-card">
+          <ion-card-content>
             <form [formGroup]="simForm" (ngSubmit)="handleSimulate()">
               <div class="loans-sim__grid">
                 <div class="loans-form__field">
@@ -154,7 +170,7 @@
                 </div>
               </div>
 
-              <ion-button type="submit" expand="block" class="loans-sim__submit" [disabled]="simForm.invalid">
+              <ion-button type="submit" expand="block" class="loans-sim__submit" color="primary" [disabled]="simForm.invalid">
                 <ion-icon name="calculator-outline" slot="start"></ion-icon>
                 Calcular Amortización
               </ion-button>
@@ -165,7 +181,7 @@
         <!-- Simulation Results Table -->
         @if (amortizationPlan().length > 0) {
           <div class="loans-sim-results">
-            <h3>Plan de Pagos Proyectado (Sistema Francés)</h3>
+            <h3 class="loans-sim-results-title">Plan de Pagos Proyectado (Sistema Francés)</h3>
             <div class="loans-table-wrapper">
               <table class="loans-sim-table">
                 <thead>
@@ -198,7 +214,7 @@
 
   <!-- Floating Action Button for active debts view -->
   @if (activeSegment() === 'debts') {
-    <ion-fab slot="fixed" vertical="bottom" horizontal="end" class="loans-fab">
+    <ion-fab slot="fixed" vertical="bottom" horizontal="end" class="home-fab">
       <ion-fab-button (click)="openCreateModal()">
         <ion-icon name="add-outline"></ion-icon>
       </ion-fab-button>
@@ -208,7 +224,7 @@
   <!-- Modal: Create Loan/Debt -->
   <ion-modal [isOpen]="isCreateModalOpen()" (didDismiss)="closeCreateModal()" class="loans-modal">
     <ng-template>
-      <ion-header>
+      <ion-header class="ion-no-border">
         <ion-toolbar class="loans-modal__toolbar">
           <ion-title>Registrar Crédito / Deuda</ion-title>
           <ion-buttons slot="end">
@@ -227,7 +243,7 @@
               <label class="loans-form__label">Descripción o Propósito del Crédito</label>
               <div class="loans-form__input-wrapper">
                 <ion-icon name="information-circle-outline" class="loans-form__icon"></ion-icon>
-                <ion-input type="text" placeholder="Ej. Crédito de Libre Inversión Vehículo" formControlName="purposeDescription" class="loans-form__input"></ion-input>
+                <ion-input type="text" placeholder="Ej. Crédito Vehículo" formControlName="purposeDescription" class="loans-form__input"></ion-input>
               </div>
               @if (loanForm.get('purposeDescription')?.invalid && loanForm.get('purposeDescription')?.touched) {
                 <div class="loans-form__error">La descripción es requerida (máx. 255 caracteres).</div>
@@ -257,6 +273,17 @@
             </div>
 
             <div class="loans-form__field">
+              <label class="loans-form__label">Plazo (Meses) / Tiempo a pagar</label>
+              <div class="loans-form__input-wrapper">
+                <ion-icon name="calendar-outline" class="loans-form__icon"></ion-icon>
+                <ion-input type="number" placeholder="Ej. 24" formControlName="termMonths" class="loans-form__input"></ion-input>
+              </div>
+              @if (loanForm.get('termMonths')?.invalid && loanForm.get('termMonths')?.touched) {
+                <div class="loans-form__error">El plazo en meses es obligatorio.</div>
+              }
+            </div>
+
+            <div class="loans-form__field">
               <label class="loans-form__label">Cuota de Manejo ($)</label>
               <div class="loans-form__input-wrapper">
                 <ion-icon name="cash-outline" class="loans-form__icon"></ion-icon>
@@ -264,15 +291,15 @@
               </div>
             </div>
 
-            <div style="display: flex; gap: 16px;">
-              <div class="loans-form__field" style="flex: 1;">
+            <div class="loans-form-grid-row">
+              <div class="loans-form__field flex-1">
                 <label class="loans-form__label">Seguro de Vida ($)</label>
                 <div class="loans-form__input-wrapper">
                   <ion-icon name="cash-outline" class="loans-form__icon"></ion-icon>
                   <ion-input type="text" placeholder="0.00" formControlName="lifeInsurance" appMoneyMask class="loans-form__input"></ion-input>
                 </div>
               </div>
-              <div class="loans-form__field" style="flex: 1;">
+              <div class="loans-form__field flex-1">
                 <label class="loans-form__label">Otros Cargos ($)</label>
                 <div class="loans-form__input-wrapper">
                   <ion-icon name="cash-outline" class="loans-form__icon"></ion-icon>
@@ -306,7 +333,7 @@
               </div>
             }
 
-            <ion-button type="submit" expand="block" class="loans-form__submit" [disabled]="loanForm.invalid || isSubmitting()">
+            <ion-button type="submit" expand="block" color="primary" class="loans-form__submit" [disabled]="loanForm.invalid || isSubmitting()">
               <ion-icon name="checkmark-outline" slot="start"></ion-icon>
               Registrar Préstamo
             </ion-button>
@@ -319,7 +346,7 @@
   <!-- Modal: Pay portion of Loan -->
   <ion-modal [isOpen]="isPayModalOpen()" (didDismiss)="closePayModal()" class="loans-modal">
     <ng-template>
-      <ion-header>
+      <ion-header class="ion-no-border">
         <ion-toolbar class="loans-modal__toolbar">
           <ion-title>Registrar Pago a Crédito</ion-title>
           <ion-buttons slot="end">
@@ -367,11 +394,69 @@
               }
             </div>
 
-            <ion-button type="submit" expand="block" class="loans-form__submit" [disabled]="payForm.invalid || isSubmitting()">
+            <ion-button type="submit" expand="block" color="primary" class="loans-form__submit" [disabled]="payForm.invalid || isSubmitting()">
               <ion-icon name="checkmark-outline" slot="start"></ion-icon>
               Registrar Abono
             </ion-button>
           </form>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <!-- Modal: View specific loan simulation -->
+  <ion-modal [isOpen]="isLoanSimModalOpen()" (didDismiss)="closeLoanSimModal()" class="loans-modal">
+    <ng-template>
+      <ion-header class="ion-no-border">
+        <ion-toolbar class="loans-modal__toolbar">
+          <ion-title>Simulación de Crédito</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="closeLoanSimModal()">
+              <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content class="loans-modal__content">
+        <div class="loans-modal__form-container">
+          @if (selectedLoan(); as loan) {
+            <div class="loans-pay-info">
+              <p>Crédito: <strong>{{ loan.purposeDescription }}</strong></p>
+              <p>Principal Inicial: <strong>{{ Number(loan.initialPrincipal) | currency:'COP':'symbol-narrow':'1.0-0' }}</strong></p>
+              <p>Tasa Mensual: <strong>{{ loan.interestRate }}%</strong> | Plazo: <strong>{{ loan.termMonths || 12 }} meses</strong></p>
+            </div>
+          }
+
+          @if (amortizationPlan().length > 0) {
+            <div class="loans-sim-results">
+              <h3 class="loans-sim-results-title">Plan de Pagos (Sistema Francés)</h3>
+              <div class="loans-table-wrapper">
+                <table class="loans-sim-table">
+                  <thead>
+                    <tr>
+                      <th>Mes</th>
+                      <th>Cuota</th>
+                      <th>Capital</th>
+                      <th>Interés</th>
+                      <th>Saldo</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (period of amortizationPlan(); track period.period) {
+                      <tr>
+                        <td class="td-center">{{ period.period }}</td>
+                        <td>{{ period.totalFee | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
+                        <td>{{ period.capital | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
+                        <td>{{ period.interest | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
+                        <td>{{ period.remainingBalance | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          }
         </div>
       </ion-content>
     </ng-template>

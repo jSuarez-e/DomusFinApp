@@ -1,52 +1,62 @@
 <!-- frontend/src/app/presentation/pages/expenses/expenses.page.html -->
 <ion-header [translucent]="true">
   <ion-toolbar class="glass-toolbar">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
     <ion-title>{{ household()?.name || 'Mi Hogar' }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="premium-content">
-  <div class="glow-bg"></div>
-
-  <div class="content-container">
+<ion-content [fullscreen]="true" class="dashboard-content">
+  <div class="dashboard-container">
+    
     <!-- Summarizing Household Card -->
-    <ion-card class="summary-card">
-      <ion-card-content>
-        <div class="summary-label">Gastos Totales del Hogar</div>
-        <div class="summary-value">{{ totalExpenses() | currency:'USD':'symbol':'1.2-2' }}</div>
-        <div class="summary-footer">
-          Agrega y visualiza de forma colaborativa respetando la privacidad.
+    <ion-card class="dashboard-card full-card">
+      <ion-card-content class="summary-card-content">
+        <div class="card-title-group summary-title-group">
+          <ion-icon name="wallet-outline" class="card-icon"></ion-icon>
+          <span class="card-title">TOTAL GASTOS PERSONALES</span>
+        </div>
+        <div class="accounts-summary__value">
+          {{ totalExpenses() | currency:'COP':'symbol-narrow':'1.0-0' }}
+        </div>
+        <div class="accounts-summary__subtitle">
+          Tus registros individuales dentro de este hogar.
         </div>
       </ion-card-content>
     </ion-card>
 
-    <!-- Expenses List Title -->
-    <div class="section-header">
-      <ion-text color="light">
-        <h2>Registro de Gastos</h2>
-      </ion-text>
-    </div>
-
-    <!-- Expenses List -->
-    <ion-list class="expenses-list" lines="none">
-      @if (expenses().length === 0) {
-        <div class="ion-text-center ion-padding empty-state-container">
-          <div class="empty-state-icon-wrapper">
-            <ion-icon name="wallet-outline" class="empty-state-icon"></ion-icon>
-          </div>
-          <h3>Comienza el mes</h3>
-          <p class="empty-state-text">¡Registra tu primer movimiento para empezar a trackear tus finanzas familiares!</p>
+    <ion-card class="dashboard-card full-card list-card">
+      <ion-card-content>
+        <div class="card-title-group list-header">
+          <ion-icon name="list-outline" class="card-icon"></ion-icon>
+          <span class="card-title">REGISTRO DE MOVIMIENTOS</span>
         </div>
-      }
 
-      @for (expense of expenses(); track expense.id) {
-        <app-expense-item 
-          [expense]="expense"
-          [categoryName]="getCategoryName(expense.categoryId)"
-          [currentUser]="currentUser()">
-        </app-expense-item>
-      }
-    </ion-list>
+        <ion-list lines="none" class="dashboard-list clear-list">
+          @if (expenses().length === 0) {
+            <div class="empty-state">
+              <div class="empty-state-icon-wrapper-list">
+                <ion-icon name="list-outline"></ion-icon>
+              </div>
+              <h3 class="empty-state-title">Sin movimientos</h3>
+              <p class="empty-state-desc">¡Registra tu primer movimiento para empezar a trackear tus finanzas!</p>
+            </div>
+          }
+          @for (expense of expenses(); track expense.id) {
+            <app-expense-item 
+              [expense]="expense"
+              [categoryName]="getCategoryName(expense.categoryId)"
+              [currentUser]="currentUser()">
+            </app-expense-item>
+            @if (expense.id !== expenses()[expenses().length - 1].id) {
+              <hr>
+            }
+          }
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
   </div>
 
   <!-- Floating Add Button -->

@@ -1,8 +1,8 @@
 .category-item {
   border-radius: 12px;
   margin-bottom: 8px;
-  --background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.03);
+  --background: var(--ion-card-background, rgba(255, 255, 255, 0.02));
+  border: 1px solid var(--ion-border-color, rgba(0, 0, 0, 0.05));
 }
 
 .category-item__icon-wrapper {
@@ -19,14 +19,14 @@
 
 .category-item__name {
   font-weight: 600;
-  color: #ffffff;
+  color: var(--ion-text-color);
 }
 
 .category-item__badge {
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
+  background: var(--ion-color-light-shade, rgba(0, 0, 0, 0.1));
+  color: var(--ion-text-color);
   font-size: 8px;
-  padding: 1px 4px;
+  padding: 2px 6px;
   border-radius: 4px;
   margin-left: 8px;
   font-weight: bold;

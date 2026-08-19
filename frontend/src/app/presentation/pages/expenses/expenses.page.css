@@ -1,11 +1,5 @@
 /* frontend/src/app/presentation/pages/expenses/expenses.page.css */
 
-.premium-content {
-  --background: #000000;
-  color: #ffffff;
-  position: relative;
-}
-
 .glass-toolbar {
   --background: rgba(0, 0, 0, 0.85);
   --border-color: rgba(255, 255, 255, 0.08);
@@ -24,85 +18,130 @@
   margin-right: 8px;
 }
 
-.glow-bg {
-  position: absolute;
-  top: -150px;
-  right: -50px;
-  width: 350px;
-  height: 350px;
-  background: radial-gradient(circle, rgba(92, 46, 126, 0.3) 0%, rgba(92, 46, 126, 0) 70%);
-  filter: blur(80px);
-  pointer-events: none;
-  z-index: 0;
+/* --- General Layout --- */
+.dashboard-content {
+  --background: var(--ion-background-color, #f4f7f6);
 }
 
-.content-container {
-  padding: 20px 16px;
-  position: relative;
-  z-index: 1;
+.dashboard-container {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 80px; /* Space for FAB */
   max-width: 600px;
   margin: 0 auto;
 }
-
-/* Summary Card styling */
-.summary-card {
-  background: rgba(18, 18, 18, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-  margin: 0 0 24px 0;
-  backdrop-filter: blur(8px);
+/* --- Base Card Styles --- */
+.dashboard-card {
+  margin: 0;
+  border-radius: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  background: var(--ion-card-background, #ffffff);
 }
 
-.summary-label {
-  color: #4C6793;
-  font-size: 0.85rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+.full-card {
+  width: 100%;
 }
 
-.summary-value {
-  color: #88DCCC;
-  font-size: 2.4rem;
-  font-weight: 800;
-  margin: 8px 0;
-  letter-spacing: -1px;
+.card-title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.summary-footer {
-  color: #a6a6a6;
+.card-icon {
+  font-size: 1.2rem;
+  color: var(--ion-color-success, #2dd36f);
+}
+
+.card-title {
   font-size: 0.8rem;
-  line-height: 1.4;
-}
-
-.section-header h2 {
-  font-size: 1.25rem;
   font-weight: 700;
-  margin: 0 0 16px 0;
-  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary, #64748b);
 }
 
-/* Expenses List styling */
-.expenses-list {
+/* --- Summary Card --- */
+.summary-card-content {
+  text-align: left;
+  padding: 24px 16px;
+}
+
+.summary-title-group {
+  margin-bottom: 8px;
+}
+
+.accounts-summary__value {
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.accounts-summary__subtitle {
+  font-size: 0.8rem;
+  color: var(--text-secondary, #64748b);
+}
+
+/* --- Lists --- */
+.list-card {
+  margin-top: 0;
+}
+
+.list-header {
+  padding: 16px 16px 8px;
+}
+
+.list-card ion-card-content {
+  padding: 0;
+}
+
+.dashboard-list {
   background: transparent;
   padding: 0;
 }
 
-/* Styles moved to expense-item component */
+.clear-list {
+  background: transparent;
+  padding: 0;
+}
+
 .empty-state {
+  padding: 32px 16px;
   text-align: center;
-  padding: 40px 20px;
-  color: #a6a6a6;
-  font-size: 0.9rem;
+  color: var(--text-secondary, #64748b);
+}
+
+.empty-state-icon-wrapper-list {
+  font-size: 2rem;
+  margin-bottom: 8px;
+  color: var(--ion-color-medium);
+}
+
+.empty-state-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ion-text-color);
+}
+
+.empty-state-desc {
+  margin: 4px 0 0;
+  font-size: 0.85rem;
+}
+
+hr {
+  border-bottom: 1px dotted var(--text-secondary); 
+  width: 90%; 
+  margin: 0 auto;
 }
 
 /* FAB button */
 .fab-button {
-  --background: #88DCCC;
-  --background-hover: #78c2b4;
-  --background-activated: #78c2b4;
-  --color: #121212;
+  --background: var(--ion-color-primary, #88DCCC);
+  --background-hover: var(--ion-color-primary-tint, #78c2b4);
+  --background-activated: var(--ion-color-primary-tint, #78c2b4);
+  --color: #ffffff;
   box-shadow: 0 4px 20px rgba(136, 220, 204, 0.4);
 }
 

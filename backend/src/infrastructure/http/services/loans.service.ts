@@ -61,6 +61,7 @@ export class LoansService {
       initialPrincipal: dto.initialPrincipal,
       currentBalance: dto.initialPrincipal, // Al inicio, el saldo pendiente es el capital inicial
       interestRate: dto.interestRate,
+      termMonths: dto.termMonths,
       handlingFee: dto.handlingFee || 0,
       lifeInsurance: dto.lifeInsurance || 0,
       otherCharges: dto.otherCharges || 0,

@@ -48,7 +48,12 @@ import {
   alertCircleOutline,
   addOutline,
   closeOutline,
-  lockClosed
+  lockClosed,
+  receiptOutline,
+  businessOutline,
+  starOutline,
+  cardOutline,
+  listOutline
 } from 'ionicons/icons';
 
 import { MovementService } from '../../../core/services/movement.service';
@@ -102,6 +107,7 @@ export class HomePage implements OnInit {
   public currentUser = this.authService.currentUser;
   
   // Reactivity State
+  public currentDate = signal<Date>(new Date());
   public selectedMonth = signal<string>('');
   public summaryData = signal<MonthlySummaryDto | null>(null);
   public dashboardData = signal<{ total_liquidity: number; total_debt: number; monthly_budget_remaining: number } | null>(null);
@@ -117,6 +123,11 @@ export class HomePage implements OnInit {
   public savingsGoals = this.savingsService.savingsGoals;
 
   // Computed Values
+  public netWorth = computed(() => {
+    const data = this.dashboardData();
+    if (!data) return 0;
+    return (data.total_liquidity || 0) - (data.total_debt || 0);
+  });
   public totalSpent = computed(() => {
     const remaining = this.dashboardData()?.monthly_budget_remaining ?? this.budget();
     return Math.max(0, this.budget() - remaining);
@@ -137,15 +148,14 @@ export class HomePage implements OnInit {
 
   public progressBarColor = computed(() => {
     const ratio = this.spentRatio();
-    if (ratio >= 0.9) return 'danger';
-    if (ratio >= 0.75) return 'warning';
-    if (ratio >= 0.5) return 'primary';
+    if (ratio > 0.7) return 'danger';
+    if (ratio >= 0.5) return 'warning';
     return 'success';
   });
 
   // 1. Featured Savings Goal (Closest to completion (<100%))
   public featuredGoal = computed(() => {
-    const goals = this.savingsGoals();
+    const goals = this.savingsGoals().filter(g => g.status !== 'ARCHIVED');
     if (goals.length === 0) return null;
     
     let bestGoal: any = null;
@@ -235,7 +245,12 @@ export class HomePage implements OnInit {
       alertCircleOutline,
       addOutline,
       closeOutline,
-      lockClosed
+      lockClosed,
+      receiptOutline,
+      businessOutline,
+      starOutline,
+      cardOutline,
+      listOutline
     });
 
     this.generateAvailableMonths();
@@ -267,28 +282,28 @@ export class HomePage implements OnInit {
   }
 
   private generateAvailableMonths() {
-    const months = [];
-    const date = new Date();
-    // Generate 12 months backward to guarantee January of the current/past cycle is included
-    for (let i = 0; i < 12; i++) {
-      const y = date.getFullYear();
-      const m = String(date.getMonth() + 1).padStart(2, '0');
-      const label = date.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
-      months.push({ value: `${y}-${m}`, label: label.charAt(0).toUpperCase() + label.slice(1) });
-      date.setMonth(date.getMonth() - 1);
-    }
-    this.availableMonths = months;
-    if (months.length > 0) {
-      this.selectedMonth.set(months[0].value);
-    }
+    const monthNames = [
+      'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ];
+    this.availableMonths = monthNames.map((name, i) => ({
+      value: String(i + 1).padStart(2, '0'),
+      label: name
+    }));
+    
+    // Default to current month
+    const currentMonthStr = String(new Date().getMonth() + 1).padStart(2, '0');
+    this.selectedMonth.set(currentMonthStr);
   }
 
   /**
    * Loads the financial summary and dashboard metrics for the selected month.
    */
   public loadDashboardData() {
-    const month = this.selectedMonth();
-    this.movementService.getMonthlySummary(month).subscribe({
+    const currentYear = new Date().getFullYear();
+    const queryMonth = `${currentYear}-${this.selectedMonth()}`;
+
+    this.movementService.getMonthlySummary(queryMonth).subscribe({
       next: (data) => {
         this.summaryData.set(data);
       },
@@ -297,7 +312,7 @@ export class HomePage implements OnInit {
       }
     });
 
-    this.movementService.getDashboardSummary(month).subscribe({
+    this.movementService.getDashboardSummary(queryMonth).subscribe({
       next: (data) => {
         this.dashboardData.set(data);
       },

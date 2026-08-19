@@ -12,6 +12,7 @@ export interface SavingsGoal {
   creator?: User;
   householdId: number;
   participants?: User[];
+  status?: 'ACTIVE' | 'ARCHIVED';
   createdAt: Date;
   updatedAt: Date;
 }

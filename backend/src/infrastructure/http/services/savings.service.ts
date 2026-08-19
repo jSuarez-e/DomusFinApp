@@ -234,6 +234,27 @@ export class SavingsService {
   }
 
   /**
+   * Archiva una meta de ahorro (la marca como ARCHIVED).
+   * 
+   * @param id ID de la meta de ahorro.
+   * @param user Usuario solicitante.
+   */
+  async archiveGoal(id: number, user: User): Promise<SavingsGoalDbEntity> {
+    const goal = await this.findOne(id, user);
+
+    if (goal.isPrivate && goal.creatorId !== user.id) {
+      throw new ForbiddenException('Solo el creador puede archivar esta meta de ahorro privada.');
+    }
+    
+    if (!goal.isPrivate && goal.creatorId !== user.id && user.role !== 'admin') {
+      throw new ForbiddenException('Solo el creador o un administrador pueden archivar esta meta compartida.');
+    }
+
+    goal.status = 'ARCHIVED';
+    return this.savingsGoalRepository.save(goal);
+  }
+
+  /**
    * Elimina una meta de ahorro si cumple las reglas de permisos de administrador para compartidas.
    * 
    * @param id ID único de la meta de ahorro.

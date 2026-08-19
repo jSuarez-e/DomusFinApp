@@ -1,6 +1,20 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonItem, IonLabel, IonButton, IonIcon } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { 
+  listOutline, 
+  pencilOutline, 
+  trashOutline,
+  fastFoodOutline,
+  flashOutline,
+  carOutline,
+  cameraOutline,
+  helpCircleOutline,
+  walletOutline,
+  cardOutline,
+  cashOutline
+} from 'ionicons/icons';
 import { Category } from '@shared/index';
 
 /**
@@ -49,4 +63,20 @@ export class CategoryListItemComponent {
 
   /** Evento emitido al querer eliminar */
   public delete = output<Category>();
+
+  constructor() {
+    addIcons({
+      listOutline,
+      pencilOutline,
+      trashOutline,
+      fastFoodOutline,
+      flashOutline,
+      carOutline,
+      cameraOutline,
+      helpCircleOutline,
+      walletOutline,
+      cardOutline,
+      cashOutline
+    });
+  }
 }

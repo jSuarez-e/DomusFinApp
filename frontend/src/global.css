@@ -137,8 +137,8 @@ ion-card, .admin-card, .settings-card, .cc-sim-card, .loans-sim-card, .kpi-card,
   border: 1px solid var(--ion-border-color) !important;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
   border-radius: 16px !important;
-  margin-top: 8px !important;
-  margin-bottom: 16px !important;
+  /* margin-top: 8px !important;
+  margin-bottom: 16px !important; */
   margin-left: 0 !important;
   margin-right: 0 !important;
   width: 100% !important;

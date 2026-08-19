@@ -4,16 +4,15 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>Ajustes de Cuenta</ion-title>
+    <ion-title>Configuraciones Generales</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="premium-content">
-  <div class="glow-bg"></div>
-
-  <div class="content-container">
+<ion-content [fullscreen]="true" class="dashboard-content">
+  <div class="dashboard-container">
+    
     <!-- Tabs Segment Control -->
-    <ion-segment scrollable="true" [value]="activeSegment()" (ionChange)="onSegmentChange($event)" class="tab-segment settings-segment">
+    <ion-segment scrollable="true" [value]="activeSegment()" (ionChange)="onSegmentChange($event)" class="settings-segment">
       <ion-segment-button value="profile">
         <ion-label>Perfil</ion-label>
       </ion-segment-button>
@@ -32,13 +31,7 @@
     @if (activeSegment() === 'profile') {
       <div class="tab-pane">
         <!-- Seccion de Foto de Perfil / Avatar -->
-        <ion-card class="settings-card settings-card--avatar">
-          <ion-card-header>
-            <div class="settings-card__icon-wrapper settings-card__icon-wrapper--avatar">
-              <ion-icon name="camera-outline" class="settings-card__icon"></ion-icon>
-            </div>
-            <ion-card-title class="settings-card__title">Foto de Perfil</ion-card-title>
-          </ion-card-header>
+        <ion-card class="dashboard-card full-card text-center">
           <ion-card-content class="avatar-card-content">
             <div class="avatar-preview-container">
               <ion-avatar class="avatar-large">
@@ -52,8 +45,8 @@
             </div>
             <div class="avatar-upload-actions">
               <p class="avatar-desc">Carga tu foto de perfil en formato PNG o JPG (Máx 1MB).</p>
-              <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" style="display: none;" />
-              <ion-button fill="outline" size="small" class="avatar-upload-btn" (click)="fileInput.click()">
+              <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" class="hidden-file-input" />
+              <ion-button fill="outline" size="small" color="primary" class="avatar-upload-btn" (click)="fileInput.click()">
                 <ion-icon name="image-outline" slot="start"></ion-icon>
                 Seleccionar Imagen
               </ion-button>
@@ -62,91 +55,95 @@
         </ion-card>
 
         <!-- Seccion de Perfil y Correo -->
-        <ion-card class="settings-card">
-          <ion-card-header>
-            <div class="settings-card__icon-wrapper">
-              <ion-icon name="mail-outline" class="settings-card__icon"></ion-icon>
-            </div>
-            <ion-card-title class="settings-card__title">Información de Cuenta</ion-card-title>
-          </ion-card-header>
+        <ion-card class="dashboard-card full-card">
           <ion-card-content>
+            <div class="card-title-group card-title-group--spaced">
+              <ion-icon name="mail-outline" class="card-icon card-icon--primary"></ion-icon>
+              <span class="card-title">PERFIL DE USUARIO</span>
+            </div>
+
             <form [formGroup]="emailForm" (ngSubmit)="onEmailSubmit()">
-              <ion-list class="settings-list" lines="none">
-                <ion-item class="settings-item">
-                  <ion-label position="stacked" class="settings-item__label">Correo Electrónico</ion-label>
+              <div class="settings-form__field">
+                <label class="settings-form__label">Correo Electrónico</label>
+                <div class="settings-form__input-wrapper">
+                  <ion-icon name="mail-outline" class="settings-form__icon"></ion-icon>
                   <ion-input 
                     type="email" 
                     formControlName="email" 
-                    class="settings-item__input" 
+                    class="settings-form__input" 
                     placeholder="correo@ejemplo.com">
                   </ion-input>
-                </ion-item>
-                
+                </div>
                 @if (emailForm.get('email')?.touched && emailForm.get('email')?.invalid) {
                   <div class="settings-error-container">
                     <span class="settings-error-text">Por favor, introduce un correo electrónico válido.</span>
                   </div>
                 }
-
-                <div class="settings-action-row">
-                  <ion-button 
-                    type="submit" 
-                    expand="block" 
-                    [disabled]="emailForm.invalid || isEmailLoading()" 
-                    class="settings-button">
-                    <ion-icon name="save-outline" slot="start"></ion-icon>
-                    @if (isEmailLoading()) { Guardando... } @else { Actualizar Correo }
-                  </ion-button>
-                </div>
-              </ion-list>
+              </div>
+              
+              <div class="settings-action-row">
+                <ion-button 
+                  type="submit" 
+                  expand="block" 
+                  color="primary"
+                  [disabled]="emailForm.invalid || isEmailLoading()" 
+                  class="settings-form__submit">
+                  <ion-icon name="save-outline" slot="start"></ion-icon>
+                  @if (isEmailLoading()) { Guardando... } @else { Actualizar Correo }
+                </ion-button>
+              </div>
             </form>
           </ion-card-content>
         </ion-card>
 
         <!-- Seccion de Seguridad -->
-        <ion-card class="settings-card">
-          <ion-card-header>
-            <div class="settings-card__icon-wrapper settings-card__icon-wrapper--security">
-              <ion-icon name="lock-closed-outline" class="settings-card__icon"></ion-icon>
-            </div>
-            <ion-card-title class="settings-card__title">Cambiar Contraseña</ion-card-title>
-          </ion-card-header>
+        <ion-card class="dashboard-card full-card">
           <ion-card-content>
+            <div class="card-title-group card-title-group--spaced">
+              <ion-icon name="lock-closed-outline" class="card-icon card-icon--primary"></ion-icon>
+              <span class="card-title">SEGURIDAD</span>
+            </div>
+
             <form [formGroup]="passwordForm" (ngSubmit)="onPasswordSubmit()">
-              <ion-list class="settings-list" lines="none">
-                <ion-item class="settings-item">
-                  <ion-label position="stacked" class="settings-item__label">Contraseña Actual</ion-label>
+              
+              <div class="settings-form__field">
+                <label class="settings-form__label">Contraseña Actual</label>
+                <div class="settings-form__input-wrapper">
+                  <ion-icon name="key-outline" class="settings-form__icon"></ion-icon>
                   <ion-input 
                     [type]="showCurrentPassword() ? 'text' : 'password'" 
                     formControlName="currentPassword" 
-                    class="settings-item__input" 
+                    class="settings-form__input" 
                     placeholder="••••••">
                   </ion-input>
                   <ion-button slot="end" fill="clear" size="small" (click)="showCurrentPassword.set(!showCurrentPassword())" class="password-toggle-btn">
                     <ion-icon [name]="showCurrentPassword() ? 'eye-outline' : 'eye-off-outline'" slot="icon-only" class="password-toggle-icon"></ion-icon>
                   </ion-button>
-                </ion-item>
+                </div>
                 @if (passwordForm.get('currentPassword')?.touched && passwordForm.get('currentPassword')?.invalid) {
                   <div class="settings-error-container">
                     <span class="settings-error-text">La contraseña actual debe tener al menos 6 caracteres.</span>
                   </div>
                 }
+              </div>
 
-                <ion-item class="settings-item">
-                  <ion-label position="stacked" class="settings-item__label">Nueva Contraseña</ion-label>
+              <div class="settings-form__field">
+                <label class="settings-form__label">Nueva Contraseña</label>
+                <div class="settings-form__input-wrapper">
+                  <ion-icon name="lock-closed-outline" class="settings-form__icon"></ion-icon>
                   <ion-input 
                     [type]="showNewPassword() ? 'text' : 'password'" 
                     formControlName="newPassword" 
-                    class="settings-item__input" 
+                    class="settings-form__input" 
                     placeholder="••••••">
                   </ion-input>
                   <ion-button slot="end" fill="clear" size="small" (click)="showNewPassword.set(!showNewPassword())" class="password-toggle-btn">
                     <ion-icon [name]="showNewPassword() ? 'eye-outline' : 'eye-off-outline'" slot="icon-only" class="password-toggle-icon"></ion-icon>
                   </ion-button>
-                </ion-item>
+                </div>
                 
                 @if (newPasswordValue()) {
-                  <div class="strength-meter-wrapper settings-strength-meter">
+                  <div class="settings-strength-meter">
                     <div class="strength-labels">
                       <span class="strength-title">Fortaleza:</span>
                       <span class="strength-value" [class]="'color-' + passwordStrengthInfo().color">
@@ -156,7 +153,7 @@
                     <ion-progress-bar 
                       [value]="passwordStrengthInfo().score" 
                       [color]="passwordStrengthInfo().color" 
-                      class="strength-bar settings-strength-bar">
+                      class="settings-strength-bar">
                     </ion-progress-bar>
                   </div>
                 }
@@ -168,50 +165,53 @@
                     </span>
                   </div>
                 }
+              </div>
 
-                <ion-item class="settings-item">
-                  <ion-label position="stacked" class="settings-item__label">Confirmar Nueva Contraseña</ion-label>
+              <div class="settings-form__field">
+                <label class="settings-form__label">Confirmar Nueva Contraseña</label>
+                <div class="settings-form__input-wrapper">
+                  <ion-icon name="shield-checkmark-outline" class="settings-form__icon"></ion-icon>
                   <ion-input 
                     [type]="showConfirmPassword() ? 'text' : 'password'" 
                     formControlName="confirmPassword" 
-                    class="settings-item__input" 
+                    class="settings-form__input" 
                     placeholder="••••••">
                   </ion-input>
                   <ion-button slot="end" fill="clear" size="small" (click)="showConfirmPassword.set(!showConfirmPassword())" class="password-toggle-btn">
                     <ion-icon [name]="showConfirmPassword() ? 'eye-outline' : 'eye-off-outline'" slot="icon-only" class="password-toggle-icon"></ion-icon>
                   </ion-button>
-                </ion-item>
+                </div>
                 
                 @if (passwordForm.touched && passwordForm.errors?.['passwordMismatch']) {
                   <div class="settings-error-container">
                     <span class="settings-error-text">Las nuevas contraseñas no coinciden.</span>
                   </div>
                 }
+              </div>
 
-                <div class="settings-action-row">
-                  <ion-button 
-                    type="submit" 
-                    expand="block" 
-                    [disabled]="passwordForm.invalid || isPasswordLoading()" 
-                    class="settings-button">
-                    <ion-icon name="refresh-outline" slot="start"></ion-icon>
-                    @if (isPasswordLoading()) { Guardando... } @else { Actualizar Contraseña }
-                  </ion-button>
-                </div>
-              </ion-list>
+              <div class="settings-action-row">
+                <ion-button 
+                  type="submit" 
+                  expand="block" 
+                  color="primary"
+                  [disabled]="passwordForm.invalid || isPasswordLoading()" 
+                  class="settings-form__submit">
+                  <ion-icon name="refresh-outline" slot="start"></ion-icon>
+                  @if (isPasswordLoading()) { Guardando... } @else { Actualizar Contraseña }
+                </ion-button>
+              </div>
             </form>
           </ion-card-content>
         </ion-card>
 
         <!-- Seccion de Peligro / Inactivar Cuenta -->
-        <ion-card class="settings-card danger-card">
-          <ion-card-header>
-            <div class="settings-card__icon-wrapper settings-card__icon-wrapper--danger">
-              <ion-icon name="alert-circle-outline" class="settings-card__icon"></ion-icon>
-            </div>
-            <ion-card-title class="settings-card__title danger-title">Inactivar Cuenta de Usuario</ion-card-title>
-          </ion-card-header>
+        <ion-card class="dashboard-card full-card">
           <ion-card-content>
+            <div class="card-title-group card-title-group--spaced">
+              <ion-icon name="alert-circle-outline" class="card-icon card-icon--danger"></ion-icon>
+              <span class="card-title card-title--danger">Inactivar Cuenta</span>
+            </div>
+            
             <div class="danger-warning">
               <p>
                 <strong>Atención:</strong> Esta acción desactivará de forma lógica su cuenta. Sus datos y gastos históricos se conservarán para no romper los reportes de su hogar, pero perderá el acceso inmediatamente.
@@ -219,29 +219,30 @@
             </div>
 
             <form [formGroup]="deleteAccountForm" (ngSubmit)="submitAccountDelete()">
-              <ion-list class="settings-list" lines="none">
-                <ion-item class="settings-item">
-                  <ion-label position="stacked" class="settings-item__label">Confirma tu Contraseña</ion-label>
+              <div class="settings-form__field">
+                <label class="settings-form__label">Confirma tu Contraseña</label>
+                <div class="settings-form__input-wrapper">
+                  <ion-icon name="lock-closed-outline" class="settings-form__icon"></ion-icon>
                   <ion-input 
                     type="password" 
                     formControlName="password" 
-                    class="settings-item__input" 
+                    class="settings-form__input" 
                     placeholder="Contraseña actual">
                   </ion-input>
-                </ion-item>
-
-                <div class="settings-action-row">
-                  <ion-button 
-                    type="submit" 
-                    expand="block" 
-                    color="danger" 
-                    [disabled]="deleteAccountForm.invalid" 
-                    class="settings-button settings-button--danger">
-                    <ion-icon name="alert-circle-outline" slot="start"></ion-icon>
-                    Inactivar mi Cuenta
-                  </ion-button>
                 </div>
-              </ion-list>
+              </div>
+
+              <div class="settings-action-row">
+                <ion-button 
+                  type="submit" 
+                  expand="block" 
+                  color="danger" 
+                  [disabled]="deleteAccountForm.invalid" 
+                  class="settings-form__submit">
+                  <ion-icon name="alert-circle-outline" slot="start"></ion-icon>
+                  Inactivar mi Cuenta
+                </ion-button>
+              </div>
             </form>
           </ion-card-content>
         </ion-card>
@@ -251,61 +252,63 @@
     <!-- TAB 2: PREFERENCES (Tema/Moneda) -->
     @if (activeSegment() === 'preferences') {
       <div class="tab-pane">
-        <ion-card class="settings-card">
-          <ion-card-header>
-            <div class="settings-card__icon-wrapper settings-card__icon-wrapper--preferences">
-              <ion-icon name="settings-outline" class="settings-card__icon"></ion-icon>
-            </div>
-            <ion-card-title class="settings-card__title">Preferencias de Visualización</ion-card-title>
-          </ion-card-header>
+        <ion-card class="dashboard-card full-card">
           <ion-card-content>
-            <ion-list class="settings-list" lines="none">
-              <!-- Formato de fecha -->
-              <ion-item class="settings-item">
-                <ion-label position="stacked" class="settings-item__label">Formato de Fecha</ion-label>
+            <div class="card-title-group card-title-group--spaced">
+              <ion-icon name="settings-outline" class="card-icon card-icon--primary"></ion-icon>
+              <span class="card-title">PREFERENCIAS</span>
+            </div>
+            
+            <div class="settings-form__field">
+              <label class="settings-form__label">Formato de Fecha</label>
+              <div class="settings-form__input-wrapper">
+                <ion-icon name="calendar-outline" class="settings-form__icon"></ion-icon>
                 <ion-select 
                   interface="popover" 
                   [value]="selectedDateFormat()" 
                   (ionChange)="onDateFormatChange($event)" 
-                  class="settings-item__select">
+                  class="settings-form__select">
                   <ion-select-option value="DD/MM/YYYY">DD/MM/AAAA (ej. 26/07/2026)</ion-select-option>
                   <ion-select-option value="MM/DD/YYYY">MM/DD/AAAA (ej. 07/26/2026)</ion-select-option>
                 </ion-select>
-              </ion-item>
+              </div>
+            </div>
 
-              <!-- Tema Oscuro toggle -->
-              <ion-item class="settings-item settings-item--inline">
-                <ion-label class="settings-item__label settings-item__label--bold">Tema Oscuro</ion-label>
+            <!-- Tema Oscuro toggle -->
+            <div class="settings-form__field settings-form__field--toggle">
+              <div class="settings-form__toggle-wrapper">
+                <div class="settings-form__toggle-info">
+                  <span class="settings-form__toggle-title">Tema Oscuro</span>
+                  <span class="settings-form__toggle-desc">Activar visualización de contraste alto.</span>
+                </div>
                 <ion-toggle 
                   [checked]="isDarkTheme()" 
                   (ionChange)="toggleTheme($event)" 
-                  slot="end"
                   color="primary">
                 </ion-toggle>
-              </ion-item>
-
-              <!-- Moneda Unificada (COP) -->
-              <ion-item class="settings-item settings-item--spaced">
-                <ion-label position="stacked" class="settings-item__label">Moneda por Defecto</ion-label>
-                <div class="settings-currency-value">
-                  Peso Colombiano ($ COP)
-                </div>
-                <p class="settings-currency-desc">
-                  La divisa de DomusFinApp está estandarizada a Peso Colombiano ($) para garantizar la coherencia contable del Hogar.
-                </p>
-              </ion-item>
-
-              <div class="settings-action-row">
-                <ion-button 
-                  (click)="onPreferencesSubmit()" 
-                  expand="block" 
-                  [disabled]="isPreferencesLoading()" 
-                  class="settings-button">
-                  <ion-icon name="save-outline" slot="start"></ion-icon>
-                  @if (isPreferencesLoading()) { Guardando... } @else { Guardar Preferencias }
-                </ion-button>
               </div>
-            </ion-list>
+            </div>
+
+            <!-- Moneda Unificada (COP) -->
+            <div class="settings-form__field">
+              <label class="settings-form__label">Moneda por Defecto</label>
+              <div class="settings-form__input-wrapper settings-form__input-wrapper--alert">
+                <div class="settings-currency-value">Peso Colombiano ($ COP)</div>
+                <p class="settings-currency-desc">La divisa de DomusFinApp está estandarizada a Peso Colombiano ($) para garantizar la coherencia contable del Hogar.</p>
+              </div>
+            </div>
+
+            <div class="settings-action-row">
+              <ion-button 
+                (click)="onPreferencesSubmit()" 
+                expand="block" 
+                color="primary"
+                [disabled]="isPreferencesLoading()" 
+                class="settings-form__submit">
+                <ion-icon name="save-outline" slot="start"></ion-icon>
+                @if (isPreferencesLoading()) { Guardando... } @else { Guardar Preferencias }
+              </ion-button>
+            </div>
           </ion-card-content>
         </ion-card>
       </div>
@@ -314,12 +317,12 @@
     <!-- TAB 3: CATEGORÍAS GASTO -->
     @if (activeSegment() === 'expenses_cat') {
       <div class="tab-pane">
-        <ion-card class="settings-card">
+        <ion-card class="dashboard-card full-card">
           <ion-card-content>
-            <div class="pane-header settings-pane-header">
+            <div class="settings-pane-header">
               <h3 class="settings-pane-title">Categorías de Gastos</h3>
               @if (isAdmin()) {
-                <ion-button (click)="openAddCategory(CategoryType.EXPENSE)" class="add-btn" size="small">
+                <ion-button (click)="openAddCategory(CategoryType.EXPENSE)" class="add-btn" color="primary" size="small">
                   <ion-icon name="add-outline" slot="start"></ion-icon>
                   Agregar
                 </ion-button>
@@ -330,7 +333,7 @@
               <app-admin-warning></app-admin-warning>
             }
 
-            <ion-list class="settings-list" lines="none">
+            <ion-list class="transparent-list" lines="none">
               @for (cat of expenseCategories(); track cat.id) {
                 <app-category-list-item 
                   [category]="cat" 
@@ -348,12 +351,12 @@
     <!-- TAB 4: CATEGORÍAS INGRESO -->
     @if (activeSegment() === 'income_cat') {
       <div class="tab-pane">
-        <ion-card class="settings-card">
+        <ion-card class="dashboard-card full-card">
           <ion-card-content>
-            <div class="pane-header settings-pane-header">
+            <div class="settings-pane-header">
               <h3 class="settings-pane-title">Categorías de Ingresos</h3>
               @if (isAdmin()) {
-                <ion-button (click)="openAddCategory(CategoryType.INCOME)" class="add-btn" size="small">
+                <ion-button (click)="openAddCategory(CategoryType.INCOME)" class="add-btn" color="primary" size="small">
                   <ion-icon name="add-outline" slot="start"></ion-icon>
                   Agregar
                 </ion-button>
@@ -364,7 +367,7 @@
               <app-admin-warning></app-admin-warning>
             }
 
-            <ion-list class="settings-list" lines="none">
+            <ion-list class="transparent-list" lines="none">
               @for (cat of incomeCategories(); track cat.id) {
                 <app-category-list-item 
                   [category]="cat" 
@@ -383,41 +386,42 @@
   <!-- MODAL: ADD/EDIT CATEGORY -->
   <ion-modal [isOpen]="isCategoryModalOpen()" (didDismiss)="closeCategoryModal()" class="admin-modal">
     <ng-template>
-      <ion-header>
+      <ion-header class="ion-no-border">
         <ion-toolbar class="modal-toolbar">
           <ion-title>{{ isCategoryEdit() ? 'Editar Categoría' : 'Nueva Categoría' }}</ion-title>
           <ion-buttons slot="end">
             <ion-button (click)="closeCategoryModal()">
-              <ion-icon name="close-outline"></ion-icon>
+              <ion-icon name="close-outline" slot="icon-only"></ion-icon>
             </ion-button>
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
 
       <ion-content class="modal-content">
-        <form [formGroup]="categoryForm" (ngSubmit)="saveCategory()" class="modal-form settings-modal-form">
-          <div class="input-wrapper settings-input-wrapper">
-            <label class="input-label settings-input-label">Nombre de Categoría</label>
-            <div class="input-field settings-input-field">
-              <ion-icon name="list-outline" class="field-icon settings-field-icon"></ion-icon>
-              <ion-input type="text" placeholder="Ej. Entretenimiento" formControlName="name" class="premium-input settings-premium-input"></ion-input>
+        <div class="settings-modal__form-container">
+          <form [formGroup]="categoryForm" (ngSubmit)="saveCategory()">
+            <div class="settings-form__field">
+              <label class="settings-form__label">Nombre de Categoría</label>
+            <div class="settings-form__input-wrapper">
+              <ion-icon name="list-outline" class="settings-form__icon"></ion-icon>
+              <ion-input type="text" placeholder="Ej. Entretenimiento" formControlName="name" class="settings-form__input"></ion-input>
             </div>
           </div>
 
-          <div class="input-wrapper settings-input-wrapper">
-            <label class="input-label settings-input-label">Tipo de Categoría</label>
-            <div class="input-field settings-input-field">
-              <ion-icon name="swap-horizontal-outline" class="field-icon settings-field-icon"></ion-icon>
-              <ion-select interface="popover" formControlName="type" class="premium-select settings-premium-select">
+          <div class="settings-form__field">
+            <label class="settings-form__label">Tipo de Categoría</label>
+            <div class="settings-form__input-wrapper">
+              <ion-icon name="swap-horizontal-outline" class="settings-form__icon"></ion-icon>
+              <ion-select interface="popover" formControlName="type" class="settings-form__select">
                 <ion-select-option value="EXPENSE">Gasto</ion-select-option>
                 <ion-select-option value="INCOME">Ingreso</ion-select-option>
               </ion-select>
             </div>
           </div>
 
-          <div class="icon-selection-wrapper settings-icon-wrapper">
-            <label class="input-label settings-input-label">Seleccionar Icono</label>
-            <div class="icon-grid settings-icon-grid">
+          <div class="settings-icon-wrapper">
+            <label class="settings-form__label">Seleccionar Icono</label>
+            <div class="settings-icon-grid">
               @for (iconName of availableIcons; track iconName) {
                 <div 
                   class="icon-grid-item" 
@@ -429,10 +433,11 @@
             </div>
           </div>
 
-          <ion-button type="submit" expand="block" [disabled]="categoryForm.invalid" class="modal-save-btn settings-modal-save-btn">
+          <ion-button type="submit" expand="block" color="primary" [disabled]="categoryForm.invalid" class="settings-modal-save-btn">
             Guardar Categoría
           </ion-button>
         </form>
+        </div>
       </ion-content>
     </ng-template>
   </ion-modal>

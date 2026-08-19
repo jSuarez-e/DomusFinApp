@@ -30,6 +30,7 @@ import {
   IonSegmentButton,
   IonToggle,
   ToastController,
+  IonMenuButton
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -85,6 +86,7 @@ import { LoanProgressComponent } from '../../../shared/components/loan-progress/
     IonSegment,
     IonSegmentButton,
     IonToggle,
+    IonMenuButton,
     MoneyMaskDirective,
     BlockScientificNotationDirective,
     LoanProgressComponent
@@ -113,6 +115,7 @@ export class LoansPage implements OnInit {
   // Modal & Async states
   public isCreateModalOpen = signal(false);
   public isPayModalOpen = signal(false);
+  public isLoanSimModalOpen = signal(false);
   public isSubmitting = signal(false);
 
   // Forms
@@ -175,6 +178,7 @@ export class LoansPage implements OnInit {
       purposeDescription: ['', [Validators.required, Validators.maxLength(255)]],
       initialPrincipal: [null, [Validators.required, Validators.min(1)]],
       interestRate: [null, [Validators.required, Validators.min(0)]],
+      termMonths: [null, [Validators.required, Validators.min(1)]],
       handlingFee: [null, [Validators.min(0)]],
       lifeInsurance: [null, [Validators.min(0)]],
       otherCharges: [null, [Validators.min(0)]],
@@ -240,6 +244,7 @@ export class LoansPage implements OnInit {
       purposeDescription: '',
       initialPrincipal: null,
       interestRate: null,
+      termMonths: null,
       handlingFee: 0,
       lifeInsurance: 0,
       otherCharges: 0,
@@ -264,6 +269,23 @@ export class LoansPage implements OnInit {
 
   public closePayModal() {
     this.isPayModalOpen.set(false);
+    this.selectedLoan.set(null);
+  }
+
+  public async openLoanSimModal(loan: Loan) {
+    this.selectedLoan.set(loan);
+    try {
+      const data = await this.loanService.simulateInstallments(Number(loan.initialPrincipal), Number(loan.interestRate), loan.termMonths || 12);
+      this.amortizationPlan.set(data || []);
+      this.isLoanSimModalOpen.set(true);
+    } catch (err) {
+      console.error('Error simulating loan plan:', err);
+      this.presentToast('Error al simular la tabla de amortización.', 'danger');
+    }
+  }
+
+  public closeLoanSimModal() {
+    this.isLoanSimModalOpen.set(false);
     this.selectedLoan.set(null);
   }
 

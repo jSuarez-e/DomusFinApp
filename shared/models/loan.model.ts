@@ -7,6 +7,7 @@ export interface Loan {
   initialPrincipal: number;
   currentBalance: number;
   interestRate: number;
+  termMonths: number;
   handlingFee: number;
   lifeInsurance: number;
   otherCharges: number;

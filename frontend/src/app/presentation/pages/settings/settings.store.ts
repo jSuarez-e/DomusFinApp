@@ -1,8 +1,8 @@
 import { computed, inject } from '@angular/core';
 import { signalStore, withState, withMethods, withComputed, patchState } from '@ngrx/signals';
 import { Category, CategoryType } from '@shared/index';
-import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
+import { CategoryService } from '../../../core/services/category.service';
 
 /**
  * Estado del módulo de configuraciones.
@@ -45,7 +45,7 @@ export const SettingsStore = signalStore(
      */
     incomeCategories: computed(() => store.categories().filter((c) => c.type === CategoryType.INCOME))
   })),
-  withMethods((store, http = inject(HttpClient)) => ({
+  withMethods((store, categoryService = inject(CategoryService)) => ({
     /**
      * Cambia el segmento activo en la vista de ajustes.
      * @param segment - 'profile' | 'preferences' | 'expenses_cat' | 'income_cat'
@@ -61,7 +61,7 @@ export const SettingsStore = signalStore(
     async loadCategories(): Promise<void> {
       patchState(store, { isLoading: true, error: null });
       try {
-        const data = await firstValueFrom(http.get<Category[]>('/api/categories'));
+        const data = await firstValueFrom(categoryService.getAll());
         patchState(store, { categories: data || [], isLoading: false });
       } catch (err: unknown) {
         patchState(store, { error: 'Error al cargar las categorías', isLoading: false });

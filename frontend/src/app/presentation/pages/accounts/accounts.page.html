@@ -1,52 +1,67 @@
 <!-- frontend/src/app/presentation/pages/accounts/accounts.page.html -->
-<ion-header [translucent]="true">
-  <ion-toolbar class="accounts-toolbar">
-    <ion-title>Mis Cuentas</ion-title>
+ <ion-header [translucent]="true">
+  <ion-toolbar class="glass-toolbar">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Cuentas</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="premium-content">
-  <div class="accounts-glow-bg"></div>
-
-  <div class="accounts-container">
+<ion-content [fullscreen]="true" class="dashboard-content">
+  <div class="dashboard-container">
     <!-- Total Balance Summary Card -->
-    <ion-card class="accounts-summary-card">
-      <ion-card-content>
-        <div class="accounts-summary__label">Balance Total</div>
-        <div class="accounts-summary__value">{{ totalBalance() | currency:'COP':'symbol-narrow':'1.0-0' }}</div>
-        <div class="accounts-summary__subtitle">Saldo combinado de todas tus cuentas</div>
+    <ion-card class="dashboard-card full-card">
+      <ion-card-content class="summary-card-content">
+        <div class="card-title-group summary-title-group">
+          <ion-icon name="wallet-outline" class="card-icon"></ion-icon>
+          <span class="card-title">BALANCE TOTAL</span>
+        </div>
+        <div class="accounts-summary__value text-success">
+          {{ totalBalance() | currency:'COP':'symbol-narrow':'1.0-0' }}
+        </div>
+        <div class="accounts-summary__subtitle">
+          Saldo combinado de todas tus cuentas
+        </div>
       </ion-card-content>
     </ion-card>
 
-    <!-- Accounts List -->
-    <div class="accounts-section-header">
-      <h2>Cuentas del Hogar</h2>
-      <ion-badge color="tertiary" class="accounts-section-badge">{{ accounts().length }}</ion-badge>
-    </div>
-
-    <ion-list class="accounts-list" lines="none">
-      @if (accounts().length === 0) {
-        <div class="accounts-empty-state">
-          <div class="accounts-empty-state__icon-bg">
-            <ion-icon name="wallet-outline" class="accounts-empty-state__icon"></ion-icon>
-          </div>
-          <h3>Sin cuentas</h3>
-          <p>Crea tu primera cuenta bancaria, de efectivo o billetera digital.</p>
+    <!-- Accounts List Card -->
+    <ion-card class="dashboard-card full-card list-card">
+      <ion-card-content>
+        <div class="card-title-group list-header">
+          <ion-icon name="business-outline" class="card-icon"></ion-icon>
+          <span class="card-title">CUENTAS BANCARIAS</span>
         </div>
-      }
+        
+        <ion-list class="dashboard-list" lines="none">
+          @if (accounts().length === 0) {
+            <div class="empty-state">
+              <div class="empty-state-icon-wrapper">
+                <ion-icon name="wallet-outline"></ion-icon>
+              </div>
+              <h3 class="empty-state-title">Sin cuentas</h3>
+              <p class="empty-state-desc">Crea tu primera cuenta bancaria, de efectivo o billetera digital.</p>
+            </div>
+          }
 
-      @for (account of accounts(); track account.id) {
-        <app-account-item
-          [account]="account"
-          (onDelete)="handleDelete($event)">
-        </app-account-item>
-      }
-    </ion-list>
+          @for (account of accounts(); track account.id) {
+            <app-account-item
+              [account]="account"
+              (onDelete)="handleDelete($event)">
+            </app-account-item>
+            @if (account.id !== accounts()[accounts().length - 1].id) {
+              <hr>
+            }
+          }
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
   </div>
 
   <!-- FAB: Add New Account -->
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button class="accounts-fab" (click)="openModal()">
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" class="home-fab">
+    <ion-fab-button (click)="openModal()">
       <ion-icon name="add-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>
@@ -96,9 +111,9 @@
                 placeholder="Seleccionar Tipo"
                 formControlName="type"
                 class="accounts-form__select">
-                <ion-select-option [value]="AccountType.BANK">🏦 Banco</ion-select-option>
-                <ion-select-option [value]="AccountType.CASH">💵 Efectivo</ion-select-option>
-                <ion-select-option [value]="AccountType.WALLET">📱 Billetera Digital</ion-select-option>
+                <ion-select-option [value]="AccountType.BANK">Banco</ion-select-option>
+                <ion-select-option [value]="AccountType.CASH">Efectivo</ion-select-option>
+                <ion-select-option [value]="AccountType.WALLET">Billetera Digital</ion-select-option>
               </ion-select>
             </div>
           </div>

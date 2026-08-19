@@ -1,89 +1,33 @@
-.accounts-item {
-  --background: #121212;
-  --border-color: rgba(255, 255, 255, 0.06);
+.dashboard-item {
   --padding-start: 16px;
   --inner-padding-end: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 14px;
-  margin-bottom: 10px;
-  transition: border-color 0.2s ease;
+  --background: transparent;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.03);
 }
 
-.accounts-item:hover {
-  border-color: rgba(136, 220, 204, 0.2);
+.dashboard-item:last-child {
+  border-bottom: none;
 }
 
-.accounts-item__icon-wrapper {
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
-  background: rgba(76, 103, 147, 0.15);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 14px;
-}
-
-.accounts-item__icon {
-  font-size: 1.3rem;
-  color: #4C6793;
-}
-
-.accounts-item__content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  padding: 4px 0;
-}
-
-.accounts-item__name {
-  font-size: 15px;
-  font-weight: 600;
-  color: #ffffff;
-}
-
-.accounts-item__balance {
-  font-size: 18px;
+.item-title {
+  font-size: 0.95rem;
   font-weight: 700;
-  color: var(--ion-color-primary);
-  margin-top: 4px;
+  color: var(--ion-text-color, #1e293b);
+  margin-bottom: 2px;
 }
 
-.accounts-item__meta {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 4px;
+.item-subtitle {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary, #64748b);
+  letter-spacing: 0.2px;
 }
 
-.accounts-item__type-badge {
-  font-size: 9px;
-  padding: 3px 6px;
-  border-radius: 6px;
-  text-transform: uppercase;
+.item-value {
+  font-size: 1rem;
+  font-weight: 700;
 }
 
-.accounts-item__privacy-badge {
-  font-size: 10px;
-  padding: 3px 6px;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: fit-content;
-}
-
-.accounts-item__privacy-badge--private {
-  --background: rgba(92, 46, 126, 0.15);
-  --color: #a78bfa;
-}
-
-.accounts-item__privacy-badge--shared {
-  --background: rgba(136, 220, 204, 0.12);
-  --color: var(--ion-color-primary);
-}
-
-.accounts-item__privacy-icon {
-  font-size: 11px;
+.text-success {
+  color: var(--ion-color-success, #2dd36f) !important;
 }

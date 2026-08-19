@@ -1,37 +1,41 @@
 <!-- frontend/src/app/presentation/pages/credit-cards/credit-cards.page.html -->
 <ion-header [translucent]="true">
-  <ion-toolbar class="cc-toolbar">
+  <ion-toolbar class="glass-toolbar">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
     <ion-title>Tarjetas de Crédito</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="premium-content">
-  <div class="cc-glow-bg"></div>
-
-  <div class="cc-container">
-    <!-- Deuda Total Card -->
-    <ion-card class="cc-summary-card">
+<ion-content [fullscreen]="true" class="dashboard-content">
+  <div class="dashboard-container">
+    
+    <!-- Deuda Total Card (Summary) -->
+    <ion-card class="dashboard-card full-card">
       <ion-card-content>
-        <div class="cc-summary__label">Deuda Consolidada</div>
-        <div class="cc-summary__value">{{ totalDebt() | currency:'COP':'symbol-narrow':'1.0-0' }}</div>
-        <div class="cc-summary__subtitle">Total adeudado en todas las tarjetas de crédito del hogar</div>
+        <div class="dashboard-summary__grid">
+          <div class="dashboard-summary__item">
+            <span class="dashboard-summary__label">Deuda Consolidada</span>
+            <span class="dashboard-summary__value">{{ totalDebt() | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+          </div>
+        </div>
+        <p class="dashboard-summary__desc">Total adeudado en todas las tarjetas de crédito del hogar</p>
       </ion-card-content>
     </ion-card>
 
-    <!-- Tarjetas Carousel/List Horizontal -->
-    <div class="cc-section-header">
-      <h2>Tus Tarjetas</h2>
-      <ion-badge color="tertiary" class="cc-section-badge">{{ creditCards().length }}</ion-badge>
+    <!-- Section Header -->
+    <div class="list-header">
+      <span class="header-title list-header-title">Tus Tarjetas</span>
+      <ion-badge color="tertiary" class="header-badge">{{ creditCards().length }}</ion-badge>
     </div>
 
     @if (creditCards().length === 0) {
-      <div class="cc-empty-state">
-        <div class="cc-empty-state__icon-bg">
-          <ion-icon name="card-outline" class="cc-empty-state__icon"></ion-icon>
-        </div>
-        <h3>Sin Tarjetas</h3>
-        <p>Añade una tarjeta de crédito para empezar a gestionar tus diferidos y simular cuotas.</p>
-        <ion-button fill="outline" color="primary" class="cc-empty-state__btn" (click)="openCreateModal()">
+      <div class="empty-state">
+        <ion-icon name="card-outline" class="empty-state-icon"></ion-icon>
+        <h3 class="empty-state-title">Sin Tarjetas</h3>
+        <p class="empty-state-desc">Añade una tarjeta de crédito para empezar a gestionar tus diferidos y simular cuotas.</p>
+        <ion-button fill="outline" color="primary" class="empty-state-btn" (click)="openCreateModal()">
           Registrar Tarjeta
         </ion-button>
       </div>
@@ -62,7 +66,7 @@
         <!-- Segment Content 1: Details and Pay -->
         @if (activeTab() === 'details') {
           <div class="cc-tab-content">
-            <ion-card class="cc-detail-card">
+            <ion-card class="dashboard-card cc-detail-card">
               <ion-card-content>
                 <div class="cc-detail-row cc-detail-row--privacy">
                   <span class="cc-detail-label cc-detail-label--highlight">
@@ -113,71 +117,75 @@
         <!-- Segment Content 2: Amortization Simulator -->
         @if (activeTab() === 'simulator') {
           <div class="cc-tab-content">
-            <ion-card class="cc-sim-inputs-card">
+            <ion-card class="dashboard-card cc-sim-inputs-card">
               <ion-card-content>
-                <h3>Simular una compra con esta tarjeta</h3>
+                <h3 class="cc-sim-title">Simular una compra con esta tarjeta</h3>
                 <p class="cc-sim-help">Aplica la tasa de interés mensual de la tarjeta de crédito seleccionada ({{ card.interestRate }}%).</p>
                 
                 <div class="cc-sim-input-grid">
-                  <div class="cc-sim-field">
-                    <label>Valor de la compra ($)</label>
-                    <ion-input 
-                      type="number" 
-                      [value]="simAmount()" 
-                      (ionInput)="onSimAmountChange($event)" 
-                      class="cc-sim-input">
-                    </ion-input>
+                  <div class="cc-form__field">
+                    <label class="cc-form__label">Valor de la compra ($)</label>
+                    <div class="cc-form__input-wrapper">
+                      <ion-input 
+                        type="number" 
+                        [value]="simAmount()" 
+                        (ionInput)="onSimAmountChange($event)" 
+                        class="cc-form__input">
+                      </ion-input>
+                    </div>
                   </div>
-                  <div class="cc-sim-field">
-                    <label>Número de cuotas</label>
-                    <ion-select 
-                      interface="popover" 
-                      [value]="simInstallments()" 
-                      (ionChange)="onSimInstallmentsChange($event)" 
-                      class="cc-sim-select">
-                      <ion-select-option [value]="1">1 cuota</ion-select-option>
-                      <ion-select-option [value]="3">3 cuotas</ion-select-option>
-                      <ion-select-option [value]="6">6 cuotas</ion-select-option>
-                      <ion-select-option [value]="12">12 cuotas</ion-select-option>
-                      <ion-select-option [value]="18">18 cuotas</ion-select-option>
-                      <ion-select-option [value]="24">24 cuotas</ion-select-option>
-                      <ion-select-option [value]="36">36 cuotas</ion-select-option>
-                    </ion-select>
+                  <div class="cc-form__field">
+                    <label class="cc-form__label">Número de cuotas</label>
+                    <div class="cc-form__input-wrapper">
+                      <ion-select 
+                        interface="popover" 
+                        [value]="simInstallments()" 
+                        (ionChange)="onSimInstallmentsChange($event)" 
+                        class="cc-form__select">
+                        <ion-select-option [value]="1">1 cuota</ion-select-option>
+                        <ion-select-option [value]="3">3 cuotas</ion-select-option>
+                        <ion-select-option [value]="6">6 cuotas</ion-select-option>
+                        <ion-select-option [value]="12">12 cuotas</ion-select-option>
+                        <ion-select-option [value]="18">18 cuotas</ion-select-option>
+                        <ion-select-option [value]="24">24 cuotas</ion-select-option>
+                        <ion-select-option [value]="36">36 cuotas</ion-select-option>
+                      </ion-select>
+                    </div>
                   </div>
                 </div>
               </ion-card-content>
             </ion-card>
 
             <!-- Sim plan table -->
-            <div class="cc-sim-plan-section">
-              <div class="cc-sim-plan-header">
-                <span>Cuota</span>
-                <span>Abono Capital</span>
-                <span>Intereses</span>
-                <span>Cuota Total</span>
+            @if (amortizationPlan().length > 0) {
+              <div class="cc-sim-results">
+                <h3 class="cc-sim-results-title">Plan de Pagos de la Compra</h3>
+                <div class="cc-table-wrapper">
+                  <table class="cc-sim-table">
+                    <thead>
+                      <tr>
+                        <th>Mes</th>
+                        <th>Cuota</th>
+                        <th>Capital</th>
+                        <th>Interés</th>
+                        <th>Saldo</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @for (period of amortizationPlan(); track period.period) {
+                        <tr>
+                          <td class="td-center">{{ period.period }}</td>
+                          <td>{{ period.totalFee | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
+                          <td>{{ period.capital | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
+                          <td>{{ period.interest | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
+                          <td>{{ period.remainingBalance | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
+                        </tr>
+                      }
+                    </tbody>
+                  </table>
+                </div>
               </div>
-              <ion-list class="cc-sim-plan-list" lines="none">
-                @for (period of amortizationPlan(); track period.period) {
-                  <ion-item class="cc-sim-plan-item">
-                    <div class="cc-sim-plan-row">
-                      <div class="cc-sim-col">
-                        <span class="cc-sim-period">#{{ period.period }}</span>
-                        <span class="cc-sim-date">{{ period.dueDate | date:'dd/MM/yyyy' }}</span>
-                      </div>
-                      <div class="cc-sim-col cc-align-right">
-                        {{ period.capital | currency:'COP':'symbol-narrow':'1.0-0' }}
-                      </div>
-                      <div class="cc-sim-col cc-align-right">
-                        {{ period.interest | currency:'COP':'symbol-narrow':'1.0-0' }}
-                      </div>
-                      <div class="cc-sim-col cc-align-right cc-sim-total">
-                        {{ period.totalFee | currency:'COP':'symbol-narrow':'1.0-0' }}
-                      </div>
-                    </div>
-                  </ion-item>
-                }
-              </ion-list>
-            </div>
+            }
           </div>
         }
       }
@@ -186,17 +194,17 @@
 
   <!-- FAB for new credit card -->
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button class="cc-fab" (click)="openCreateModal()">
+    <ion-fab-button class="dashboard-fab" (click)="openCreateModal()">
       <ion-icon name="add-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 </ion-content>
 
 <!-- Modal: Create credit card -->
-<ion-modal [isOpen]="isCreateModalOpen()" (didDismiss)="closeCreateModal()" class="cc-modal">
+<ion-modal [isOpen]="isCreateModalOpen()" (didDismiss)="closeCreateModal()" class="dashboard-modal">
   <ng-template>
-    <ion-header>
-      <ion-toolbar class="cc-modal__toolbar">
+    <ion-header class="ion-no-border">
+      <ion-toolbar class="dashboard-modal__toolbar">
         <ion-title>Nueva Tarjeta</ion-title>
         <ion-buttons slot="end">
           <ion-button (click)="closeCreateModal()">
@@ -206,8 +214,8 @@
       </ion-toolbar>
     </ion-header>
 
-    <ion-content class="cc-modal__content">
-      <div class="cc-modal__form-container">
+    <ion-content class="dashboard-modal__content">
+      <div class="dashboard-modal__form-container">
         <form [formGroup]="cardForm" (ngSubmit)="handleCreateCard()">
           
           <div class="cc-form__field">
@@ -276,18 +284,18 @@
             <div class="cc-form__field">
               <label class="cc-form__label">Día de Corte</label>
               <div class="cc-form__input-wrapper">
+                <ion-icon name="calendar-outline" class="cc-form__icon"></ion-icon>
                 <ion-input type="number" formControlName="cutDate" class="cc-form__input" min="1" max="31"></ion-input>
               </div>
             </div>
             <div class="cc-form__field">
               <label class="cc-form__label">Día Límite de Pago</label>
               <div class="cc-form__input-wrapper">
+                <ion-icon name="calendar-outline" class="cc-form__icon"></ion-icon>
                 <ion-input type="number" formControlName="paymentDueDate" class="cc-form__input" min="1" max="31"></ion-input>
               </div>
             </div>
           </div>
-
-
 
           <ion-button type="submit" expand="block" class="cc-form__submit" [disabled]="cardForm.invalid || isSubmitting()">
             <ion-icon name="checkmark-outline" slot="start"></ion-icon>
@@ -300,10 +308,10 @@
 </ion-modal>
 
 <!-- Modal: Pay Credit Card -->
-<ion-modal [isOpen]="isPayModalOpen()" (didDismiss)="closePayModal()" class="cc-modal">
+<ion-modal [isOpen]="isPayModalOpen()" (didDismiss)="closePayModal()" class="dashboard-modal">
   <ng-template>
-    <ion-header>
-      <ion-toolbar class="cc-modal__toolbar">
+    <ion-header class="ion-no-border">
+      <ion-toolbar class="dashboard-modal__toolbar">
         <ion-title>Pagar Tarjeta</ion-title>
         <ion-buttons slot="end">
           <ion-button (click)="closePayModal()">
@@ -313,11 +321,10 @@
       </ion-toolbar>
     </ion-header>
 
-    <ion-content class="cc-modal__content">
-      <div class="cc-modal__form-container">
+    <ion-content class="dashboard-modal__content">
+      <div class="dashboard-modal__form-container">
         <form [formGroup]="payForm" (ngSubmit)="handlePayDebt()">
           @if (selectedCard(); as card) {
-            <!-- Changed *ngIf to modern @if to resolve template variable parsing error -->
             <div class="cc-payment-info">
               <p>Deuda actual: <strong>{{ card.currentDebt | currency:'COP':'symbol-narrow':'1.0-0' }}</strong></p>
             </div>

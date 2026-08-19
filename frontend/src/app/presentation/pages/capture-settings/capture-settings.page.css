@@ -47,39 +47,33 @@
   padding: 12px;
 }
 
-.capture-card__icon-wrapper {
-  width: 42px;
-  height: 42px;
-  border-radius: 10px;
-  background: rgba(136, 220, 204, 0.1);
-  border: 1px solid rgba(136, 220, 204, 0.2);
+.card-title-group {
   display: flex;
   align-items: center;
-  justify-content: center;
-  float: left;
-  margin-right: 12px;
+  gap: 8px;
 }
 
-.capture-card__icon-wrapper--config {
-  background: rgba(92, 46, 126, 0.1);
-  border-color: rgba(92, 46, 126, 0.2);
+.card-title-group--spaced {
+  margin-bottom: 16px;
 }
 
-.capture-card__icon {
-  font-size: 20px;
-  color: #88DCCC;
+.card-icon {
+  font-size: 1.2rem;
 }
 
-.capture-card__icon-wrapper--config .capture-card__icon {
+.card-icon--primary {
+  color: var(--ion-color-primary, #88DCCC);
+}
+
+.card-icon--preferences {
   color: #c084fc;
 }
 
-.capture-card__title {
-  font-size: 1.1rem;
+.card-title {
+  font-size: 0.8rem;
   font-weight: 700;
-  color: #ffffff;
-  line-height: 42px;
-  margin: 0;
+  color: var(--text-secondary, #64748b);
+  text-transform: uppercase;
 }
 
 .capture-card__content p {
@@ -146,14 +140,7 @@
  * ----------------------------------------------------
  */
 
-.capture-card__icon-wrapper--native {
-  background: rgba(136, 220, 204, 0.1);
-  color: #88DCCC;
-}
-
-.capture-card__icon--native {
-  color: #88DCCC;
-}
+/* Native icon colors no longer needed as we use card-title-group */
 
 .capture-card__desc {
   margin-bottom: 16px;

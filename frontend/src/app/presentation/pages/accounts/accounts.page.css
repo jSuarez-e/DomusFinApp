@@ -1,213 +1,113 @@
 /* frontend/src/app/presentation/pages/accounts/accounts.page.css */
 
-/* --- Toolbar --- */
-.accounts-toolbar {
-  --background: #121212;
-  --border-color: rgba(255, 255, 255, 0.08);
-  --color: #ffffff;
+/* --- General Layout --- */
+.transparent-toolbar {
+  --background: transparent;
+  --border-width: 0;
 }
 
-/* --- Content --- */
-.accounts-content {
-  --background: #000000;
-  color: #ffffff;
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 8px 16px 0;
 }
 
-.accounts-glow-bg {
-  position: absolute;
-  top: -80px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(136, 220, 204, 0.08) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
+.header-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--ion-text-color, #1e293b);
 }
 
-.accounts-container {
-  position: relative;
-  z-index: 1;
-  padding: 16px;
+.dashboard-content {
+  --background: var(--ion-background-color, #f4f7f6);
+}
+
+.dashboard-container {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 80px; /* Space for FAB */
   max-width: 600px;
   margin: 0 auto;
 }
 
-/* --- Summary Card --- */
-.accounts-summary-card {
-  --background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+/* --- Base Card Styles --- */
+.dashboard-card {
+  margin: 0;
   border-radius: 20px;
-  border: 1px solid rgba(136, 220, 204, 0.15);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-  margin-bottom: 24px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  background: var(--ion-card-background, #ffffff);
 }
 
-.accounts-summary__label {
-  font-size: 0.8rem;
-  color: #a6a6a6;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  font-weight: 600;
-  margin-bottom: 8px;
+.full-card {
+  width: 100%;
 }
 
-.accounts-summary__value {
-  font-size: 2rem;
-  font-weight: 800;
-  color: var(--ion-color-primary);
-  letter-spacing: -0.5px;
-}
-
-.accounts-summary__subtitle {
-  font-size: 0.75rem;
-  color: #666;
-  margin-top: 8px;
-}
-
-/* --- Section Header --- */
-.accounts-section-header {
+.card-title-group {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-  padding: 0 4px;
+  gap: 8px;
 }
 
-.accounts-section-header h2 {
-  font-size: 1rem;
+.card-icon {
+  font-size: 1.2rem;
+  color: var(--ion-color-success, #2dd36f);
+}
+
+.card-title {
+  font-size: 0.8rem;
   font-weight: 700;
-  color: #ffffff;
-  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary, #64748b);
 }
 
-.accounts-section-badge {
-  --background: rgba(92, 46, 126, 0.3);
-  --color: #c4a0e8;
-  font-size: 0.7rem;
+/* --- Text Colors --- */
+.text-success { color: var(--ion-color-success, #2dd36f) !important; }
+
+/* --- Summary Card --- */
+.accounts-summary__label {
+  font-size: 0.8rem;
+  color: var(--text-secondary, #64748b);
+  text-transform: uppercase;
   font-weight: 700;
-  padding: 4px 10px;
-  border-radius: 12px;
+  letter-spacing: 1px;
 }
 
-/* --- Accounts List --- */
-.accounts-list {
+/* --- Lists --- */
+.list-card ion-card-content {
+  padding: 0;
+}
+
+.dashboard-list {
   background: transparent;
   padding: 0;
 }
 
-.accounts-item {
-  --background: #121212;
-  --border-color: rgba(255, 255, 255, 0.06);
-  --padding-start: 16px;
-  --inner-padding-end: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 14px;
-  margin-bottom: 10px;
-  transition: border-color 0.2s ease;
-}
-
-.accounts-item:hover {
-  border-color: rgba(136, 220, 204, 0.2);
-}
-
-.accounts-item__icon-wrapper {
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
-  background: rgba(76, 103, 147, 0.15);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 14px;
-}
-
-.accounts-item__icon {
-  font-size: 1.3rem;
-  color: #4C6793;
-}
-
-.accounts-item__header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 4px;
-}
-
-.accounts-item__name {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #ffffff;
-}
-
-.accounts-item__type-badge {
-  font-size: 0.65rem;
-  font-weight: 600;
-  --background: rgba(255, 255, 255, 0.08);
-  --color: #a6a6a6;
-  padding: 2px 8px;
-  border-radius: 8px;
-}
-
-.accounts-item__balance {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--ion-color-primary);
-}
-
-/* --- Empty State --- */
-.accounts-empty-state {
+.empty-state {
+  padding: 32px 16px;
   text-align: center;
-  padding: 48px 24px;
+  color: var(--text-secondary, #64748b);
 }
 
-.accounts-empty-state__icon-bg {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  background: rgba(76, 103, 147, 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 16px;
+/* --- FAB Button --- */
+.home-fab {
+  margin-bottom: env(safe-area-inset-bottom);
 }
 
-.accounts-empty-state__icon {
-  font-size: 2.2rem;
-  color: #4C6793;
-}
-
-.accounts-empty-state h3 {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #ffffff;
-  margin: 0 0 8px;
-}
-
-.accounts-empty-state p {
-  font-size: 0.85rem;
-  color: #a6a6a6;
-  margin: 0;
-}
-
-/* --- FAB --- */
-.accounts-fab {
-  --background: var(--ion-color-primary);
-  --background-hover: var(--ion-color-primary-shade);
-  --background-activated: var(--ion-color-primary-shade);
-  --color: #121212;
-  box-shadow: 0 6px 24px rgba(136, 220, 204, 0.3);
-}
-
-/* --- Modal --- */
+/* --- Modal Form --- */
 .accounts-modal__toolbar {
-  --background: #121212;
-  --border-color: rgba(255, 255, 255, 0.08);
-  --color: #ffffff;
+  --background: var(--ion-toolbar-background);
+  --border-color: var(--ion-border-color);
+  --color: var(--ion-text-color);
 }
 
 .accounts-modal__content {
-  --background: #000000;
-  color: #ffffff;
+  --background: var(--ion-background-color);
+  color: var(--ion-text-color);
 }
 
 .accounts-modal__form-container {
@@ -216,7 +116,6 @@
   margin: 0 auto;
 }
 
-/* --- Form Fields --- */
 .accounts-form__field {
   margin-bottom: 20px;
 }
@@ -224,7 +123,6 @@
 .accounts-form__label {
   display: block;
   font-size: 0.78rem;
-  color: #a6a6a6;
   font-weight: 600;
   margin-bottom: 8px;
   text-transform: uppercase;
@@ -234,8 +132,8 @@
 .accounts-form__input-wrapper {
   display: flex;
   align-items: center;
-  background: #121212;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--ion-card-background);
+  border: 1px solid var(--ion-border-color);
   border-radius: 12px;
   padding: 0 16px;
   height: 48px;
@@ -249,24 +147,22 @@
 
 .accounts-form__icon {
   font-size: 1.2rem;
-  color: #4C6793;
+  color: var(--ion-color-medium, #92949c);
   margin-right: 12px;
 }
 
 .accounts-form__input {
   --background: transparent;
-  --color: #ffffff;
-  --placeholder-color: #595959;
+  --color: var(--ion-text-color);
   --padding-start: 0;
   font-size: 0.95rem;
   width: 100%;
 }
 
 .accounts-form__select {
-  --placeholder-color: #595959;
   --padding-start: 0;
   --padding-end: 0;
-  color: #ffffff;
+  color: var(--ion-text-color);
   font-size: 0.95rem;
   width: 100%;
 }
@@ -279,31 +175,91 @@
 }
 
 .accounts-form__submit {
-  --background: var(--ion-color-primary);
-  --background-hover: var(--ion-color-primary-shade);
-  --background-activated: var(--ion-color-primary-shade);
-  --color: #121212;
-  font-weight: 700;
   --border-radius: 12px;
   margin-top: 32px;
-  box-shadow: 0 6px 20px rgba(136, 220, 204, 0.25);
   height: 48px;
 }
 
-/* --- Accounts Item Customizations --- */
-.accounts-item__content { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 4px 0; }
-.accounts-item__name { font-size: 15px; font-weight: 600; color: #ffffff; }
-.accounts-item__balance { font-size: 18px; font-weight: 700; color: var(--ion-color-primary); margin-top: 4px; }
-.accounts-item__meta { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
-.accounts-item__type-badge { font-size: 9px; padding: 3px 6px; border-radius: 6px; text-transform: uppercase; }
-.accounts-item__privacy-badge { font-size: 10px; padding: 3px 6px; border-radius: 6px; display: flex; align-items: center; justify-content: center; width: fit-content; }
-.accounts-item__privacy-badge--private { --background: rgba(92, 46, 126, 0.15); --color: #a78bfa; }
-.accounts-item__privacy-badge--shared { --background: rgba(var(--ion-color-primary-rgb), 0.12); --color: var(--ion-color-primary); }
-.accounts-item__privacy-icon { font-size: 11px; }
+.accounts-form__field--toggle {
+  background: var(--ion-card-background);
+  border: 1px solid var(--ion-border-color);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 20px;
+}
 
-/* --- Accounts Form Toggle --- */
-.accounts-form__field--toggle { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 12px; margin-bottom: 20px; }
-.accounts-form__toggle-wrapper { display: flex; justify-content: space-between; align-items: center; }
-.accounts-form__toggle-texts { display: flex; flex-direction: column; gap: 4px; padding-right: 12px; }
-.accounts-form__toggle-title { font-size: 13px; font-weight: 700; color: #ffffff; }
-.accounts-form__toggle-desc { font-size: 11px; color: #9ca3af; line-height: 1.3; }
+.accounts-form__toggle-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.accounts-form__toggle-texts {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-right: 12px;
+}
+
+.accounts-form__toggle-title {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.accounts-form__toggle-desc {
+  font-size: 11px;
+  color: var(--text-secondary, #64748b);
+  line-height: 1.3;
+}
+
+hr {
+  border-bottom: 1px dotted var(--text-secondary); 
+  width: 90%; 
+  margin: 0 auto;
+}
+
+/* --- Extracted Inline Styles --- */
+.summary-card-content {
+  text-align: left;
+  padding: 24px 16px;
+}
+
+.summary-title-group {
+  margin-bottom: 8px;
+}
+
+.accounts-summary__value {
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.accounts-summary__subtitle {
+  font-size: 0.8rem;
+  color: var(--text-secondary, #64748b);
+}
+
+.list-card {
+  margin-top: 0;
+}
+
+.list-header {
+  padding: 16px 16px 8px;
+}
+
+.empty-state-icon-wrapper {
+  font-size: 2rem;
+  margin-bottom: 8px;
+  color: var(--ion-color-medium);
+}
+
+.empty-state-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ion-text-color);
+}
+
+.empty-state-desc {
+  margin: 4px 0 0;
+  font-size: 0.85rem;
+}

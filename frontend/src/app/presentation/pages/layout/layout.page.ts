@@ -24,7 +24,9 @@ import {
   IonButton,
   IonButtons,
   MenuController,
-  AlertController
+  AlertController,
+  IonCard,
+  IonCardContent
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { 
@@ -41,9 +43,14 @@ import {
   cardOutline,
   trendingUpOutline,
   calculatorOutline,
-  archiveOutline
+  archiveOutline,
+  sunnyOutline,
+  moonOutline,
+  rocketOutline,
+  headsetOutline
 } from 'ionicons/icons';
 import { AuthService } from '../../../core/services/auth.service';
+import { ThemeService } from '../../../core/services/theme.service';
 import { LayoutStore } from './layout.store';
 import { MenuOptionItemComponent } from '../../../shared/components/menu-option-item/menu-option-item.component';
 
@@ -73,6 +80,8 @@ import { MenuOptionItemComponent } from '../../../shared/components/menu-option-
     IonModal,
     IonButton,
     IonButtons,
+    IonCard,
+    IonCardContent,
     MenuOptionItemComponent
   ],
   providers: [LayoutStore],
@@ -82,6 +91,7 @@ export class LayoutPage implements OnInit {
   public currentUser = this.authService.currentUser;
   public store = inject(LayoutStore);
   public activeTabIndex = signal<number>(0);
+  public isDarkTheme = this.themeService.isDark;
 
   // Mapeo de rutas a índices para el cutout
   private tabIndexMap: Record<string, number> = {
@@ -94,6 +104,7 @@ export class LayoutPage implements OnInit {
 
   constructor(
     private authService: AuthService,
+    private themeService: ThemeService,
     private menuCtrl: MenuController,
     private alertController: AlertController
   ) {
@@ -111,7 +122,11 @@ export class LayoutPage implements OnInit {
       cardOutline,
       trendingUpOutline,
       calculatorOutline,
-      archiveOutline
+      archiveOutline,
+      sunnyOutline,
+      moonOutline,
+      rocketOutline,
+      headsetOutline
     });
   }
 
@@ -159,6 +174,10 @@ export class LayoutPage implements OnInit {
   handleLogout(): void {
     this.closeMenu();
     this.authService.logout();
+  }
+
+  public toggleTheme(): void {
+    this.themeService.toggleTheme(!this.isDarkTheme());
   }
 
   /**

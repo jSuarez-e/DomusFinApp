@@ -4,6 +4,7 @@ export interface CreateLoanDto {
   purposeDescription: string;
   initialPrincipal: number;
   interestRate: number;
+  termMonths: number;
   handlingFee?: number;
   lifeInsurance?: number;
   otherCharges?: number;

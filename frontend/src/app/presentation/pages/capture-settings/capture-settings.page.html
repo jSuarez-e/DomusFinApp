@@ -12,28 +12,24 @@
   <div class="glow-bg"></div>
 
   <div class="content-container">
-    <ion-card class="capture-card">
-      <ion-card-header>
-        <div class="capture-card__icon-wrapper">
-          <ion-icon name="flash-outline" class="capture-card__icon"></ion-icon>
-        </div>
-        <ion-card-title class="capture-card__title">Servicio de Captura Móvil</ion-card-title>
-      </ion-card-header>
+    <ion-card class="dashboard-card capture-card">
       <ion-card-content class="capture-card__content">
+        <div class="card-title-group card-title-group--spaced">
+          <ion-icon name="flash-outline" class="card-icon card-icon--primary"></ion-icon>
+          <span class="card-title">SERVICIO DE CAPTURA MÓVIL</span>
+        </div>
         <p>
           Configura los canales de escucha del plugin nativo de Android. El sistema procesará mensajes de texto y notificaciones push bancarias para crear gastos en tiempo real de forma segura.
         </p>
       </ion-card-content>
     </ion-card>
 
-    <ion-card class="capture-card">
-      <ion-card-header>
-        <div class="capture-card__icon-wrapper capture-card__icon-wrapper--config">
-          <ion-icon name="settings-outline" class="capture-card__icon"></ion-icon>
-        </div>
-        <ion-card-title class="capture-card__title">Canales de Escucha</ion-card-title>
-      </ion-card-header>
+    <ion-card class="dashboard-card capture-card">
       <ion-card-content>
+        <div class="card-title-group card-title-group--spaced">
+          <ion-icon name="settings-outline" class="card-icon card-icon--primary"></ion-icon>
+          <span class="card-title">CANALES DE ESCUCHA</span>
+        </div>
         <ion-list class="capture-list" lines="none">
           <app-capture-channel-item
             icon="chatbubble-ellipses-outline"
@@ -62,14 +58,12 @@
       </ion-card-content>
     </ion-card>
 
-    <ion-card class="capture-card">
-      <ion-card-header>
-        <div class="capture-card__icon-wrapper capture-card__icon-wrapper--native">
-          <ion-icon name="shield-checkmark-outline" class="capture-card__icon capture-card__icon--native"></ion-icon>
-        </div>
-        <ion-card-title class="capture-card__title">Permisos Requeridos</ion-card-title>
-      </ion-card-header>
+    <ion-card class="dashboard-card capture-card">
       <ion-card-content class="capture-card__content">
+        <div class="card-title-group card-title-group--spaced">
+          <ion-icon name="shield-checkmark-outline" class="card-icon card-icon--primary"></ion-icon>
+          <span class="card-title">PERMISOS REQUERIDOS</span>
+        </div>
         <p class="capture-card__desc">
           Para que la captura en segundo plano funcione correctamente en Android, debes habilitar el acceso a las notificaciones para esta aplicación en los ajustes del sistema.
         </p>

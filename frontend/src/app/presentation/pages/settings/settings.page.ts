@@ -57,8 +57,16 @@ import {
   listOutline,
   walletOutline,
   cardOutline,
-  cashOutline
+  cashOutline,
+  keyOutline,
+  shieldCheckmarkOutline,
+  swapHorizontalOutline,
+  fastFoodOutline,
+  flashOutline,
+  carOutline,
+  helpCircleOutline
 } from 'ionicons/icons';
+import { CategoryService } from '../../../core/services/category.service';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
@@ -213,7 +221,8 @@ export class SettingsPage implements OnInit {
     private readonly http: HttpClient,
     private readonly router: Router,
     private readonly alertController: AlertController,
-    private readonly themeService: ThemeService
+    private readonly themeService: ThemeService,
+    private readonly categoryService: CategoryService
   ) {
     addIcons({
       lockClosedOutline,
@@ -233,7 +242,14 @@ export class SettingsPage implements OnInit {
       listOutline,
       walletOutline,
       cardOutline,
-      cashOutline
+      cashOutline,
+      keyOutline,
+      shieldCheckmarkOutline,
+      swapHorizontalOutline,
+      fastFoodOutline,
+      flashOutline,
+      carOutline,
+      helpCircleOutline
     });
 
     // Auto-update local preference signals when current user state loads or changes
@@ -458,20 +474,23 @@ export class SettingsPage implements OnInit {
 
     const val = this.categoryForm.value;
     if (this.store.isCategoryEdit()) {
-      this.http.put(`/api/categories/${this.store.currentEditingCategoryId()}`, val).subscribe({
-        next: () => {
-          this.showToast('Categoría actualizada con éxito.', 'success');
-          this.store.loadCategories();
-          this.store.closeCategoryModal();
-        },
-        error: (err) => {
-          console.error('Failed to update category:', err);
-          const msg = err?.error?.message || 'No se pudo actualizar la categoría.';
-          this.showToast(msg, 'danger');
-        }
-      });
+      const id = this.store.currentEditingCategoryId();
+      if (id !== null) {
+        this.categoryService.update(id, val).subscribe({
+          next: () => {
+            this.showToast('Categoría actualizada con éxito.', 'success');
+            this.store.loadCategories();
+            this.store.closeCategoryModal();
+          },
+          error: (err) => {
+            console.error('Failed to update category:', err);
+            const msg = err?.error?.message || 'No se pudo actualizar la categoría.';
+            this.showToast(msg, 'danger');
+          }
+        });
+      }
     } else {
-      this.http.post('/api/categories', val).subscribe({
+      this.categoryService.create(val).subscribe({
         next: () => {
           this.showToast('Categoría creada con éxito.', 'success');
           this.store.loadCategories();
@@ -497,7 +516,7 @@ export class SettingsPage implements OnInit {
           text: 'Eliminar',
           role: 'destructive',
           handler: () => {
-            this.http.delete(`/api/categories/${cat.id}`).subscribe({
+            this.categoryService.delete(cat.id).subscribe({
               next: () => {
                 this.showToast('Categoría eliminada con éxito.', 'success');
                 this.loadCategories();

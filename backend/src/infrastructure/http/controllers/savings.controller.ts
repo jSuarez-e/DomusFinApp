@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, UseGuards, Request, ParseIntPipe, UseInterceptors, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards, Request, ParseIntPipe, UseInterceptors, Delete, Patch } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { SavingsService } from '../services/savings.service';
@@ -82,6 +82,16 @@ export class SavingsController {
     @Request() req: { user: User }
   ): Promise<SavingsGoalDbEntity> {
     return this.savingsService.deposit(id, dto, req.user);
+  }
+
+  @Patch(':id/archive')
+  @ApiOperation({ summary: 'Archivar una meta de ahorro' })
+  @ApiResponse({ status: 200, description: 'Meta de ahorro archivada exitosamente', type: SavingsGoalDbEntity })
+  async archive(
+    @Param('id', ParseIntPipe) id: number,
+    @Request() req: { user: User }
+  ): Promise<SavingsGoalDbEntity> {
+    return this.savingsService.archiveGoal(id, req.user);
   }
 
   @Delete(':id')
