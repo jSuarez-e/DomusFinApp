@@ -129,9 +129,7 @@
 
     <!-- Archived Savings Goals Section -->
     @if (archivedSavingsGoals().length > 0) {
-      <div class="list-header" style="margin-top: 32px;">
-        <span class="header-title list-header-title">Historial de Metas</span>
-      </div>
+      <app-list-header title="Historial de Metas" [spaced]="true"></app-list-header>
       <div class="savings-goals-grid">
         @for (goal of archivedSavingsGoals(); track goal.id) {
           <ion-card class="savings-card" style="opacity: 0.7;">

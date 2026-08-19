@@ -53,6 +53,7 @@ import { MoneyMaskDirective } from '../../directives/money-mask.directive';
 import { BlockScientificNotationDirective } from '../../directives/block-scientific-notation.directive';
 import { SavingsStore } from './savings.store';
 import { SavingsProgressComponent } from '../../../shared/components/savings-progress/savings-progress.component';
+import { ListHeaderComponent } from '../../../shared/components/list-header/list-header.component';
 
 @Component({
   selector: 'app-savings',
@@ -86,7 +87,8 @@ import { SavingsProgressComponent } from '../../../shared/components/savings-pro
     IonMenuButton,
     MoneyMaskDirective,
     BlockScientificNotationDirective,
-    SavingsProgressComponent
+    SavingsProgressComponent,
+    ListHeaderComponent
   ],
   providers: [SavingsStore],
   changeDetection: ChangeDetectionStrategy.OnPush,

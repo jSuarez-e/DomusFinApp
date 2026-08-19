@@ -1,63 +1,27 @@
 /* frontend/src/app/presentation/pages/savings/savings.page.css */
 
 /* --- General Layout --- */
-.transparent-toolbar {
+.savings__toolbar--transparent {
   --background: transparent;
   --border-width: 0;
 }
 
-.header-content {
+.savings-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
   padding: 8px 16px 0;
 }
 
-.header-title {
+.savings-header__title {
   margin: 0;
   font-size: 1.5rem;
   font-weight: 800;
   color: var(--ion-text-color, #1e293b);
 }
 
-.dashboard-content {
-  --background: var(--ion-background-color, #f4f7f6);
-}
-
-.dashboard-container {
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+.savings__dashboard-container--with-fab {
   padding-bottom: 80px; /* Space for FAB */
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-/* --- Base Card Styles --- */
-.dashboard-card {
-  margin: 0;
-  border-radius: 20px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
-  background: var(--ion-card-background, #ffffff);
-}
-
-.full-card {
-  width: 100%;
-}
-
-.card-title-group {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.card-title {
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--text-secondary, #64748b);
 }
 
 /* --- Summary Card Specifics --- */

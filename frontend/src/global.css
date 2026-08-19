@@ -222,3 +222,295 @@ body.dark .glow-bg {
 .premium-alert .alert-button-role-destructive {
   color: var(--ion-color-danger) !important;
 }
+
+/* --- Shared Dashboard Layout --- */
+.dashboard-content {
+  --background: var(--ion-background-color, #f4f7f6);
+}
+
+.dashboard-container {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 32px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.dashboard-card {
+  margin: 0;
+  border-radius: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  background: var(--ion-card-background, #ffffff);
+}
+
+.full-card {
+  width: 100%;
+}
+
+.card-title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-title-group--spaced {
+  margin-bottom: 24px;
+}
+
+.card-icon {
+  font-size: 1.2rem;
+}
+
+.card-icon--primary {
+  color: var(--ion-color-primary, #88DCCC);
+}
+
+.card-icon--danger {
+  color: var(--ion-color-danger, #eb445a);
+}
+
+.card-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-secondary, #64748b);
+  text-transform: uppercase;
+}
+
+.card-title--danger {
+  color: var(--ion-color-danger, #eb445a);
+}
+
+/* --- Shared Settings Segments --- */
+.settings-segment {
+  background: var(--ion-card-background);
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 8px;
+}
+
+.settings-segment ion-segment-button {
+  --color-checked: var(--ion-color-primary-contrast, #fff);
+  --indicator-color: var(--ion-color-primary);
+  --color: var(--text-secondary);
+  color: var(--text-secondary);
+}
+
+/* --- Shared Form Fields --- */
+.settings-form__field {
+  margin-bottom: 20px;
+}
+
+.settings-form__label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--ion-text-color);
+}
+
+.settings-form__input-wrapper {
+  display: flex;
+  align-items: center;
+  background: var(--ion-card-background);
+  border: 1px solid var(--ion-border-color);
+  border-radius: 12px;
+  padding: 0 16px;
+  height: 48px;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.settings-form__input-wrapper--alert {
+  height: auto;
+  padding: 12px 16px;
+  align-items: flex-start;
+  flex-direction: column;
+  background: var(--ion-color-light);
+}
+
+.settings-form__input-wrapper:focus-within {
+  border-color: var(--ion-color-primary);
+  box-shadow: 0 0 8px rgba(var(--ion-color-primary-rgb, 136, 220, 204), 0.2);
+}
+
+.settings-form__icon {
+  font-size: 1.2rem;
+  color: var(--ion-color-medium, #92949c);
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.settings-form__input {
+  --background: transparent;
+  --color: var(--ion-text-color);
+  --padding-start: 0;
+  font-size: 0.95rem;
+  width: 100%;
+}
+
+.settings-form__select {
+  --padding-start: 0;
+  --padding-end: 0;
+  color: var(--ion-text-color);
+  font-size: 0.95rem;
+  width: 100%;
+}
+
+.settings-form__submit {
+  --border-radius: 12px;
+  margin-top: 16px;
+  height: 48px;
+}
+
+.settings-action-row {
+  margin-top: 24px;
+}
+
+.settings-error-container {
+  padding: 4px 8px;
+  margin-top: -6px;
+  margin-bottom: 12px;
+}
+
+.settings-error-text {
+  color: var(--ion-color-danger, #eb445a);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.settings-pane-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.settings-pane-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--ion-text-color);
+}
+
+/* --- Shared Modal Forms --- */
+.modal-toolbar {
+  --background: var(--ion-toolbar-background);
+  --border-color: var(--ion-border-color);
+}
+
+.modal-content {
+  --background: var(--ion-background-color);
+}
+
+.settings-modal__form-container {
+  padding: 24px 16px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.settings-icon-wrapper {
+  margin-bottom: 24px;
+}
+
+.settings-icon-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+.icon-grid-item {
+  aspect-ratio: 1;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--ion-color-primary, #88DCCC);
+  font-size: 24px;
+  border: 1px solid var(--ion-border-color);
+  background: var(--ion-card-background);
+  transition: all 0.2s ease;
+}
+
+.icon-grid-item--selected {
+  border: 2px solid var(--ion-color-primary);
+  background: rgba(var(--ion-color-primary-rgb, 136, 220, 204), 0.15);
+}
+
+.settings-modal-save-btn {
+  --border-radius: 12px;
+  font-weight: bold;
+  margin-top: 16px;
+  height: 48px;
+}
+
+.transparent-list {
+  background: transparent;
+}
+
+/* --- Global Utilities (BEM / OOCSS) --- */
+.u-text-success { color: var(--ion-color-success, #2dd36f) !important; }
+.u-text-danger { color: var(--ion-color-danger, #ff4961) !important; }
+.u-text-warning { color: var(--ion-color-warning, #ffc409) !important; }
+
+.u-bg-success { background: var(--ion-color-success, #2dd36f) !important; }
+.u-bg-danger { background: var(--ion-color-danger, #ff4961) !important; }
+.u-bg-warning { background: var(--ion-color-warning, #ffc409) !important; }
+
+.u-mb-12 { margin-bottom: 12px !important; }
+
+/* --- Dashboard Layout & Cards --- */
+.dashboard-content {
+  --background: var(--ion-background-color, #f4f7f6);
+}
+
+.dashboard-container {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 32px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.dashboard-card {
+  margin: 0;
+  border-radius: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  background: var(--ion-card-background, #ffffff);
+}
+
+.full-card {
+  width: 100%;
+}
+
+.card-title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-icon {
+  font-size: 1.2rem;
+  color: var(--ion-color-success, #2dd36f);
+}
+
+.card-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary, #64748b);
+}
+.u-text-warning { color: var(--ion-color-warning, #ffc409) !important; }
+
+.u-bg-success { background: var(--ion-color-success, #2dd36f) !important; }
+.u-bg-danger { background: var(--ion-color-danger, #ff4961) !important; }
+.u-bg-warning { background: var(--ion-color-warning, #ffc409) !important; }
+
+.u-mb-12 { margin-bottom: 12px !important; }
+

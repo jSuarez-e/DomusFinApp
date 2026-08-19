@@ -56,3 +56,21 @@
   background: var(--ion-color-light, #f4f5f8);
   color: var(--text-secondary, #64748b);
 }
+
+.dashboard-item__title-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.dashboard-item__private-icon {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.dashboard-item__end-slot {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}

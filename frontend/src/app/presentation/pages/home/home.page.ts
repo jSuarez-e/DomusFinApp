@@ -66,6 +66,8 @@ import { ThemeService } from '../../../core/services/theme.service';
 import { TransactionFormComponent } from '../../components/transaction-form/transaction-form.component';
 import { TransactionEventService } from '../../../core/services/transaction-event.service';
 import { Movement, MonthlySummaryDto } from '@shared/index';
+import { ListHeaderComponent } from '../../../shared/components/list-header/list-header.component';
+import { SavingsItemComponent } from '../../../shared/components/savings-item/savings-item.component';
 
 /**
  * @class HomePage
@@ -99,7 +101,9 @@ import { Movement, MonthlySummaryDto } from '@shared/index';
     IonAvatar,
     IonFab,
     IonFabButton,
-    IonFabList
+    IonFabList,
+    ListHeaderComponent,
+    SavingsItemComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })

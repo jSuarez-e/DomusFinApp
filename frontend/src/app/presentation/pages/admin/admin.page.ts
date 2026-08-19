@@ -61,6 +61,9 @@ import { Category, PaymentMethod, CategoryType } from '@shared/index';
 import { environment } from 'src/environments/environment'; // Import environment config for API URL
 import { MoneyMaskDirective } from '../../directives/money-mask.directive';
 import { AdminStore } from './admin.store';
+import { CategoryListItemComponent } from '../../../shared/components/category-list-item/category-list-item.component';
+import { PaymentItemComponent } from '../../../shared/components/payment-item/payment-item.component';
+import { MemberItemComponent } from '../../../shared/components/member-item/member-item.component';
 
 @Component({
   selector: 'app-admin',
@@ -94,7 +97,10 @@ import { AdminStore } from './admin.store';
     IonSelect,
     IonSelectOption,
     MoneyMaskDirective,
-    IonSearchbar
+    IonSearchbar,
+    CategoryListItemComponent,
+    PaymentItemComponent,
+    MemberItemComponent
   ],
   providers: [AdminStore],
   changeDetection: ChangeDetectionStrategy.OnPush

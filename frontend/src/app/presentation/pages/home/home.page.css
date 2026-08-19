@@ -1,37 +1,29 @@
 /* frontend/src/app/presentation/pages/home/home.page.css */
 
 /* --- General Layout --- */
-.transparent-toolbar {
+.home__toolbar--transparent {
   --background: transparent;
   --border-width: 0;
 }
 
-.dashboard-content {
-  --background: var(--ion-background-color, #f4f7f6);
-}
-
-.dashboard-container {
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+.home__dashboard-container--with-fab {
   padding-bottom: 80px; /* Space for FAB */
 }
 
 /* --- Header Section --- */
-.header-content {
+.home-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
   padding: 8px 16px 0;
 }
 
-.header-left {
+.home-header__left {
   display: flex;
   flex-direction: column;
 }
 
-.month-selector {
+.home-header__month-selector {
   font-size: 0.8rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -42,74 +34,33 @@
   --padding-bottom: 4px;
 }
 
-.month-selector::part(icon) {
-  display: none; /* Hide standard dropdown icon if desired */
+.home-header__month-selector::part(icon) {
+  display: none;
 }
 
-.header-title {
+.home-header__title {
   margin: 0;
   font-size: 1.5rem;
   font-weight: 800;
   color: var(--ion-text-color, #1e293b);
 }
 
-.header-right {
+.home-header__right {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
 }
 
-.net-worth-label {
+.home-header__net-worth-label {
   font-size: 0.75rem;
   color: var(--text-secondary, #64748b);
 }
 
-.net-worth-value {
+.home-header__net-worth-value {
   font-size: 1.1rem;
   font-weight: 700;
   color: var(--ion-color-success, #2dd36f);
 }
-
-/* --- Base Card Styles --- */
-.dashboard-card {
-  margin: 0;
-  border-radius: 20px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
-  background: var(--ion-card-background, #ffffff);
-}
-
-.full-card {
-  width: 100%;
-}
-
-.card-title-group {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.card-icon {
-  font-size: 1.2rem;
-  color: var(--ion-color-success, #2dd36f);
-}
-
-.card-title {
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--text-secondary, #64748b);
-}
-
-/* --- Text Colors --- */
-.text-success { color: var(--ion-color-success, #2dd36f) !important; }
-.text-danger { color: var(--ion-color-danger, #ff4961) !important; }
-.text-warning { color: var(--ion-color-warning, #ffc409) !important; }
-
-/* --- Background Colors for Bars --- */
-.bg-success { background: var(--ion-color-success, #2dd36f) !important; }
-.bg-danger { background: var(--ion-color-danger, #ff4961) !important; }
-.bg-warning { background: var(--ion-color-warning, #ffc409) !important; }
 
 /* --- KPIs Superiores --- */
 .kpi-grid {
@@ -183,8 +134,6 @@
 }
 
 /* --- Balance Grid --- */
-.mb-12 { margin-bottom: 12px; }
-
 .balance-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;

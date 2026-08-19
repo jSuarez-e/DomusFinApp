@@ -1,46 +1,46 @@
 <!-- frontend/src/app/presentation/pages/home/home.page.html -->
 <ion-header class="ion-no-border">
-  <ion-toolbar class="transparent-toolbar">
-    <div class="header-content">
+  <ion-toolbar class="home__toolbar--transparent">
+    <div class="home-header">
       <!-- Left side: Date and Title -->
-      <div class="header-left">
+      <div class="home-header__left">
         <ion-select 
           [value]="selectedMonth()" 
           (ionChange)="onMonthChange($event)" 
           interface="popover" 
-          class="month-selector">
+          class="home-header__month-selector">
           @for (m of availableMonths; track m.value) {
             <ion-select-option [value]="m.value">{{ m.label }} {{ currentDate().getFullYear() }}</ion-select-option>
           }
         </ion-select>
-        <h1 class="header-title">Mis finanzas</h1>
+        <h1 class="home-header__title">Mis finanzas</h1>
       </div>
       
       <!-- Right side: Net Worth -->
-      <div class="header-right">
-        <span class="net-worth-label">Patrimonio neto</span>
-        <span class="net-worth-value">{{ netWorth() | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+      <div class="home-header__right">
+        <span class="home-header__net-worth-label">Patrimonio neto</span>
+        <span class="home-header__net-worth-value">{{ netWorth() | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
       </div>
     </div>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="dashboard-content">
-  <div class="dashboard-container">
+  <div class="dashboard-container home__dashboard-container--with-fab">
     
     <!-- 1. KPIs Superiores -->
     <div class="kpi-grid">
       <ion-card class="dashboard-card kpi-card">
         <ion-card-content>
           <span class="kpi-label">LIQUIDEZ</span>
-          <span class="kpi-value text-success">{{ (dashboardData()?.total_liquidity || 0) | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+          <span class="kpi-value u-text-success">{{ (dashboardData()?.total_liquidity || 0) | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
         </ion-card-content>
       </ion-card>
       
       <ion-card class="dashboard-card kpi-card">
         <ion-card-content>
           <span class="kpi-label">DEUDA ACTIVA</span>
-          <span class="kpi-value text-danger">{{ (dashboardData()?.total_debt || 0) | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+          <span class="kpi-value u-text-danger">{{ (dashboardData()?.total_debt || 0) | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
         </ion-card-content>
       </ion-card>
     </div>
@@ -59,9 +59,9 @@
         <div class="progress-bar-container">
           <div class="progress-bar-fill" 
                [style.width.%]="spentRatio() * 100"
-               [class.bg-success]="progressBarColor() === 'success'"
-               [class.bg-warning]="progressBarColor() === 'warning'"
-               [class.bg-danger]="progressBarColor() === 'danger'">
+               [class.u-bg-success]="progressBarColor() === 'success'"
+               [class.u-bg-warning]="progressBarColor() === 'warning'"
+               [class.u-bg-danger]="progressBarColor() === 'danger'">
           </div>
         </div>
         
@@ -75,7 +75,7 @@
     <!-- 3. Balance (Ingresos vs Gastos) -->
     <ion-card class="dashboard-card full-card">
       <ion-card-content>
-        <div class="card-title-group mb-12">
+        <div class="card-title-group u-mb-12">
           <ion-icon name="wallet-outline" class="card-icon"></ion-icon>
           <span class="card-title">BALANCE</span>
         </div>
@@ -83,13 +83,13 @@
         <div class="balance-grid">
           <div class="balance-box">
             <span class="balance-label">INGRESOS</span>
-            <span class="balance-value text-success">{{ income() | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
-            <div class="mini-bar bg-success"></div>
+            <span class="balance-value u-text-success">{{ income() | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+            <div class="mini-bar u-bg-success"></div>
           </div>
           <div class="balance-box">
             <span class="balance-label">GASTOS</span>
-            <span class="balance-value text-danger">{{ totalSpent() | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
-            <div class="mini-bar bg-danger"></div>
+            <span class="balance-value u-text-danger">{{ totalSpent() | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+            <div class="mini-bar u-bg-danger"></div>
           </div>
         </div>
       </ion-card-content>
@@ -126,25 +126,11 @@
     <!-- 5. Ahorros -->
     <ion-card class="dashboard-card full-card list-card">
       <ion-card-content>
-        <div class="card-title-group list-header">
-          <ion-icon name="star-outline" class="card-icon"></ion-icon>
-          <span class="card-title">AHORROS</span>
-        </div>
+        <app-list-header title="Ahorros" icon="star-outline"></app-list-header>
         
         <div class="savings-list">
           @for (goal of savingsGoals(); track goal.id) {
-            <div class="savings-item">
-              <div class="savings-header">
-                <span class="item-title">{{ goal.title }}</span>
-                <span class="item-value text-success">
-                  {{ Number(goal.currentAmount) | currency:'COP':'symbol-narrow':'1.0-0' }} / 
-                  {{ Number(goal.targetAmount) | currency:'COP':'symbol-narrow':'1.0-0' }}
-                </span>
-              </div>
-              <div class="progress-bar-container mini">
-                <div class="progress-bar-fill bg-success" [style.width.%]="getGoalProgress(goal)"></div>
-              </div>
-            </div>
+            <app-savings-item [goal]="goal"></app-savings-item>
             @if (goal.id !== savingsGoals()[savingsGoals().length - 1].id) {
               <hr>
             }
@@ -159,10 +145,7 @@
     <!-- 6. Créditos -->
     <ion-card class="dashboard-card full-card list-card">
       <ion-card-content>
-        <div class="card-title-group list-header">
-          <ion-icon name="card-outline" class="card-icon"></ion-icon>
-          <span class="card-title">CRÉDITOS</span>
-        </div>
+        <app-list-header title="Créditos" icon="card-outline"></app-list-header>
         
         <ion-list lines="none" class="dashboard-list">
           @for (card of creditCards(); track card.id) {
@@ -173,7 +156,7 @@
                   Corte: Día {{ card.cutDate }}
                 </p>
               </ion-label>
-              <span slot="end" class="item-value text-success">{{ card.currentDebt | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+              <span slot="end" class="item-value u-text-success">{{ card.currentDebt | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
             </ion-item>
             @if (card.id !== creditCards()[creditCards().length - 1].id) {
               <hr>

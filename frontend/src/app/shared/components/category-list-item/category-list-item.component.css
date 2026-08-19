@@ -52,3 +52,16 @@
 .category-item__btn--delete {
   --color: #ff6b6b;
 }
+
+.category-item__desc {
+  margin: 4px 0 0 0;
+  font-size: 0.8rem;
+  color: var(--text-secondary, #a1a1aa);
+}
+
+.category-item__badge--role {
+  color: var(--ion-color-primary);
+  background: transparent;
+  padding: 0;
+  font-size: inherit;
+}
