@@ -1,36 +1,32 @@
 .legend-item {
   display: flex;
   align-items: center;
-  padding: 8px 12px;
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 6px 0;
+  background: transparent;
+  border: none;
 }
 
 .legend-color-dot {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
-  margin-right: 12px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  margin-right: 8px;
 }
 
 .legend-label {
   flex: 1;
-  font-size: 13px;
+  font-size: 0.85rem;
   font-weight: 500;
-  color: #e5e7eb;
+  color: var(--text-secondary);
 }
 
 .legend-percentage {
-  font-size: 13px;
+  font-size: 0.85rem;
   font-weight: 700;
-  color: #9ca3af;
-  margin-right: 12px;
+  color: var(--ion-text-color);
+  margin-left: auto;
 }
 
 .legend-value {
-  font-size: 13px;
-  font-weight: 700;
-  color: #ffffff;
+  display: none;
 }

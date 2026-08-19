@@ -36,7 +36,7 @@ import { DatabaseSeederService } from './infrastructure/database/database-seeder
       password: process.env.DB_PASSWORD ?? 'domusfin_password',
       database: process.env.DB_DATABASE ?? 'domusfin_db',
       entities: [UserDbEntity, HouseholdDbEntity, CategoryDbEntity, ExpenseDbEntity, PaymentMethodDbEntity, MovementDbEntity, AccountDbEntity, CreditCardDbEntity, SavingsGoalDbEntity, LoanDbEntity], // Explicitly declare entities for Webpack bundle compatibility
-      synchronize: process.env.DB_SYNC === 'true', //synchronize: process.env.NODE_ENV !== 'production', // Disable in prod
+      synchronize: process.env.DB_SYNC === 'true', //synchronize: process.env.NODE_ENV !== 'production', // Disable in prod or variable in false in PROD
       logging: process.env.NODE_ENV !== 'production',
     }),
     TypeOrmModule.forFeature([CategoryDbEntity, PaymentMethodDbEntity, UserDbEntity]),

@@ -41,7 +41,8 @@ import {
   fastFoodOutline,
   carOutline,
   cameraOutline,
-  helpCircleOutline
+  helpCircleOutline,
+  receiptOutline
 } from 'ionicons/icons';
 
 import { ReportService } from '../../../core/services/report.service';
@@ -158,7 +159,8 @@ export class ReportsPage implements OnInit {
       fastFoodOutline,
       carOutline,
       cameraOutline,
-      helpCircleOutline
+      helpCircleOutline,
+      receiptOutline
     });
 
     effect(() => {
