@@ -42,12 +42,10 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="premium-content">
-  <div class="glow-bg"></div>
-
-  <div class="content-container">
+<ion-content [fullscreen]="true" class="dashboard-content">
+  <div class="dashboard-container">
     <!-- Reports Segments -->
-    <ion-segment [value]="activeType()" (ionChange)="onTypeChange($event)" class="tab-segment">
+    <ion-segment [value]="activeType()" (ionChange)="onTypeChange($event)" class="tab-segment" scrollable="true">
       <ion-segment-button value="General">
         <ion-label>General</ion-label>
       </ion-segment-button>
@@ -73,45 +71,53 @@
 
     <!-- Consolidated KPI Grid -->
     <div class="metrics-grid">
-      <div class="metric-card income">
-        <div class="metric-icon-bg">
-          <ion-icon name="trending-up-outline"></ion-icon>
-        </div>
-        <div class="metric-data">
-          <span class="metric-label">Ingresos</span>
-          <span class="metric-value">{{ summary().totalIncome | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
-        </div>
-      </div>
+      <ion-card class="dashboard-card metric-card income">
+        <ion-card-content class="metric-card-content">
+          <div class="metric-icon-bg">
+            <ion-icon name="trending-up-outline"></ion-icon>
+          </div>
+          <div class="metric-data">
+            <span class="metric-label">Ingresos</span>
+            <span class="metric-value">{{ summary().totalIncome | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+          </div>
+        </ion-card-content>
+      </ion-card>
 
-      <div class="metric-card expense">
-        <div class="metric-icon-bg">
-          <ion-icon name="trending-down-outline"></ion-icon>
-        </div>
-        <div class="metric-data">
-          <span class="metric-label">Gastos</span>
-          <span class="metric-value">{{ summary().totalSpent | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
-        </div>
-      </div>
+      <ion-card class="dashboard-card metric-card expense">
+        <ion-card-content class="metric-card-content">
+          <div class="metric-icon-bg">
+            <ion-icon name="trending-down-outline"></ion-icon>
+          </div>
+          <div class="metric-data">
+            <span class="metric-label">Gastos</span>
+            <span class="metric-value">{{ summary().totalSpent | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+          </div>
+        </ion-card-content>
+      </ion-card>
 
-      <div class="metric-card savings" [class.negative]="summary().netSavings < 0">
-        <div class="metric-icon-bg">
-          <ion-icon name="wallet-outline"></ion-icon>
-        </div>
-        <div class="metric-data">
-          <span class="metric-label">Balance</span>
-          <span class="metric-value">{{ summary().netSavings | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
-        </div>
-      </div>
+      <ion-card class="dashboard-card metric-card savings" [class.negative]="summary().netSavings < 0">
+        <ion-card-content class="metric-card-content">
+          <div class="metric-icon-bg">
+            <ion-icon name="wallet-outline"></ion-icon>
+          </div>
+          <div class="metric-data">
+            <span class="metric-label">Balance</span>
+            <span class="metric-value">{{ summary().netSavings | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+          </div>
+        </ion-card-content>
+      </ion-card>
     </div>
 
     <!-- Category Distribution Visualization Card -->
     @if (activeType() === 'General' || activeType() === 'Gasto') {
-      <ion-card class="chart-card">
-        <ion-card-header>
-          <ion-card-title>Distribución de Gastos</ion-card-title>
-        </ion-card-header>
-        <ion-card-content class="chart-content">
-          <div class="canvas-wrapper">
+      <ion-card class="dashboard-card full-card chart-card">
+        <ion-card-content class="chart-card-content">
+          <div class="card-title-group summary-title-group">
+            <ion-icon name="pie-chart-outline" class="card-icon"></ion-icon>
+            <span class="card-title">DISTRIBUCIÓN DE GASTOS</span>
+          </div>
+          <div class="chart-content">
+            <div class="canvas-wrapper">
             <canvas #donutCanvas></canvas>
           </div>
 
@@ -127,18 +133,21 @@
               }
             }
           </div>
+          </div>
         </ion-card-content>
       </ion-card>
     }
 
     <!-- Movements Listing -->
-    <!-- Movements Listing -->
-    <div class="list-section-header">
-      <h3>Detalle de Transacciones</h3>
-    </div>
+    <ion-card class="dashboard-card full-card list-card">
+      <ion-card-content>
+        <div class="card-title-group list-header">
+          <ion-icon name="list-outline" class="card-icon"></ion-icon>
+          <span class="card-title">DETALLE DE TRANSACCIONES</span>
+        </div>
 
-    <div class="movements-container">
-      @if (groupedMovements().length === 0) {
+        <div class="movements-container dashboard-list">
+          @if (groupedMovements().length === 0) {
         <div class="empty-state">
           <ion-icon name="analytics-outline" class="empty-icon"></ion-icon>
           <h4>Sin Transacciones</h4>
@@ -213,10 +222,15 @@
                 </div>
 
               </ion-item>
+              @if (m.id !== group.items[group.items.length - 1].id) {
+                <hr>
+              }
             }
           </ion-list>
         </div>
       }
-    </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
   </div>
 </ion-content>

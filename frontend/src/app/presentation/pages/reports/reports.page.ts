@@ -267,7 +267,7 @@ export class ReportsPage implements OnInit {
     const centerX = size / 2;
     const centerY = size / 2;
     const radius = size * 0.45;
-    const innerRadius = radius * 0.6;
+    const innerRadius = radius * 0.70;
 
     ctx.clearRect(0, 0, size, size);
 
@@ -277,13 +277,14 @@ export class ReportsPage implements OnInit {
     if (spentCategories.length === 0) {
       ctx.beginPath();
       ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+      ctx.fillStyle = 'rgba(128, 128, 128, 0.1)';
       ctx.fill();
 
+      ctx.globalCompositeOperation = 'destination-out';
       ctx.beginPath();
       ctx.arc(centerX, centerY, innerRadius, 0, 2 * Math.PI);
-      ctx.fillStyle = '#09090b'; 
       ctx.fill();
+      ctx.globalCompositeOperation = 'source-over';
 
       ctx.fillStyle = '#71717a';
       ctx.font = 'bold 10px "Outfit", "Inter", sans-serif';
@@ -311,20 +312,22 @@ export class ReportsPage implements OnInit {
       startAngle = endAngle;
     });
 
+    ctx.globalCompositeOperation = 'destination-out';
     ctx.beginPath();
     ctx.arc(centerX, centerY, innerRadius, 0, 2 * Math.PI);
-    ctx.fillStyle = '#09090b'; 
     ctx.fill();
+    ctx.globalCompositeOperation = 'source-over';
 
     ctx.fillStyle = '#a1a1aa';
-    ctx.font = '500 8px "Outfit", "Inter", sans-serif';
+    ctx.font = '500 11px "Outfit", "Inter", sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText('TOTAL GASTADO', centerX, centerY - 8);
+    ctx.fillText('TOTAL GASTADO', centerX, centerY - 10);
 
-    ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 11px "Outfit", "Inter", sans-serif';
+    const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    ctx.fillStyle = isDarkMode ? '#ffffff' : '#1e293b';
+    ctx.font = 'bold 16px "Outfit", "Inter", sans-serif';
     const totalSpentStr = `$${totalAmount.toLocaleString('es-CO', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
-    ctx.fillText(totalSpentStr, centerX, centerY + 6);
+    ctx.fillText(totalSpentStr, centerX, centerY + 8);
   }
 }
