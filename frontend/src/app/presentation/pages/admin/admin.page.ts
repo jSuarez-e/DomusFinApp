@@ -52,7 +52,9 @@ import {
   flashOutline,
   carOutline,
   cameraOutline,
-  helpCircleOutline
+  helpCircleOutline,
+  paperPlaneOutline,
+  saveOutline
 } from 'ionicons/icons';
 
 import { HouseholdService } from '../../../core/services/household.service';
@@ -105,6 +107,10 @@ import { MemberItemComponent } from '../../../shared/components/member-item/memb
   providers: [AdminStore],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
+/**
+ * @class AdminPage
+ * @description Componente de vista para la administración del sistema. Gestiona categorías, métodos de pago, el presupuesto del hogar y los miembros.
+ */
 export class AdminPage implements OnInit {
   public store = inject(AdminStore);
   
@@ -169,7 +175,9 @@ export class AdminPage implements OnInit {
       flashOutline,
       carOutline,
       cameraOutline,
-      helpCircleOutline
+      helpCircleOutline,
+      paperPlaneOutline,
+      saveOutline
     });
   }
 
@@ -260,6 +268,11 @@ export class AdminPage implements OnInit {
     this.store.setCategoryModalOpen(false);
   }
 
+  /**
+   * Guarda o actualiza una categoría en el sistema.
+   * Dependiendo de `isCategoryEdit` en el store, realizará una petición POST o PUT.
+   * @returns {void}
+   */
   public saveCategory(): void {
     if (this.categoryForm.invalid) return;
 
@@ -427,6 +440,11 @@ export class AdminPage implements OnInit {
     return this.store.members().filter(m => m.id !== this.currentUser()?.id && m.isActive !== false);
   }
 
+  /**
+   * Envía la solicitud para suspender a un miembro del hogar, desactivándolo de forma lógica.
+   * Presenta un diálogo de confirmación antes de proceder con la petición HTTP DELETE.
+   * @returns {Promise<void>} Promesa que se resuelve tras la operación o cancelación.
+   */
   public async submitSuspendMember(): Promise<void> {
     if (this.suspendMemberForm.invalid) {
       return;

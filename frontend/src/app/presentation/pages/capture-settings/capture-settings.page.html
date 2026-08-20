@@ -8,11 +8,9 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="premium-content">
-  <div class="glow-bg"></div>
-
-  <div class="content-container">
-    <ion-card class="dashboard-card capture-card">
+<ion-content [fullscreen]="true" class="dashboard-content">
+  <div class="dashboard-container">
+    <ion-card class="dashboard-card full-card">
       <ion-card-content class="capture-card__content">
         <div class="card-title-group card-title-group--spaced">
           <ion-icon name="flash-outline" class="card-icon card-icon--primary"></ion-icon>
@@ -24,7 +22,7 @@
       </ion-card-content>
     </ion-card>
 
-    <ion-card class="dashboard-card capture-card">
+    <ion-card class="dashboard-card full-card">
       <ion-card-content>
         <div class="card-title-group card-title-group--spaced">
           <ion-icon name="settings-outline" class="card-icon card-icon--primary"></ion-icon>
@@ -58,7 +56,7 @@
       </ion-card-content>
     </ion-card>
 
-    <ion-card class="dashboard-card capture-card">
+    <ion-card class="dashboard-card full-card">
       <ion-card-content class="capture-card__content">
         <div class="card-title-group card-title-group--spaced">
           <ion-icon name="shield-checkmark-outline" class="card-icon card-icon--primary"></ion-icon>
@@ -67,9 +65,11 @@
         <p class="capture-card__desc">
           Para que la captura en segundo plano funcione correctamente en Android, debes habilitar el acceso a las notificaciones para esta aplicación en los ajustes del sistema.
         </p>
-        <ion-button expand="block" color="primary" class="capture-btn capture-btn--native" (click)="requestNotificationPermission()">
-          Habilitar Acceso Nativo
-        </ion-button>
+        <div class="capture-action-row">
+          <ion-button class="capture-btn capture-btn--native" (click)="requestNotificationPermission()">
+            Habilitar Acceso Nativo
+          </ion-button>
+        </div>
       </ion-card-content>
     </ion-card>
   </div>

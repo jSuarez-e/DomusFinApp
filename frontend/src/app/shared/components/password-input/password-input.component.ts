@@ -53,6 +53,9 @@ export class PasswordInputComponent {
 
   public showPassword = signal(false);
 
+  /**
+   * Inicializa el componente y registra los íconos de Ionic requeridos para el toggle.
+   */
   constructor() {
     addIcons({ lockClosedOutline, eyeOutline, eyeOffOutline });
   }

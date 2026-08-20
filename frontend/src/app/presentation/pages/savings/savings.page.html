@@ -38,17 +38,23 @@
     </ion-card>
 
     <!-- Savings Goals Section -->
-    <div class="list-header">
-      <span class="header-title list-header-title">Mis Metas de Ahorro</span>
-      <ion-badge class="header-badge">{{ activeSavingsGoals().length }}</ion-badge>
-    </div>
+    <ion-card class="dashboard-card full-card list-card">
+      <ion-card-content>
+        <div class="card-title-group list-header">
+          <div class="list-header__title-group">
+            <ion-icon name="star-outline" class="card-icon"></ion-icon>
+            <span class="card-title">MIS METAS DE AHORRO</span>
+          </div>
+          <ion-badge color="primary" class="header-badge">{{ activeSavingsGoals().length }}</ion-badge>
+        </div>
 
     @if (activeSavingsGoals().length === 0) {
       <div class="empty-state">
         <ion-icon name="trending-up-outline" class="empty-state-icon"></ion-icon>
         <h3 class="empty-state-title">Sin Metas Activas</h3>
         <p class="empty-state-desc">Crea tu primera meta de ahorro (por ejemplo: Vacaciones, Fondo de Emergencias) y comienza a aportar de forma inteligente.</p>
-        <ion-button fill="outline" color="success" (click)="openCreateModal()">
+        <ion-button (click)="openCreateModal()">
+          <ion-icon name="add-outline" slot="start"></ion-icon>
           Crear Meta de Ahorro
         </ion-button>
       </div>
@@ -126,10 +132,19 @@
         }
       </div>
     }
+    </ion-card-content>
+    </ion-card>
 
     <!-- Archived Savings Goals Section -->
     @if (archivedSavingsGoals().length > 0) {
-      <app-list-header title="Historial de Metas" [spaced]="true"></app-list-header>
+      <ion-card class="dashboard-card full-card list-card list-card--spaced">
+        <ion-card-content>
+          <div class="card-title-group list-header">
+            <div class="list-header__title-group">
+              <ion-icon name="time-outline" class="card-icon"></ion-icon>
+              <span class="card-title">HISTORIAL DE METAS</span>
+            </div>
+          </div>
       <div class="savings-goals-grid">
         @for (goal of archivedSavingsGoals(); track goal.id) {
           <ion-card class="savings-card" style="opacity: 0.7;">
@@ -158,6 +173,8 @@
           </ion-card>
         }
       </div>
+      </ion-card-content>
+      </ion-card>
     }
   </div>
 

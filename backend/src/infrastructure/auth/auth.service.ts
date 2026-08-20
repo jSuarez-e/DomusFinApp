@@ -7,6 +7,10 @@ import { JwtService } from '@nestjs/jwt';
  */
 @Injectable()
 export class AuthService {
+  /**
+   * Inicializa el servicio de autenticación con sus dependencias requeridas.
+   * @param {JwtService} jwtService - Servicio de NestJS para la emisión y verificación de JSON Web Tokens.
+   */
   constructor(private readonly jwtService: JwtService) {}
 
   /**

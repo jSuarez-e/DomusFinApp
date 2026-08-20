@@ -30,8 +30,11 @@
     <ion-card class="dashboard-card full-card list-card">
       <ion-card-content>
         <div class="card-title-group list-header">
-          <ion-icon name="business-outline" class="card-icon"></ion-icon>
-          <span class="card-title">CUENTAS BANCARIAS</span>
+          <div class="list-header__title-group">
+            <ion-icon name="business-outline" class="card-icon"></ion-icon>
+            <span class="card-title">CUENTAS BANCARIAS</span>
+          </div>
+          <ion-badge color="primary" class="header-badge">{{ accounts().length }}</ion-badge>
         </div>
         
         <ion-list class="dashboard-list" lines="none">
@@ -41,7 +44,11 @@
                 <ion-icon name="wallet-outline"></ion-icon>
               </div>
               <h3 class="empty-state-title">Sin cuentas</h3>
-              <p class="empty-state-desc">Crea tu primera cuenta bancaria, de efectivo o billetera digital.</p>
+              <p class="empty-state-desc">Crea tus cuentas bancarias, de efectivo, ahorros o billeteras digitales y lleva un control general.</p>
+              <ion-button (click)="openModal()">
+                <ion-icon name="add-outline" slot="start"></ion-icon>
+                Crear Cuenta
+              </ion-button>
             </div>
           }
 

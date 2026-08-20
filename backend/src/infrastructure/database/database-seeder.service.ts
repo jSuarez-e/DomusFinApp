@@ -16,6 +16,12 @@ import { CategoryType } from '@shared/index';
 export class DatabaseSeederService implements OnApplicationBootstrap {
   private readonly logger = new Logger(DatabaseSeederService.name);
 
+  /**
+   * Inicializa el servicio con los repositorios necesarios para el sembrado.
+   * @param {Repository<CategoryDbEntity>} categoryRepository - Repositorio de la entidad de categoría.
+   * @param {Repository<PaymentMethodDbEntity>} paymentMethodRepository - Repositorio de la entidad de método de pago.
+   * @param {Repository<UserDbEntity>} userRepository - Repositorio de la entidad de usuario.
+   */
   constructor(
     @InjectRepository(CategoryDbEntity)
     private readonly categoryRepository: Repository<CategoryDbEntity>,
@@ -25,6 +31,11 @@ export class DatabaseSeederService implements OnApplicationBootstrap {
     private readonly userRepository: Repository<UserDbEntity>,
   ) {}
 
+  /**
+   * Evento del ciclo de vida de NestJS ejecutado al arrancar la aplicación.
+   * Dispara el sembrado de datos por defecto requeridos globalmente.
+   * @returns {Promise<void>} Promesa vacía tras completar las operaciones.
+   */
   async onApplicationBootstrap(): Promise<void> {
     // await this.clearFinancialData(); Habilitar para limpieza de datos
     await this.seedGlobalCategories();

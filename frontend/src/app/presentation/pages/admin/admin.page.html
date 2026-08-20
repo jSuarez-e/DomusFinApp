@@ -186,20 +186,22 @@
             <form [formGroup]="inviteForm" (ngSubmit)="sendInvitation()">
               <div class="settings-form__field">
                 <label class="settings-form__label">Correo Electrónico del Invitado</label>
-                <div class="invite-form-row">
-                  <div class="settings-form__input-wrapper input-field--flexible">
-                    <ion-icon name="mail-outline" class="settings-form__icon"></ion-icon>
-                    <ion-input 
-                      type="email" 
-                      placeholder="correo@ejemplo.com" 
-                      formControlName="email"
-                      class="settings-form__input">
-                    </ion-input>
-                  </div>
-                  <ion-button type="submit" [disabled]="inviteForm.invalid" color="primary" class="invite-submit-btn">
-                    Enviar
-                  </ion-button>
+                <div class="settings-form__input-wrapper">
+                  <ion-icon name="mail-outline" class="settings-form__icon"></ion-icon>
+                  <ion-input 
+                    type="email" 
+                    placeholder="correo@ejemplo.com" 
+                    formControlName="email"
+                    class="settings-form__input">
+                  </ion-input>
                 </div>
+              </div>
+              
+              <div class="settings-action-row">
+                <ion-button type="submit" [disabled]="inviteForm.invalid">
+                  <ion-icon name="paper-plane-outline" slot="start"></ion-icon>
+                  Enviar Invitación
+                </ion-button>
               </div>
             </form>
           </ion-card-content>
@@ -237,7 +239,7 @@
               </div>
 
               <div class="settings-action-row">
-                <ion-button type="submit" expand="block" color="primary" [disabled]="budgetForm.invalid" class="settings-form__submit">
+                <ion-button type="submit" [disabled]="budgetForm.invalid">
                   <ion-icon name="save-outline" slot="start"></ion-icon>
                   Actualizar Presupuesto
                 </ion-button>
@@ -288,7 +290,7 @@
               </div>
 
               <div class="settings-action-row">
-                <ion-button type="submit" expand="block" color="danger" [disabled]="suspendMemberForm.invalid || getOtherMembers().length === 0" class="settings-form__submit">
+                <ion-button type="submit" color="danger" [disabled]="suspendMemberForm.invalid || getOtherMembers().length === 0">
                   <ion-icon name="trash-outline" slot="start"></ion-icon>
                   Suspender Cuenta
                 </ion-button>

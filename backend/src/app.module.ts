@@ -57,4 +57,9 @@ import { DatabaseSeederService } from './infrastructure/database/database-seeder
   controllers: [],
   providers: [DatabaseSeederService],
 })
+
+/**
+ * Módulo principal de la aplicación que orquesta la carga de los demás módulos,
+ * configuración de base de datos y proveedores compartidos.
+ */
 export class AppModule {}

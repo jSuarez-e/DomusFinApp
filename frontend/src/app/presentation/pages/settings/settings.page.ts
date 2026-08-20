@@ -129,6 +129,10 @@ export function passwordMatchValidator(control: AbstractControl): ValidationErro
   providers: [SettingsStore],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
+/**
+ * @class SettingsPage
+ * @description Componente principal de la vista de Configuración. Gestiona la actualización del perfil, contraseñas, preferencias y categorías.
+ */
 export class SettingsPage implements OnInit {
   public store = inject(SettingsStore);
   public currentUser = this.authService.currentUser;

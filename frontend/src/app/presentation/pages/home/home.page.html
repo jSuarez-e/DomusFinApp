@@ -2,8 +2,9 @@
 <ion-header class="ion-no-border">
   <ion-toolbar class="home__toolbar--transparent">
     <div class="home-header">
-      <!-- Left side: Date and Title -->
-      <div class="home-header__left">
+      <h1 class="home-header__title">Mis finanzas</h1>
+      <div class="home-header__bottom-row">
+        <!-- Left side: Date -->
         <ion-select 
           [value]="selectedMonth()" 
           (ionChange)="onMonthChange($event)" 
@@ -13,13 +14,12 @@
             <ion-select-option [value]="m.value">{{ m.label }} {{ currentDate().getFullYear() }}</ion-select-option>
           }
         </ion-select>
-        <h1 class="home-header__title">Mis finanzas</h1>
-      </div>
-      
-      <!-- Right side: Net Worth -->
-      <div class="home-header__right">
-        <span class="home-header__net-worth-label">Patrimonio neto</span>
-        <span class="home-header__net-worth-value">{{ netWorth() | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+        
+        <!-- Right side: Net Worth -->
+        <div class="home-header__right">
+          <span class="home-header__net-worth-label">Patrimonio neto</span>
+          <span class="home-header__net-worth-value">{{ netWorth() | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+        </div>
       </div>
     </div>
   </ion-toolbar>
@@ -126,7 +126,10 @@
     <!-- 5. Ahorros -->
     <ion-card class="dashboard-card full-card list-card">
       <ion-card-content>
-        <app-list-header title="Ahorros" icon="star-outline"></app-list-header>
+        <div class="card-title-group list-header">
+          <ion-icon name="star-outline" class="card-icon"></ion-icon>
+          <span class="card-title">AHORROS</span>
+        </div>
         
         <div class="savings-list">
           @for (goal of savingsGoals(); track goal.id) {
@@ -145,7 +148,10 @@
     <!-- 6. Créditos -->
     <ion-card class="dashboard-card full-card list-card">
       <ion-card-content>
-        <app-list-header title="Créditos" icon="card-outline"></app-list-header>
+        <div class="card-title-group list-header">
+          <ion-icon name="card-outline" class="card-icon"></ion-icon>
+          <span class="card-title">CRÉDITOS</span>
+        </div>
         
         <ion-list lines="none" class="dashboard-list">
           @for (card of creditCards(); track card.id) {

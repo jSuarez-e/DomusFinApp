@@ -1,83 +1,18 @@
 /* frontend/src/app/presentation/pages/capture-settings/capture-settings.page.css */
 
-.premium-content {
-  --background: #09090b;
-  color: #ffffff;
-  position: relative;
-}
-
-.glass-toolbar {
-  --background: rgba(9, 9, 11, 0.85);
-  --border-color: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  color: #ffffff;
-}
-
-.glow-bg {
-  position: absolute;
-  top: -100px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(136, 220, 204, 0.15) 0%, rgba(92, 46, 126, 0.05) 50%, rgba(9, 9, 11, 0) 70%);
-  filter: blur(100px);
-  pointer-events: none;
-  z-index: 0;
-}
-
-.content-container {
-  padding: 16px;
-  position: relative;
-  z-index: 1;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-/* Card Styling */
-.capture-card {
-  background: rgba(18, 18, 18, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-radius: 16px;
-  margin-bottom: 20px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
-  padding: 12px;
-}
-
-.card-title-group {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
+/* Se eliminaron las clases premium-content, glow-bg, content-container y capture-card
+   para utilizar el estándar global dashboard-content, dashboard-container y dashboard-card. */
 
 .card-title-group--spaced {
   margin-bottom: 16px;
-}
-
-.card-icon {
-  font-size: 1.2rem;
 }
 
 .card-icon--primary {
   color: var(--ion-color-primary, #88DCCC);
 }
 
-.card-icon--preferences {
-  color: #c084fc;
-}
-
-.card-title {
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--text-secondary, #64748b);
-  text-transform: uppercase;
-}
-
 .capture-card__content p {
-  color: #a1a1aa;
+  color: var(--text-secondary, #64748b);
   font-size: 0.9rem;
   line-height: 1.5;
   margin: 12px 0 0 0;
@@ -91,9 +26,9 @@
 }
 
 .capture-item {
-  --background: rgba(255, 255, 255, 0.02);
-  --border-color: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  --background: transparent;
+  --border-color: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.05);
   border-radius: 10px;
   margin-bottom: 12px;
   --padding-start: 12px;
@@ -101,7 +36,7 @@
 }
 
 .capture-item__icon {
-  color: #4c6793;
+  color: var(--ion-color-primary);
   font-size: 22px;
   margin-right: 12px;
 }
@@ -109,21 +44,19 @@
 .capture-item__label h3 {
   font-size: 0.95rem;
   font-weight: 600;
-  color: #ffffff;
+  color: var(--ion-text-color);
   margin: 0 0 4px 0;
 }
 
 .capture-item__label p {
   font-size: 0.78rem;
-  color: #a1a1aa;
+  color: var(--text-secondary, #64748b);
   margin: 0;
 }
 
 .premium-toggle {
-  --background: rgba(255, 255, 255, 0.08);
-  --handle-background: #71717a;
-  --background-checked: #88DCCC;
-  --handle-background-checked: #09090b;
+  --background: var(--ion-color-step-150, #e0e0e0);
+  --background-checked: var(--ion-color-primary);
 }
 
 /* Toast customization class */
@@ -145,12 +78,16 @@
 .capture-card__desc {
   margin-bottom: 16px;
   font-size: 13px;
-  color: #9ca3af;
+  color: var(--text-secondary, #64748b);
   line-height: 1.4;
 }
 
 .capture-btn--native {
   --border-radius: 12px;
   font-weight: bold;
-  margin-top: 8px;
+}
+
+.capture-action-row {
+  text-align: center;
+  margin-top: 24px;
 }

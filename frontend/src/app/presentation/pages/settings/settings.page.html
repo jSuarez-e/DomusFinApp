@@ -4,7 +4,7 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>Configuraciones Generales</ion-title>
+    <ion-title>Ajustes de Cuenta</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -46,7 +46,7 @@
             <div class="avatar-upload-actions">
               <p class="avatar-desc">Carga tu foto de perfil en formato PNG o JPG (Máx 1MB).</p>
               <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" class="hidden-file-input" />
-              <ion-button fill="outline" size="small" color="primary" class="avatar-upload-btn" (click)="fileInput.click()">
+              <ion-button class="avatar-upload-btn" (click)="fileInput.click()">
                 <ion-icon name="image-outline" slot="start"></ion-icon>
                 Seleccionar Imagen
               </ion-button>
@@ -83,11 +83,8 @@
               
               <div class="settings-action-row">
                 <ion-button 
-                  type="submit" 
-                  expand="block" 
-                  color="primary"
-                  [disabled]="emailForm.invalid || isEmailLoading()" 
-                  class="settings-form__submit">
+                  type="submit"
+                  [disabled]="emailForm.invalid || isEmailLoading()">
                   <ion-icon name="save-outline" slot="start"></ion-icon>
                   @if (isEmailLoading()) { Guardando... } @else { Actualizar Correo }
                 </ion-button>
@@ -191,11 +188,8 @@
 
               <div class="settings-action-row">
                 <ion-button 
-                  type="submit" 
-                  expand="block" 
-                  color="primary"
-                  [disabled]="passwordForm.invalid || isPasswordLoading()" 
-                  class="settings-form__submit">
+                  type="submit"
+                  [disabled]="passwordForm.invalid || isPasswordLoading()">
                   <ion-icon name="refresh-outline" slot="start"></ion-icon>
                   @if (isPasswordLoading()) { Guardando... } @else { Actualizar Contraseña }
                 </ion-button>
@@ -234,11 +228,9 @@
 
               <div class="settings-action-row">
                 <ion-button 
-                  type="submit" 
-                  expand="block" 
+                  type="submit"
                   color="danger" 
-                  [disabled]="deleteAccountForm.invalid" 
-                  class="settings-form__submit">
+                  [disabled]="deleteAccountForm.invalid">
                   <ion-icon name="alert-circle-outline" slot="start"></ion-icon>
                   Inactivar mi Cuenta
                 </ion-button>
@@ -300,11 +292,8 @@
 
             <div class="settings-action-row">
               <ion-button 
-                (click)="onPreferencesSubmit()" 
-                expand="block" 
-                color="primary"
-                [disabled]="isPreferencesLoading()" 
-                class="settings-form__submit">
+                (click)="onPreferencesSubmit()"
+                [disabled]="isPreferencesLoading()">
                 <ion-icon name="save-outline" slot="start"></ion-icon>
                 @if (isPreferencesLoading()) { Guardando... } @else { Guardar Preferencias }
               </ion-button>

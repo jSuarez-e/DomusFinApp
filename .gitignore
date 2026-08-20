@@ -34,3 +34,6 @@ www/
 # 7. Archivos de Sistema Operativo
 .DS_Store
 Thumbs.db
+
+# 8. Documentación propia del Monorepo
+docs/*

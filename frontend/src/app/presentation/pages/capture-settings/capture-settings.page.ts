@@ -147,8 +147,7 @@ export class CaptureSettingsPage implements OnInit {
       message,
       duration: 2000,
       position: 'bottom',
-      color: 'success',
-      cssClass: 'premium-toast'
+      color: 'success'
     });
     await toast.present();
   }

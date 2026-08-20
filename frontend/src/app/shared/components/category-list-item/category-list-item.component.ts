@@ -39,10 +39,10 @@ import { Category } from '@shared/index';
       @if (isAdmin() && !category().isGlobal) {
         <div slot="end" class="category-item__actions">
           <ion-button fill="clear" (click)="edit.emit(category())" class="category-item__btn category-item__btn--edit">
-            <ion-icon name="pencil-outline"></ion-icon>
+            <ion-icon name="pencil-outline" slot="icon-only"></ion-icon>
           </ion-button>
           <ion-button fill="clear" (click)="delete.emit(category())" class="category-item__btn category-item__btn--delete">
-            <ion-icon name="trash-outline"></ion-icon>
+            <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
           </ion-button>
         </div>
       }

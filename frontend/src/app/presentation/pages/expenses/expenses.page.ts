@@ -25,8 +25,7 @@ import {
   ModalController
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { lockClosedOutline, addOutline, walletOutline, eyeOffOutline, globeOutline } from 'ionicons/icons';
-import { ExpenseService } from '../../../core/services/expense.service';
+import { lockClosedOutline, addOutline, walletOutline, eyeOffOutline, globeOutline, listOutline } from 'ionicons/icons';
 import { HouseholdService } from '../../../core/services/household.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { TransactionFormComponent } from '../../components/transaction-form/transaction-form.component';
@@ -99,7 +98,8 @@ export class ExpensesPage implements OnInit {
       addOutline,
       walletOutline,
       eyeOffOutline,
-      globeOutline
+      globeOutline,
+      listOutline
     });
 
     // Recargar gastos reactivamente al detectar mutaciones financieras

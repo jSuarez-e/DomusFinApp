@@ -50,17 +50,23 @@
         </ion-card>
 
         <!-- Section Header -->
-        <div class="list-header">
-          <span class="header-title list-header-title">Créditos Activos</span>
-          <ion-badge class="header-badge">{{ activeLoans().length }}</ion-badge>
-        </div>
+        <ion-card class="dashboard-card full-card list-card list-card--spaced">
+          <ion-card-content>
+            <div class="card-title-group list-header">
+              <div class="list-header__title-group">
+                <ion-icon name="card-outline" class="card-icon"></ion-icon>
+                <span class="card-title">CRÉDITOS ACTIVOS</span>
+              </div>
+              <ion-badge color="primary" class="header-badge">{{ activeLoans().length }}</ion-badge>
+            </div>
 
         @if (activeLoans().length === 0) {
           <div class="empty-state">
             <ion-icon name="calculator-outline" class="empty-state-icon"></ion-icon>
             <h3 class="empty-state-title">Sin Créditos Registrados</h3>
             <p class="empty-state-desc">Aquí verás tus préstamos y deudas. Registra una nueva deuda para proyectar sus cuotas y abonar capital.</p>
-            <ion-button fill="outline" color="primary" (click)="openCreateModal()">
+            <ion-button (click)="openCreateModal()">
+              <ion-icon name="add-outline" slot="start"></ion-icon>
               Registrar Deuda
             </ion-button>
           </div>
@@ -138,6 +144,8 @@
             }
           </div>
         }
+        </ion-card-content>
+        </ion-card>
       </div>
     }
 

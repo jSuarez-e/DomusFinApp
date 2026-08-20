@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { SavingsGoal } from '@shared/index';
@@ -54,6 +54,10 @@ import { SavingsProgressComponent } from '../savings-progress/savings-progress.c
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
+/**
+ * Componente presentacional para visualizar un ítem de meta de ahorro,
+ * incluyendo su título, monto actual y barra de progreso.
+ */
 export class SavingsItemComponent {
   public goal = input.required<SavingsGoal>();
   public readonly Number = Number;

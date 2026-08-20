@@ -456,37 +456,27 @@
 
 /* Empty State */
 .empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 40px 20px;
+  padding: 32px 16px;
   text-align: center;
-  border: 1px dashed rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.01);
-  margin-top: 10px;
+  color: var(--text-secondary, #64748b);
 }
 
 .empty-icon {
-  font-size: 2.2rem;
-  color: #71717a;
-  margin-bottom: 12px;
+  font-size: 2rem;
+  margin-bottom: 8px;
+  color: var(--ion-color-medium);
 }
 
-.empty-state h4 {
-  font-size: 1.1rem;
+.empty-state h3 {
+  margin: 0;
+  font-size: 1rem;
   font-weight: 600;
-  margin: 0 0 6px 0;
   color: var(--ion-text-color);
 }
 
 .empty-state p {
+  margin: 4px 0 10px;
   font-size: 0.85rem;
-  color: #71717a;
-  margin: 0;
-  max-width: 250px;
-  line-height: 1.5;
 }
 
 /* Animations & Media Queries */

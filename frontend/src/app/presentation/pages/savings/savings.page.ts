@@ -43,12 +43,13 @@ import {
   walletOutline,
   helpCircleOutline,
   informationCircleOutline,
+  starOutline
 } from 'ionicons/icons';
 
 import { SavingsService } from '../../../core/services/savings.service';
 import { AccountService } from '../../../core/services/account.service';
 import { AuthService } from '../../../core/services/auth.service';
-import { SavingsGoal, Account, User } from '@shared/index';
+import { SavingsGoal } from '@shared/index';
 import { MoneyMaskDirective } from '../../directives/money-mask.directive';
 import { BlockScientificNotationDirective } from '../../directives/block-scientific-notation.directive';
 import { SavingsStore } from './savings.store';
@@ -143,6 +144,7 @@ export class SavingsPage implements OnInit {
       walletOutline,
       helpCircleOutline,
       informationCircleOutline,
+      starOutline
     });
 
     // Recargar metas de ahorro reactivamente al detectar mutaciones financieras

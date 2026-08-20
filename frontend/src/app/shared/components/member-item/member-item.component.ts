@@ -4,6 +4,13 @@ import { IonItem, IonLabel, IonButton, IonIcon } from '@ionic/angular/standalone
 import { addIcons } from 'ionicons';
 import { personOutline, swapHorizontalOutline, trashOutline } from 'ionicons/icons';
 
+export interface MemberData {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+}
+
 /**
  * Componente presentacional para renderizar un miembro del hogar en una lista.
  */
@@ -26,10 +33,10 @@ import { personOutline, swapHorizontalOutline, trashOutline } from 'ionicons/ico
       @if (member().id !== currentUserId()) {
         <div slot="end" class="category-item__actions">
           <ion-button fill="clear" (click)="toggleRole.emit(member())" class="category-item__btn category-item__btn--edit" title="Cambiar Rol">
-            <ion-icon name="swap-horizontal-outline"></ion-icon>
+            <ion-icon name="swap-horizontal-outline" slot="icon-only"></ion-icon>
           </ion-button>
           <ion-button fill="clear" (click)="delete.emit(member())" class="category-item__btn category-item__btn--delete" title="Eliminar Miembro">
-            <ion-icon name="trash-outline"></ion-icon>
+            <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
           </ion-button>
         </div>
       }
@@ -38,12 +45,16 @@ import { personOutline, swapHorizontalOutline, trashOutline } from 'ionicons/ico
   styleUrls: ['../category-list-item/category-list-item.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MemberItemComponent {
-  public member = input.required<any>();
-  public currentUserId = input.required<number | undefined>();
-  public toggleRole = output<any>();
-  public delete = output<any>();
 
+export class MemberItemComponent {
+  public member = input.required<MemberData>();
+  public currentUserId = input.required<number | undefined>();
+  public toggleRole = output<MemberData>();
+  public delete = output<MemberData>();
+
+  /**
+   * Inicializa el componente registrando los íconos de Ionic requeridos.
+   */
   constructor() {
     addIcons({ personOutline, swapHorizontalOutline, trashOutline });
   }

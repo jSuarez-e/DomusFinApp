@@ -140,6 +140,18 @@
   color: var(--ion-color-danger, #eb445a);
 }
 
+/* --- Buttons & Forms --- */
+.settings-action-row {
+  text-align: center;
+  margin-top: 16px;
+}
+
+.settings-form__submit {
+  --border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
 /* Toggle Styles */
 .settings-form__field--toggle {
   background: var(--ion-card-background);

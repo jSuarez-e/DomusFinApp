@@ -13,14 +13,16 @@
 /* --- Header Section --- */
 .home-header {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
+  flex-direction: column;
   padding: 8px 16px 0;
+  gap: 4px;
 }
 
-.home-header__left {
+.home-header__bottom-row {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  width: 100%;
 }
 
 .home-header__month-selector {
@@ -49,6 +51,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  width: stretch;
 }
 
 .home-header__net-worth-label {

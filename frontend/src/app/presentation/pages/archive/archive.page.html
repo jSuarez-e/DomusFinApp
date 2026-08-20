@@ -39,11 +39,15 @@
     <!-- TAB 1: SAVINGS -->
     @if (store.activeSegment() === 'savings') {
       @if (store.completedSavings().length === 0) {
-        <div class="empty-state">
-          <ion-icon name="trending-up-outline" class="empty-state-icon"></ion-icon>
-          <h3 class="empty-state-title">Sin Ahorros Archivados</h3>
-          <p class="empty-state-desc">No tienes metas de ahorro completadas o alcanzadas en este hogar.</p>
-        </div>
+        <ion-card class="dashboard-card full-card list-card list-card--spaced">
+          <ion-card-content>
+            <div class="empty-state">
+              <ion-icon name="trending-up-outline" class="empty-state-icon"></ion-icon>
+              <h3 class="empty-state-title">Sin Ahorros Archivados</h3>
+              <p class="empty-state-desc">No tienes metas de ahorro completadas o alcanzadas en este hogar.</p>
+            </div>
+          </ion-card-content>
+        </ion-card>
       } @else {
         <div class="archive-items-grid">
           @for (goal of store.completedSavings(); track goal.id) {
@@ -93,11 +97,15 @@
     <!-- TAB 2: LOANS -->
     @if (store.activeSegment() === 'loans') {
       @if (store.completedLoans().length === 0) {
-        <div class="empty-state">
-          <ion-icon name="calculator-outline" class="empty-state-icon"></ion-icon>
-          <h3 class="empty-state-title">Sin Créditos Archivados</h3>
-          <p class="empty-state-desc">No tienes préstamos o deudas liquidadas en este hogar.</p>
-        </div>
+        <ion-card class="dashboard-card full-card list-card list-card--spaced">
+          <ion-card-content>
+            <div class="empty-state">
+              <ion-icon name="calculator-outline" class="empty-state-icon"></ion-icon>
+              <h3 class="empty-state-title">Sin Créditos Archivados</h3>
+              <p class="empty-state-desc">No tienes préstamos o deudas liquidadas en este hogar.</p>
+            </div>
+          </ion-card-content>
+        </ion-card>
       } @else {
         <div class="archive-items-grid">
           @for (loan of store.completedLoans(); track loan.id) {
@@ -142,11 +150,15 @@
     <!-- TAB 3: CREDIT CARDS -->
     @if (store.activeSegment() === 'cc') {
       @if (store.completedCreditCards().length === 0) {
-        <div class="empty-state">
-          <ion-icon name="card-outline" class="empty-state-icon"></ion-icon>
-          <h3 class="empty-state-title">Sin Tarjetas al Día</h3>
-          <p class="empty-state-desc">Todas tus tarjetas de crédito registradas tienen deuda acumulada activa.</p>
-        </div>
+        <ion-card class="dashboard-card full-card list-card list-card--spaced">
+          <ion-card-content>
+            <div class="empty-state">
+              <ion-icon name="card-outline" class="empty-state-icon"></ion-icon>
+              <h3 class="empty-state-title">Sin Tarjetas al Día</h3>
+              <p class="empty-state-desc">Todas tus tarjetas de crédito registradas tienen deuda acumulada activa.</p>
+            </div>
+          </ion-card-content>
+        </ion-card>
       } @else {
         <div class="archive-items-grid">
           @for (card of store.completedCreditCards(); track card.id) {

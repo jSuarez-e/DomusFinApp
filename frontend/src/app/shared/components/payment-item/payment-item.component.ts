@@ -24,10 +24,10 @@ import { PaymentMethod } from '@shared/index';
       @if (paymentMethod().householdId !== null) {
         <div slot="end" class="category-item__actions">
           <ion-button fill="clear" (click)="edit.emit(paymentMethod())" class="category-item__btn category-item__btn--edit">
-            <ion-icon name="pencil-outline"></ion-icon>
+            <ion-icon name="pencil-outline" slot="icon-only"></ion-icon>
           </ion-button>
           <ion-button fill="clear" (click)="delete.emit(paymentMethod())" class="category-item__btn category-item__btn--delete">
-            <ion-icon name="trash-outline"></ion-icon>
+            <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
           </ion-button>
         </div>
       }
@@ -41,6 +41,9 @@ export class PaymentItemComponent {
   public edit = output<PaymentMethod>();
   public delete = output<PaymentMethod>();
 
+  /**
+   * Inicializa el componente registrando los íconos necesarios de Ionic.
+   */
   constructor() {
     addIcons({ pencilOutline, trashOutline, cardOutline });
   }

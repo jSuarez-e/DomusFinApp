@@ -25,17 +25,23 @@
     </ion-card>
 
     <!-- Section Header -->
-    <div class="list-header">
-      <span class="header-title list-header-title">Tus Tarjetas</span>
-      <ion-badge color="tertiary" class="header-badge">{{ creditCards().length }}</ion-badge>
-    </div>
+    <ion-card class="dashboard-card full-card list-card list-card--spaced">
+      <ion-card-content>
+        <div class="card-title-group list-header">
+          <div class="list-header__title-group">
+            <ion-icon name="card-outline" class="card-icon"></ion-icon>
+            <span class="card-title">TUS TARJETAS</span>
+          </div>
+          <ion-badge color="primary" class="header-badge">{{ creditCards().length }}</ion-badge>
+        </div>
 
     @if (creditCards().length === 0) {
       <div class="empty-state">
         <ion-icon name="card-outline" class="empty-state-icon"></ion-icon>
         <h3 class="empty-state-title">Sin Tarjetas</h3>
         <p class="empty-state-desc">Añade una tarjeta de crédito para empezar a gestionar tus diferidos y simular cuotas.</p>
-        <ion-button fill="outline" color="primary" class="empty-state-btn" (click)="openCreateModal()">
+        <ion-button class="empty-state-btn" (click)="openCreateModal()">
+          <ion-icon name="add-outline" slot="start"></ion-icon>
           Registrar Tarjeta
         </ion-button>
       </div>
@@ -190,6 +196,8 @@
         }
       }
     }
+      </ion-card-content>
+    </ion-card>
   </div>
 
   <!-- FAB for new credit card -->

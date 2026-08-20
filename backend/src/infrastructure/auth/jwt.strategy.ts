@@ -5,8 +5,16 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { IUserRepository } from '../../core/repositories/user-repository.interface';
 import { Inject } from '@nestjs/common';
 
+/**
+ * Estrategia de Passport para la validación de tokens JWT.
+ * Intercepta y verifica el Bearer token extraído de las cabeceras de autorización HTTP.
+ */
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
+  /**
+   * Instancia la estrategia configurando el extractor del JWT y la clave secreta.
+   * @param {IUserRepository} userRepository - Repositorio para la recuperación de entidades de usuario.
+   */
   constructor(
     @Inject('IUserRepository')
     private readonly userRepository: IUserRepository,

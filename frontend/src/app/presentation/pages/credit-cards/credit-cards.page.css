@@ -78,49 +78,59 @@
   margin-top: 8px;
 }
 
+.list-card ion-card-content {
+  padding: 0;
+}
+
+.list-card--spaced {
+  margin-top: 16px;
+}
+
 .list-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 4px 8px;
+  padding: 16px 16px 8px;
 }
 
-.list-header-title {
-  font-size: 1.1rem;
+.list-header__title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .header-badge {
-  background: var(--ion-color-primary);
-  border-radius: 12px;
-  padding: 4px 8px;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
 }
 
 .empty-state {
   padding: 32px 16px;
   text-align: center;
   color: var(--text-secondary, #64748b);
-  background: var(--ion-card-background);
-  border-radius: 20px;
-  margin-top: 8px;
 }
 
 .empty-state-icon {
-  font-size: 3rem;
-  margin-bottom: 12px;
+  font-size: 2rem;
+  margin-bottom: 8px;
   color: var(--ion-color-medium);
 }
 
 .empty-state-title {
   margin: 0;
-  font-size: 1.1rem;
-  font-weight: 700;
+  font-size: 1rem;
+  font-weight: 600;
   color: var(--ion-text-color);
-  margin-bottom: 8px;
 }
 
 .empty-state-desc {
-  font-size: 0.9rem;
-  margin-bottom: 24px;
+  margin: 4px 0 10px;
+  font-size: 0.85rem;
 }
 
 .empty-state-btn {
@@ -143,14 +153,6 @@
   padding: 24px 16px;
   max-width: 500px;
   margin: 0 auto;
-}
-
-.dashboard-fab {
-  --background: var(--ion-color-primary);
-  --background-hover: var(--ion-color-primary-shade);
-  --background-activated: var(--ion-color-primary-shade);
-  --color: #121212;
-  box-shadow: 0 6px 24px rgba(136, 220, 204, 0.3);
 }
 
 /* --- Layout overrides & additions --- */
@@ -225,6 +227,9 @@
 /* --- Detail Card --- */
 .cc-detail-card {
   margin: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
 }
 
 .cc-detail-row {
@@ -293,6 +298,9 @@
 /* --- Simulator Card --- */
 .cc-sim-inputs-card {
   margin: 0 0 16px;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
 }
 
 .cc-sim-title {

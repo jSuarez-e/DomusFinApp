@@ -30,8 +30,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--ion-color-step-50, #f8f9fa);
+  border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 12px;
   padding: 12px;
   margin-top: 16px;
@@ -59,21 +59,21 @@
 
 .magic-label {
   font-size: 0.72rem;
-  color: #a1a1aa;
+  color: var(--text-secondary, #64748b);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .magic-url {
   font-size: 0.85rem;
-  color: #ffffff;
+  color: var(--ion-text-color, #1e293b);
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
 }
 
 .copy-link-btn {
-  --color: #88dccc;
+  --color: var(--ion-color-primary);
   margin: 0;
   --padding-start: 8px;
   --padding-end: 8px;
@@ -91,7 +91,7 @@
 .invite-divider::after {
   content: '';
   flex: 1;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .invite-divider:not(:empty)::before {
@@ -120,7 +120,7 @@
 .spaced-searchbar {
   --background: var(--ion-card-background);
   --color: var(--ion-text-color);
-  --placeholder-color: #a1a1aa;
+  --placeholder-color: var(--text-secondary, #64748b);
   --border-radius: 12px;
   margin-bottom: 16px;
   padding: 0;
@@ -155,8 +155,5 @@
 }
 
 .admin-modal {
-  --background: rgba(18, 18, 22, 0.9);
-  --backdrop-opacity: 0.55;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  --background: var(--ion-background-color);
 }
