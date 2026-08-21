@@ -28,6 +28,10 @@ import { DashboardModule } from './infrastructure/http/modules/dashboard.module'
 import { CdtsModule } from './infrastructure/http/modules/cdts.module';
 import { DatabaseSeederService } from './infrastructure/database/database-seeder.service';
 
+/**
+ * Módulo principal de la aplicación que orquesta la carga de los demás módulos,
+ * configuración de base de datos y proveedores compartidos.
+ */
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -61,8 +65,4 @@ import { DatabaseSeederService } from './infrastructure/database/database-seeder
   providers: [DatabaseSeederService],
 })
 
-/**
- * Módulo principal de la aplicación que orquesta la carga de los demás módulos,
- * configuración de base de datos y proveedores compartidos.
- */
 export class AppModule {}
