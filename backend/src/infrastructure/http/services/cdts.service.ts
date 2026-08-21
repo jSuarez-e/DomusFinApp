@@ -41,12 +41,12 @@ export class CdtsService {
     // 2. Public CDTs in their household where sharedWith is empty (shared with everyone) OR includes their userId.
     const query = this.cdtsRepository.createQueryBuilder('cdt')
       .leftJoinAndSelect('cdt.owner', 'owner')
-      .where('cdt.household_id = :householdId', { householdId })
+      .where('cdt.householdId = :householdId', { householdId })
       .andWhere(
-        '(cdt.owner_id = :userId OR (cdt.is_public = true AND (cdt.shared_with IS NULL OR cdt.shared_with = "" OR cdt.shared_with LIKE :userIdPattern)))',
-        { userId, userIdPattern: `%${userId}%` }
+        '(cdt.ownerId = :userId OR (cdt.isPublic = :isPublic AND (cdt.sharedWith IS NULL OR cdt.sharedWith = "" OR cdt.sharedWith LIKE :userIdPattern)))',
+        { userId, isPublic: true, userIdPattern: `%${userId}%` }
       )
-      .orderBy('cdt.created_at', 'DESC');
+      .orderBy('cdt.createdAt', 'DESC');
 
     return await query.getMany();
   }

@@ -33,9 +33,15 @@ export class CdtDbEntity {
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
+  @Column({ name: 'owner_id' })
+  ownerId: number;
+
   @ManyToOne(() => UserDbEntity)
   @JoinColumn({ name: 'owner_id' })
   owner: UserDbEntity;
+
+  @Column({ name: 'household_id' })
+  householdId: number;
 
   @ManyToOne(() => HouseholdDbEntity, (household) => household.cdts)
   @JoinColumn({ name: 'household_id' })
