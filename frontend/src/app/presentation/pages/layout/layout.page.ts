@@ -47,7 +47,8 @@ import {
   sunnyOutline,
   moonOutline,
   rocketOutline,
-  headsetOutline
+  headsetOutline,
+  documentTextOutline
 } from 'ionicons/icons';
 import { AuthService } from '../../../core/services/auth.service';
 import { ThemeService } from '../../../core/services/theme.service';
@@ -126,7 +127,8 @@ export class LayoutPage implements OnInit {
       sunnyOutline,
       moonOutline,
       rocketOutline,
-      headsetOutline
+      headsetOutline,
+      documentTextOutline
     });
   }
 

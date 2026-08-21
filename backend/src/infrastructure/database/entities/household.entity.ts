@@ -3,6 +3,7 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany } f
 import { UserDbEntity } from './user.entity';
 import { ExpenseDbEntity } from './expense.entity';
 import { CategoryDbEntity } from './category.entity';
+import { CdtDbEntity } from './cdt.entity';
 
 @Entity('households')
 export class HouseholdDbEntity {
@@ -26,4 +27,7 @@ export class HouseholdDbEntity {
 
   @OneToMany(() => ExpenseDbEntity, (expense) => expense.household)
   expenses: ExpenseDbEntity[];
+
+  @OneToMany(() => CdtDbEntity, (cdt) => cdt.household)
+  cdts: CdtDbEntity[];
 }

@@ -145,6 +145,41 @@
       </ion-card-content>
     </ion-card>
 
+    <!-- 5.5 CDTs Próximos a Vencer (Solo si hay) -->
+    @if (expiringCdts().length > 0) {
+      <ion-card class="dashboard-card full-card list-card">
+        <ion-card-content>
+          <div class="card-title-group list-header" style="justify-content: space-between; display: flex;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <ion-icon name="document-text-outline" class="card-icon card-icon--danger"></ion-icon>
+              <span class="card-title">CDTS PRÓXIMOS A VENCER</span>
+            </div>
+            <ion-badge color="danger" class="header-badge">{{ expiringCdts().length }}</ion-badge>
+          </div>
+          
+          <ion-list lines="none" class="dashboard-list">
+            @for (cdt of expiringCdts(); track cdt.id) {
+              <ion-item class="dashboard-item">
+                <div slot="start" class="icon-circle icon-circle-private" style="background: rgba(var(--ion-color-danger-rgb), 0.1); color: var(--ion-color-danger);">
+                  <ion-icon name="alert-circle-outline"></ion-icon>
+                </div>
+                <ion-label>
+                  <h3 class="item-title">{{ cdt.bankName }}</h3>
+                  <p class="item-subtitle">Plazo: {{ cdt.termDays }} días</p>
+                </ion-label>
+                <div slot="end" style="text-align: right;">
+                  <span class="item-value u-text-danger">{{ cdt.initialAmount | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+                </div>
+              </ion-item>
+              @if (cdt.id !== expiringCdts()[expiringCdts().length - 1].id) {
+                <hr>
+              }
+            }
+          </ion-list>
+        </ion-card-content>
+      </ion-card>
+    }
+
     <!-- 6. Créditos -->
     <ion-card class="dashboard-card full-card list-card">
       <ion-card-content>

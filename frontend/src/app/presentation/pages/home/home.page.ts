@@ -68,6 +68,8 @@ import { TransactionEventService } from '../../../core/services/transaction-even
 import { Movement, MonthlySummaryDto } from '@shared/index';
 import { ListHeaderComponent } from '../../../shared/components/list-header/list-header.component';
 import { SavingsItemComponent } from '../../../shared/components/savings-item/savings-item.component';
+import { CdtService } from '../../../core/services/cdt.service';
+import { Cdt } from '@shared/models/cdts/cdt.interface';
 
 /**
  * @class HomePage
@@ -116,6 +118,7 @@ export class HomePage implements OnInit {
   public summaryData = signal<MonthlySummaryDto | null>(null);
   public dashboardData = signal<{ total_liquidity: number; total_debt: number; monthly_budget_remaining: number } | null>(null);
   public availableMonths: { value: string; label: string }[] = [];
+  public expiringCdts = signal<Cdt[]>([]);
 
   // Theme support
   public isDarkTheme = this.themeService.isDark;
@@ -170,6 +173,7 @@ export class HomePage implements OnInit {
     private readonly accountService: AccountService,
     private readonly creditCardService: CreditCardService,
     private readonly savingsService: SavingsService,
+    private readonly cdtService: CdtService,
     private readonly themeService: ThemeService,
     private readonly transactionEventService: TransactionEventService,
     private readonly modalCtrl: ModalController
@@ -213,6 +217,7 @@ export class HomePage implements OnInit {
         // Also reload accounts and credit cards to update mini-cards
         this.accountService.loadAccounts(true);
         this.creditCardService.loadCreditCards(true);
+        this.loadExpiringCdts();
       }
     });
   }
@@ -227,7 +232,8 @@ export class HomePage implements OnInit {
     await Promise.all([
       this.accountService.loadAccounts(true),
       this.creditCardService.loadCreditCards(true),
-      this.savingsService.loadSavingsGoals(true)
+      this.savingsService.loadSavingsGoals(true),
+      this.loadExpiringCdts()
     ]);
   }
 
@@ -249,6 +255,22 @@ export class HomePage implements OnInit {
   /**
    * Loads the financial summary and dashboard metrics for the selected month.
    */
+  public async loadExpiringCdts() {
+    try {
+      const cdts = await this.cdtService.getCdts();
+      const now = new Date().getTime();
+      const expiring = cdts.filter(c => {
+        const created = new Date(c.createdAt).getTime();
+        const maturity = created + c.termDays * 24 * 60 * 60 * 1000;
+        const diffDays = Math.ceil((maturity - now) / (1000 * 60 * 60 * 24));
+        return diffDays >= 0 && diffDays <= 10;
+      });
+      this.expiringCdts.set(expiring);
+    } catch (e) {
+      console.error('Failed to load expiring CDTs', e);
+    }
+  }
+
   public loadDashboardData() {
     const currentYear = new Date().getFullYear();
     const queryMonth = `${currentYear}-${this.selectedMonth()}`;

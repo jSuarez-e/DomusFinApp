@@ -1,0 +1,77 @@
+/* frontend/src/app/shared/components/cdt-item/cdt-item.component.scss */
+.cdt-item {
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  --background: transparent;
+  margin-bottom: 8px;
+
+  &__icon-wrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: 16px;
+    background: rgba(var(--ion-color-primary-rgb), 0.1);
+    color: var(--ion-color-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-right: 16px;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+
+  &__bank {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--ion-text-color);
+  }
+
+  &__badges {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__privacy-icon {
+    font-size: 14px;
+    color: var(--ion-color-medium);
+  }
+
+  &__alert-badge {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    padding: 4px 8px;
+    border-radius: 8px;
+    
+    ion-icon {
+      font-size: 12px;
+    }
+  }
+
+  &__amount {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--ion-color-primary);
+    margin: 0 0 2px 0;
+  }
+
+  &__meta {
+    font-size: 0.8rem;
+    color: var(--ion-color-medium);
+    margin: 0;
+  }
+
+  &__action-btn {
+    --color: var(--ion-color-primary);
+    font-weight: 600;
+    text-transform: none;
+  }
+}

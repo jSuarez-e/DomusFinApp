@@ -1,0 +1,227 @@
+<!-- frontend/src/app/presentation/pages/cdts/cdts.page.html -->
+<ion-header [translucent]="true">
+  <ion-toolbar class="glass-toolbar">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Certificados (CDTs)</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="dashboard-content">
+  <div class="dashboard-container">
+    <!-- Total Amount Summary Card -->
+    <ion-card class="dashboard-card full-card">
+      <ion-card-content class="summary-card-content">
+        <div class="card-title-group summary-title-group">
+          <ion-icon name="document-text-outline" class="card-icon"></ion-icon>
+          <span class="card-title">INVERSIÓN TOTAL EN CDTS</span>
+        </div>
+        <div class="cdts-summary__value text-success">
+          {{ totalAmount() | currency:'COP':'symbol-narrow':'1.0-0' }}
+        </div>
+        <div class="cdts-summary__subtitle">
+          Capital combinado en certificados activos
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- CDTs List Card -->
+    <ion-card class="dashboard-card full-card list-card">
+      <ion-card-content>
+        <div class="card-title-group list-header">
+          <div class="list-header__title-group">
+            <ion-icon name="business-outline" class="card-icon"></ion-icon>
+            <span class="card-title">MIS CDTS</span>
+          </div>
+          <ion-badge color="primary" class="header-badge">{{ store.cdts().length }}</ion-badge>
+        </div>
+        
+        <ion-list class="dashboard-list" lines="none">
+          @if (store.cdts().length === 0 && !store.isLoading()) {
+            <div class="empty-state">
+              <div class="empty-state-icon-wrapper">
+                <ion-icon name="document-text-outline"></ion-icon>
+              </div>
+              <h3 class="empty-state-title">Sin CDTs</h3>
+              <p class="empty-state-desc">No tienes Certificados de Depósito a Término registrados. Añade uno para hacerle seguimiento.</p>
+              <ion-button (click)="openCreateModal()">
+                <ion-icon name="add-outline" slot="start"></ion-icon>
+                Crear CDT
+              </ion-button>
+            </div>
+          }
+
+          @for (cdt of store.cdts(); track cdt.id) {
+            <app-cdt-item
+              [cdt]="cdt"
+              (onViewDetails)="openDetailsModal($event)">
+            </app-cdt-item>
+            @if (cdt.id !== store.cdts()[store.cdts().length - 1].id) {
+              <hr>
+            }
+          }
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" class="home-fab">
+    <ion-fab-button (click)="openCreateModal()">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>
+
+<!-- Create CDT Modal -->
+<ion-modal [isOpen]="isCreateModalOpen()" (didDismiss)="closeCreateModal()" class="cdts-modal">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar class="cdts-modal__toolbar">
+        <ion-title>Registrar CDT</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="closeCreateModal()">
+            <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="cdts-modal__content">
+      <div class="cdts-modal__form-container">
+        <form [formGroup]="cdtForm" (ngSubmit)="handleCreate()">
+          
+          <div class="cdts-form__field">
+            <label class="cdts-form__label">Entidad Bancaria</label>
+            <div class="cdts-form__input-wrapper">
+              <ion-icon name="business-outline" class="cdts-form__icon"></ion-icon>
+              <ion-input type="text" placeholder="Ej. Bancolombia" formControlName="bankName" class="cdts-form__input"></ion-input>
+            </div>
+          </div>
+
+          <div class="cdts-form__field">
+            <label class="cdts-form__label">Valor de Apertura ($)</label>
+            <div class="cdts-form__input-wrapper">
+              <ion-icon name="cash-outline" class="cdts-form__icon"></ion-icon>
+              <ion-input type="number" placeholder="0.00" formControlName="initialAmount" class="cdts-form__input"></ion-input>
+            </div>
+          </div>
+
+          <div class="cdts-form__field">
+            <label class="cdts-form__label">Tasa Pactada (%)</label>
+            <div class="cdts-form__input-wrapper">
+              <ion-icon name="trending-up-outline" class="cdts-form__icon"></ion-icon>
+              <ion-input type="number" step="0.01" placeholder="Ej. 10.5" formControlName="rateUi" class="cdts-form__input"></ion-input>
+            </div>
+          </div>
+
+          <div class="cdts-form__field">
+            <label class="cdts-form__label">Plazo (Días)</label>
+            <div class="cdts-form__input-wrapper">
+              <ion-icon name="calendar-outline" class="cdts-form__icon"></ion-icon>
+              <ion-input type="number" placeholder="Ej. 90" formControlName="termDays" class="cdts-form__input"></ion-input>
+            </div>
+          </div>
+
+          <div class="cdts-form__field">
+            <label class="cdts-form__label">Pago de Intereses</label>
+            <div class="cdts-form__input-wrapper">
+              <ion-icon name="time-outline" class="cdts-form__icon"></ion-icon>
+              <ion-select interface="popover" formControlName="paymentType" class="cdts-form__select">
+                <ion-select-option [value]="CdtPaymentType.AT_MATURITY">Al Vencimiento</ion-select-option>
+                <ion-select-option [value]="CdtPaymentType.MONTHLY">Mensual</ion-select-option>
+              </ion-select>
+            </div>
+          </div>
+
+          <div class="cdts-form__field cdts-form__field--toggle">
+            <div class="cdts-form__toggle-wrapper">
+              <div class="cdts-form__toggle-texts">
+                <span class="cdts-form__toggle-title">Hacer Público</span>
+                <span class="cdts-form__toggle-desc">Si lo activas, los miembros del hogar podrán verlo (modo lectura).</span>
+              </div>
+              <ion-toggle formControlName="isPublic" color="primary"></ion-toggle>
+            </div>
+          </div>
+
+          <ion-button type="submit" expand="block" class="cdts-form__submit" [disabled]="cdtForm.invalid || store.isLoading()">
+            <ion-icon name="checkmark-outline" slot="start"></ion-icon>
+            Guardar CDT
+          </ion-button>
+        </form>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>
+
+<!-- CDT Details Modal -->
+<ion-modal [isOpen]="isDetailsModalOpen()" (didDismiss)="closeDetailsModal()" class="cdts-details-modal">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar class="cdts-modal__toolbar">
+        <ion-title>Detalles del CDT</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="closeDetailsModal()">
+            <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="cdts-modal__content">
+      @if (store.selectedCdt()) {
+        <div class="cdts-details-container">
+          <div class="cdts-details-header">
+            <h2>{{ store.selectedCdt()?.bankName }}</h2>
+            <p class="cdts-details-amount">{{ store.selectedCdt()?.initialAmount | currency:'COP':'symbol-narrow':'1.0-0' }}</p>
+          </div>
+
+          <ion-card class="details-card">
+            <ion-card-content>
+              <div class="details-row">
+                <span class="details-label">Tasa Pactada</span>
+                <span class="details-value">{{ store.selectedCdt()?.rate | percent:'1.2-2' }}</span>
+              </div>
+              <div class="details-row">
+                <span class="details-label">Plazo</span>
+                <span class="details-value">{{ store.selectedCdt()?.termDays }} días</span>
+              </div>
+              <div class="details-row">
+                <span class="details-label">Fecha Apertura</span>
+                <span class="details-value">{{ store.selectedCdt()?.createdAt | date:'shortDate' }}</span>
+              </div>
+              <div class="details-row highlight-row">
+                <span class="details-label">Vencimiento</span>
+                <span class="details-value">
+                  {{ detailsMaturityDate() | date:'shortDate' }}
+                  @if (detailsDaysToMaturity() <= 10) {
+                    <ion-badge color="danger" class="expiration-badge">{{ detailsDaysToMaturity() }} días</ion-badge>
+                  }
+                </span>
+              </div>
+            </ion-card-content>
+          </ion-card>
+
+          <h3 class="section-title">Cálculo de Rendimientos Estimados</h3>
+          <ion-card class="details-card calculation-card">
+            <ion-card-content>
+              <div class="details-row">
+                <span class="details-label">Rendimiento Bruto</span>
+                <span class="details-value text-success">+{{ grossReturns() | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+              </div>
+              <div class="details-row">
+                <span class="details-label">Retefuente (4%)</span>
+                <span class="details-value text-danger">-{{ taxDeduction() | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+              </div>
+              <hr>
+              <div class="details-row total-row">
+                <span class="details-label">Rendimiento Neto</span>
+                <span class="details-value text-primary">{{ netReturns() | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </div>
+      }
+    </ion-content>
+  </ng-template>
+</ion-modal>

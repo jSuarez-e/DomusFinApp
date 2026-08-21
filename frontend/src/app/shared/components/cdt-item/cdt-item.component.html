@@ -1,0 +1,37 @@
+<!-- frontend/src/app/shared/components/cdt-item/cdt-item.component.html -->
+<ion-item class="cdt-item" lines="none">
+  <div class="cdt-item__icon-wrapper" slot="start">
+    <ion-icon name="document-text-outline"></ion-icon>
+  </div>
+  
+  <ion-label class="cdt-item__label">
+    <div class="cdt-item__header">
+      <h3 class="cdt-item__bank">{{ cdt().bankName }}</h3>
+      <div class="cdt-item__badges">
+        @if (cdt().isPublic) {
+          <ion-icon name="globe-outline" class="cdt-item__privacy-icon"></ion-icon>
+        } @else {
+          <ion-icon name="lock-closed-outline" class="cdt-item__privacy-icon"></ion-icon>
+        }
+        
+        @if (isExpiringSoon()) {
+          <ion-badge color="danger" class="cdt-item__alert-badge">
+            <ion-icon name="alert-circle-outline"></ion-icon>
+            {{ daysToMaturity() }} días
+          </ion-badge>
+        }
+      </div>
+    </div>
+    
+    <div class="cdt-item__details">
+      <p class="cdt-item__amount">{{ cdt().initialAmount | currency:'COP':'symbol-narrow':'1.0-0' }}</p>
+      <p class="cdt-item__meta">
+        Tasa: {{ cdt().rate | percent:'1.2-2' }} | Vence: {{ maturityDate() | date:'shortDate' }}
+      </p>
+    </div>
+  </ion-label>
+
+  <ion-button fill="clear" slot="end" (click)="onViewDetails.emit(cdt())" class="cdt-item__action-btn">
+    Ver
+  </ion-button>
+</ion-item>

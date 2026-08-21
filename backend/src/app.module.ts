@@ -14,6 +14,7 @@ import { AccountDbEntity } from './infrastructure/database/entities/account.enti
 import { CreditCardDbEntity } from './infrastructure/database/entities/credit-card.entity';
 import { SavingsGoalDbEntity } from './infrastructure/database/entities/savings-goal.entity';
 import { LoanDbEntity } from './infrastructure/database/entities/loan.entity';
+import { CdtDbEntity } from './infrastructure/database/entities/cdt.entity';
 import { MovementsModule } from './infrastructure/http/modules/movements.module';
 import { AccountsModule } from './infrastructure/http/modules/accounts.module';
 import { CreditCardsModule } from './infrastructure/http/modules/credit-cards.module';
@@ -24,6 +25,7 @@ import { ReportsModule } from './infrastructure/http/modules/reports.module';
 import { SavingsModule } from './infrastructure/http/modules/savings.module';
 import { LoansModule } from './infrastructure/http/modules/loans.module';
 import { DashboardModule } from './infrastructure/http/modules/dashboard.module';
+import { CdtsModule } from './infrastructure/http/modules/cdts.module';
 import { DatabaseSeederService } from './infrastructure/database/database-seeder.service';
 
 @Module({
@@ -35,7 +37,7 @@ import { DatabaseSeederService } from './infrastructure/database/database-seeder
       username: process.env.DB_USERNAME ?? 'domusfin_user',
       password: process.env.DB_PASSWORD ?? 'domusfin_password',
       database: process.env.DB_DATABASE ?? 'domusfin_db',
-      entities: [UserDbEntity, HouseholdDbEntity, CategoryDbEntity, ExpenseDbEntity, PaymentMethodDbEntity, MovementDbEntity, AccountDbEntity, CreditCardDbEntity, SavingsGoalDbEntity, LoanDbEntity], // Explicitly declare entities for Webpack bundle compatibility
+      entities: [UserDbEntity, HouseholdDbEntity, CategoryDbEntity, ExpenseDbEntity, PaymentMethodDbEntity, MovementDbEntity, AccountDbEntity, CreditCardDbEntity, SavingsGoalDbEntity, LoanDbEntity, CdtDbEntity], // Explicitly declare entities for Webpack bundle compatibility
       synchronize: process.env.DB_SYNC === 'true', //synchronize: process.env.NODE_ENV !== 'production', // Disable in prod or variable in false in PROD
       logging: process.env.NODE_ENV !== 'production',
     }),
@@ -53,6 +55,7 @@ import { DatabaseSeederService } from './infrastructure/database/database-seeder
     SavingsModule,
     LoansModule,
     DashboardModule,
+    CdtsModule,
   ],
   controllers: [],
   providers: [DatabaseSeederService],
