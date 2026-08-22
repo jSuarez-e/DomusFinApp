@@ -16,7 +16,7 @@ import { CommonModule } from '@angular/common';
       <span class="legend-value">{{ amount() | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
     </div>
   `,
-  styleUrls: ['./report-legend.component.css'],
+  styleUrls: ['./report-legend.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ReportLegendComponent {

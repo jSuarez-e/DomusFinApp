@@ -43,7 +43,7 @@ import { RegisterDto } from "@shared/index";
 @Component({
   selector: "app-register",
   templateUrl: "./register.page.html",
-  styleUrls: ["./register.page.css"],
+  styleUrls: ['./register.page.scss'],
   standalone: true,
   imports: [
     ReactiveFormsModule,

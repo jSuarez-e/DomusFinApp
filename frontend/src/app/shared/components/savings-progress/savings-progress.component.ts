@@ -32,7 +32,7 @@ import { SavingsGoal } from "@shared/index";
       </div>
     </div>
   `,
-  styleUrls: ["./savings-progress.component.css"],
+  styleUrls: ['./savings-progress.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SavingsProgressComponent {

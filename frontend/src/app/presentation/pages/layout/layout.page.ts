@@ -64,7 +64,7 @@ import { MenuOptionItemComponent } from "../../../shared/components/menu-option-
 @Component({
   selector: "app-layout",
   templateUrl: "./layout.page.html",
-  styleUrls: ["./layout.page.css"],
+  styleUrls: ['./layout.page.scss'],
   standalone: true,
   imports: [
     RouterModule,

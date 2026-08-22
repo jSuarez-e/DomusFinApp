@@ -16,7 +16,7 @@ import { IonItem, IonIcon, IonLabel } from '@ionic/angular';
       <ion-label>{{ label() }}</ion-label>
     </ion-item>
   `,
-  styleUrls: ['./menu-option-item.component.css'],
+  styleUrls: ['./menu-option-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MenuOptionItemComponent {

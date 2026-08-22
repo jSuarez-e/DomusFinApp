@@ -18,7 +18,7 @@ import { IonIcon } from "@ionic/angular";
       <p class="auth-subtitle">{{ subtitle() }}</p>
     </div>
   `,
-  styleUrls: ["./auth-header.component.css"],
+  styleUrls: ['./auth-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthHeaderComponent {

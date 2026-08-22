@@ -16,7 +16,7 @@ import { IonIcon } from "@ionic/angular";
       <p class="empty-state__message">{{ message() }}</p>
     </div>
   `,
-  styleUrls: ["./app-empty-state.component.css"],
+  styleUrls: ['./app-empty-state.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppEmptyStateComponent {

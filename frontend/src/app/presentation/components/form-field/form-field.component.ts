@@ -7,7 +7,7 @@ import { IonIcon } from '@ionic/angular';
   imports: [
     IonIcon
   ],
-  styleUrl: './form-field.component.css',
+  styleUrl: './form-field.component.scss',
   template: `
     <div class="input-wrapper">
       <label class="input-label">{{ label }}</label>

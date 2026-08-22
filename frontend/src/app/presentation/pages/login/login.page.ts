@@ -41,7 +41,7 @@ import { LoginStore } from "./login.store";
 @Component({
   selector: "app-login",
   templateUrl: "./login.page.html",
-  styleUrls: ["./login.page.css"],
+  styleUrls: ['./login.page.scss'],
   standalone: true,
   imports: [
     ReactiveFormsModule,

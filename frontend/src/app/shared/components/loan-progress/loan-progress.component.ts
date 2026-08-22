@@ -20,7 +20,7 @@ import { Loan } from '@shared/index';
       </div>
     </div>
   `,
-  styleUrls: ['./loan-progress.component.css'],
+  styleUrls: ['./loan-progress.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoanProgressComponent {

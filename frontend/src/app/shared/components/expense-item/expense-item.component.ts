@@ -17,7 +17,7 @@ import { lockClosedOutline, eyeOffOutline, globeOutline } from 'ionicons/icons';
 @Component({
   selector: 'app-expense-item',
   templateUrl: './expense-item.component.html',
-  styleUrls: ['./expense-item.component.css'],
+  styleUrls: ['./expense-item.component.scss'],
   standalone: true,
   imports: [
     CommonModule,

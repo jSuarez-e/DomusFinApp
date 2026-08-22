@@ -43,7 +43,7 @@ import { ResetPasswordStore } from "./reset-password.store";
 @Component({
   selector: "app-reset-password",
   templateUrl: "./reset-password.page.html",
-  styleUrls: ["./reset-password.page.css"],
+  styleUrls: ['./reset-password.page.scss'],
   standalone: true,
   imports: [
     ReactiveFormsModule,

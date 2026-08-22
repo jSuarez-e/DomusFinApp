@@ -7,7 +7,7 @@
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "css"
+          "style": "scss"
         }
       },
       "root": "",
@@ -33,7 +33,7 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/global.css"],
+            "styles": ["src/global.scss"],
             "scripts": []
           },
           "configurations": {
@@ -83,7 +83,7 @@
           "options": {
             "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "tsconfig.spec.json",
-            "styles": ["src/global.css"],
+            "styles": ["src/global.scss"],
             "scripts": [],
             "assets": [
               {

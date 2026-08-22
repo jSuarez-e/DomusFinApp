@@ -69,7 +69,7 @@ import { Category } from "@shared/index";
       }
     </ion-item>
   `,
-  styleUrls: ["./category-list-item.component.css"],
+  styleUrls: ['./category-list-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CategoryListItemComponent {

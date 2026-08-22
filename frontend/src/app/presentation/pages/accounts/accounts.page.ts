@@ -55,7 +55,7 @@ import { BlockScientificNotationDirective } from '../../directives/block-scienti
 @Component({
   selector: 'app-accounts',
   templateUrl: './accounts.page.html',
-  styleUrls: ['./accounts.page.css'],
+  styleUrls: ['./accounts.page.scss'],
   standalone: true,
   imports: [
     CommonModule,

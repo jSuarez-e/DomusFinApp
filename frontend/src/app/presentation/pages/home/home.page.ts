@@ -78,7 +78,7 @@ import { Cdt } from '@shared/models/cdts/cdt.interface';
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
-  styleUrls: ['./home.page.css'],
+  styleUrls: ['./home.page.scss'],
   standalone: true,
   imports: [
     CommonModule,

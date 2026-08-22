@@ -42,7 +42,7 @@ export interface MemberData {
       }
     </ion-item>
   `,
-  styleUrls: ['../category-list-item/category-list-item.component.css'],
+  styleUrls: ['../category-list-item/category-list-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 

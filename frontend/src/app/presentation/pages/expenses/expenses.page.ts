@@ -35,7 +35,7 @@ import { ExpensesStore } from './expenses.store';
 @Component({
   selector: 'app-expenses',
   templateUrl: './expenses.page.html',
-  styleUrls: ['./expenses.page.css'],
+  styleUrls: ['./expenses.page.scss'],
   standalone: true,
   imports: [
     CommonModule,

@@ -59,7 +59,7 @@ import { LoanProgressComponent } from '../../../shared/components/loan-progress/
 @Component({
   selector: 'app-loans',
   templateUrl: './loans.page.html',
-  styleUrls: ['./loans.page.css'],
+  styleUrls: ['./loans.page.scss'],
   standalone: true,
   imports: [
     CommonModule,

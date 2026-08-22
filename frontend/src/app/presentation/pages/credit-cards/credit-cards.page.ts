@@ -62,7 +62,7 @@ import { CreditCardUiComponent } from '../../../shared/components/credit-card-ui
 @Component({
   selector: 'app-credit-cards',
   templateUrl: './credit-cards.page.html',
-  styleUrls: ['./credit-cards.page.css'],
+  styleUrls: ['./credit-cards.page.scss'],
   standalone: true,
   imports: [
     CommonModule,

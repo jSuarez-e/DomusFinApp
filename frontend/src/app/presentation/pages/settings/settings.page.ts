@@ -105,7 +105,7 @@ export function passwordMatchValidator(
 @Component({
   selector: "app-settings",
   templateUrl: "./settings.page.html",
-  styleUrls: ["./settings.page.css"],
+  styleUrls: ['./settings.page.scss'],
   standalone: true,
   imports: [
     ReactiveFormsModule,

@@ -81,7 +81,7 @@ import { MemberItemComponent } from "../../../shared/components/member-item/memb
 @Component({
   selector: "app-admin",
   templateUrl: "./admin.page.html",
-  styleUrls: ["./admin.page.css"],
+  styleUrls: ['./admin.page.scss'],
   standalone: true,
   imports: [
     FormsModule,

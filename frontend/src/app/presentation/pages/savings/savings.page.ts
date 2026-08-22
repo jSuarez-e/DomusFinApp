@@ -59,7 +59,7 @@ import { ListHeaderComponent } from '../../../shared/components/list-header/list
 @Component({
   selector: 'app-savings',
   templateUrl: './savings.page.html',
-  styleUrls: ['./savings.page.css'],
+  styleUrls: ['./savings.page.scss'],
   standalone: true,
   imports: [
     CommonModule,

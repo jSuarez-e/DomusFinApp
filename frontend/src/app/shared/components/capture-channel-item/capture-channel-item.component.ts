@@ -38,7 +38,7 @@ import {
       </ion-toggle>
     </ion-item>
   `,
-  styleUrls: ["./capture-channel-item.component.css"],
+  styleUrls: ['./capture-channel-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CaptureChannelItemComponent {

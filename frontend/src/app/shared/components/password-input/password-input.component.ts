@@ -53,7 +53,7 @@ import { lockClosedOutline, eyeOutline, eyeOffOutline } from "ionicons/icons";
       <ng-content></ng-content>
     </div>
   `,
-  styleUrls: ["./password-input.component.css"],
+  styleUrls: ['./password-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PasswordInputComponent {

@@ -55,7 +55,7 @@ import { ReportLegendComponent } from '../../../shared/components/report-legend/
 @Component({
   selector: 'app-reports',
   templateUrl: './reports.page.html',
-  styleUrls: ['./reports.page.css'],
+  styleUrls: ['./reports.page.scss'],
   standalone: true,
   imports: [
     CommonModule,

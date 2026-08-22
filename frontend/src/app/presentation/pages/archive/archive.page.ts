@@ -39,7 +39,7 @@ import { AppEmptyStateComponent } from '../../../shared/components/app-empty-sta
 @Component({
   selector: 'app-archive',
   templateUrl: './archive.page.html',
-  styleUrls: ['./archive.page.css'],
+  styleUrls: ['./archive.page.scss'],
   standalone: true,
   imports: [
     CommonModule,

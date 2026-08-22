@@ -35,7 +35,7 @@ import { cardOutline } from 'ionicons/icons';
       </div>
     </div>
   `,
-  styleUrls: ['./credit-card-ui.component.css'],
+  styleUrls: ['./credit-card-ui.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CreditCardUiComponent {

@@ -57,7 +57,7 @@ export const TRANSACTION_OPTIONS = [
 @Component({
   selector: 'app-transaction-form',
   templateUrl: './transaction-form.component.html',
-  styleUrls: ['./transaction-form.component.css'],
+  styleUrls: ['./transaction-form.component.scss'],
   standalone: true,
   imports: [
     CommonModule,

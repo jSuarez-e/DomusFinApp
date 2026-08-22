@@ -40,7 +40,7 @@ import { CaptureChannelItemComponent } from "../../../shared/components/capture-
 @Component({
   selector: "app-capture-settings",
   templateUrl: "./capture-settings.page.html",
-  styleUrls: ["./capture-settings.page.css"],
+  styleUrls: ['./capture-settings.page.scss'],
   standalone: true,
   imports: [
     IonContent,
