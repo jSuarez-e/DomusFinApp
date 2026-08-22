@@ -24,7 +24,7 @@ import {
   IonMenuButton,
   ToastController,
   IonButton,
-} from "@ionic/angular/standalone";
+} from "@ionic/angular";
 import { addIcons } from "ionicons";
 import {
   flashOutline,

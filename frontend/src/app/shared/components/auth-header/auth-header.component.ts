@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from "@angular/core";
 
-import { IonIcon } from "@ionic/angular/standalone";
+import { IonIcon } from "@ionic/angular";
 
 /**
  * Componente presentacional para el encabezado de las vistas de autenticación

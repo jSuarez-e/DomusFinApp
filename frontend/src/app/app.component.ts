@@ -1,6 +1,6 @@
 // frontend/src/app/app.component.ts
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { IonApp, IonRouterOutlet, Platform } from '@ionic/angular/standalone';
+import { IonApp, IonRouterOutlet, Platform } from '@ionic/angular';
 
 import { ThemeService } from './core/services/theme.service';
 import { SplashScreen } from '@capacitor/splash-screen';

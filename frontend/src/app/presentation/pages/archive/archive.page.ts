@@ -20,7 +20,7 @@ import {
   IonSegmentButton,
   IonBadge,
   ToastController
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { 
   archiveOutline, 

@@ -1,7 +1,7 @@
 // frontend/src/app/presentation/components/password-strength/password-strength.component.ts
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonText } from '@ionic/angular/standalone';
+import { IonText } from '@ionic/angular';
 
 @Component({
   selector: 'app-password-strength',

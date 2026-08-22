@@ -10,7 +10,7 @@ import {
   IonIcon,
   IonLabel,
   IonToggle,
-} from "@ionic/angular/standalone";
+} from "@ionic/angular";
 
 /**
  * Componente presentacional para un canal de captura.

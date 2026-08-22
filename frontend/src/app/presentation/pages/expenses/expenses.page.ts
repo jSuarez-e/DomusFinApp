@@ -23,7 +23,7 @@ import {
   IonMenuButton,
   IonButtons,
   ModalController
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { lockClosedOutline, addOutline, walletOutline, eyeOffOutline, globeOutline, listOutline } from 'ionicons/icons';
 import { HouseholdService } from '../../../core/services/household.service';

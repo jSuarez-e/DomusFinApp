@@ -7,8 +7,8 @@ import { Directive, HostListener } from '@angular/core';
 })
 export class BlockScientificNotationDirective {
   @HostListener('keydown', ['$event'])
-  onKeyDown(event: KeyboardEvent) {
-    if (['e', 'E', '+', '-'].includes(event.key)) {
+  onKeyDown(event: Event) {
+    if (event instanceof KeyboardEvent && ['e', 'E', '+', '-'].includes(event.key)) {
       event.preventDefault();
     }
   }

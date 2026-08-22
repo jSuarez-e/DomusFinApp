@@ -20,7 +20,7 @@ import {
   IonIcon,
   IonLabel,
   AlertController,
-} from "@ionic/angular/standalone";
+} from "@ionic/angular";
 import { addIcons } from "ionicons";
 import { mailOutline, arrowBackOutline, keyOutline } from "ionicons/icons";
 import { AuthHeaderComponent } from "../../../shared/components/auth-header/auth-header.component";

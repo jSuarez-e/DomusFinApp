@@ -1,11 +1,11 @@
 import { Component, Input } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import { IonIcon } from '@ionic/angular';
 
 @Component({
   selector: 'dma-form-field',
   standalone: true,
   imports: [
-    IonicModule
+    IonIcon
   ],
   styleUrl: './form-field.component.css',
   template: `

@@ -31,7 +31,7 @@ import {
   IonToggle,
   ToastController,
   IonMenuButton
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import {
   addOutline,

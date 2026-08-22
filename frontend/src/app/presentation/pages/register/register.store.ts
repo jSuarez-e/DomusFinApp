@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { signalStore, withState, withMethods, patchState } from '@ngrx/signals';
 import { AuthService } from '../../../core/services/auth.service';
 import { Router } from '@angular/router';
-import { AlertController } from '@ionic/angular/standalone';
+import { AlertController } from '@ionic/angular';
 import { RegisterDto } from '@shared/index';
 
 /** Interface del estado local de Registro */

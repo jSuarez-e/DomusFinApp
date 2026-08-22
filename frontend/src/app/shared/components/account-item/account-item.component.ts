@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Account, AccountType } from '@shared/index';
-import { IonItemSliding, IonItem, IonItemOptions, IonItemOption, IonBadge, IonIcon, IonLabel } from '@ionic/angular/standalone';
+import { IonItemSliding, IonItem, IonItemOptions, IonItemOption, IonBadge, IonIcon, IonLabel } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { lockClosedOutline, peopleOutline, trashOutline, walletOutline, cardOutline, cashOutline, phonePortraitOutline } from 'ionicons/icons';
 

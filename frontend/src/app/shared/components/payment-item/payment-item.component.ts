@@ -10,7 +10,7 @@ import {
   IonLabel,
   IonButton,
   IonIcon,
-} from "@ionic/angular/standalone";
+} from "@ionic/angular";
 import { addIcons } from "ionicons";
 import { pencilOutline, trashOutline, cardOutline } from "ionicons/icons";
 import { PaymentMethod } from "@shared/index";

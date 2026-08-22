@@ -6,7 +6,7 @@ import {
 } from "@angular/core";
 
 import { FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { IonIcon, IonInput, IonButton } from "@ionic/angular/standalone";
+import { IonIcon, IonInput, IonButton } from "@ionic/angular";
 import { addIcons } from "ionicons";
 import { lockClosedOutline, eyeOutline, eyeOffOutline } from "ionicons/icons";
 

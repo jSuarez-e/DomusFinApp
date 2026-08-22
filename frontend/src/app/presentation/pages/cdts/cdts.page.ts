@@ -6,7 +6,7 @@ import {
   IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonMenuButton,
   IonCard, IonCardContent, IonIcon, IonBadge, IonList, IonButton, IonFab, IonFabButton,
   IonModal, IonInput, IonSelect, IonSelectOption, IonToggle, IonLabel
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { 
   documentTextOutline, addOutline, closeOutline, businessOutline, cashOutline, 

@@ -6,7 +6,7 @@ import {
   IonLabel,
   IonBadge,
   IonIcon
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { lockClosedOutline, eyeOffOutline, globeOutline } from 'ionicons/icons';
 

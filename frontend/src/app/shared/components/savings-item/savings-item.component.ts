@@ -1,13 +1,12 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
 import { SavingsGoal } from '@shared/index';
 import { SavingsProgressComponent } from '../savings-progress/savings-progress.component';
 
 @Component({
   selector: 'app-savings-item',
   standalone: true,
-  imports: [CommonModule, IonicModule, SavingsProgressComponent],
+  imports: [CommonModule, SavingsProgressComponent],
   template: `
     <div class="savings-item">
       <div class="savings-item__header">

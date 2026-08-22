@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { IonItem, IonIcon, IonLabel } from '@ionic/angular/standalone';
+import { IonItem, IonIcon, IonLabel } from '@ionic/angular';
 
 /**
  * Componente reutilizable para opciones del menú lateral.

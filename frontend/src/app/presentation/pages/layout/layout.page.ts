@@ -33,7 +33,7 @@ import {
   AlertController,
   IonCard,
   IonCardContent,
-} from "@ionic/angular/standalone";
+} from "@ionic/angular";
 import { addIcons } from "ionicons";
 import {
   homeOutline,

@@ -45,7 +45,7 @@ import {
   IonSegmentButton,
   IonModal,
   IonAlert,
-} from "@ionic/angular/standalone";
+} from "@ionic/angular";
 import { addIcons } from "ionicons";
 import {
   lockClosedOutline,

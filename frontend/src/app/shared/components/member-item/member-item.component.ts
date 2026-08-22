@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonItem, IonLabel, IonButton, IonIcon } from '@ionic/angular/standalone';
+import { IonItem, IonLabel, IonButton, IonIcon } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { personOutline, swapHorizontalOutline, trashOutline } from 'ionicons/icons';
 

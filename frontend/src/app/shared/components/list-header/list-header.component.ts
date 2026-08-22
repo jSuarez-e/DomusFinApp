@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, input } from "@angular/core";
 
-import { IonicModule } from "@ionic/angular";
+import { IonIcon } from "@ionic/angular";
 
 @Component({
   selector: "app-list-header",
   standalone: true,
-  imports: [IonicModule],
+  imports: [IonIcon],
   template: `
     <div class="list-header" [class.list-header--spaced]="spaced()">
       @if (icon()) {

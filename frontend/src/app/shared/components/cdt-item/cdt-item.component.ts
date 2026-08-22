@@ -1,7 +1,7 @@
 // frontend/src/app/shared/components/cdt-item/cdt-item.component.ts
 import { Component, ChangeDetectionStrategy, input, output, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonItem, IonLabel, IonIcon, IonBadge, IonButton } from '@ionic/angular/standalone';
+import { IonItem, IonLabel, IonIcon, IonBadge, IonButton } from '@ionic/angular';
 import { Cdt } from '@shared/models/cdts/cdt.interface';
 import { addIcons } from 'ionicons';
 import { documentTextOutline, alertCircleOutline, lockClosedOutline, globeOutline } from 'ionicons/icons';

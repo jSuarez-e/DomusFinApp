@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from "@angular/core";
 
-import { IonIcon } from "@ionic/angular/standalone";
+import { IonIcon } from "@ionic/angular";
 
 /**
  * Componente reutilizable para mostrar un estado vacío (Empty State)
