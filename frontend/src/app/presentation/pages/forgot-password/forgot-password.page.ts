@@ -1,34 +1,38 @@
 // frontend/src/app/presentation/pages/forgot-password/forgot-password.page.ts
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
-import { 
-  IonContent, 
-  IonCard, 
-  IonCardHeader, 
-  IonCardTitle, 
-  IonCardContent, 
-  IonButton, 
-  IonInput, 
-  IonText, 
-  IonIcon, 
+import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
+
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from "@angular/forms";
+import { Router, RouterModule } from "@angular/router";
+import {
+  IonContent,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent,
+  IonButton,
+  IonInput,
+  IonText,
+  IonIcon,
   IonLabel,
-  AlertController
-} from '@ionic/angular/standalone';
-import { addIcons } from 'ionicons';
-import { mailOutline, arrowBackOutline, keyOutline } from 'ionicons/icons';
-import { AuthHeaderComponent } from '../../../shared/components/auth-header/auth-header.component';
-import { ForgotPasswordStore } from './forgot-password.store';
-import { AuthService } from '@core/services/auth.service';
+  AlertController,
+} from "@ionic/angular/standalone";
+import { addIcons } from "ionicons";
+import { mailOutline, arrowBackOutline, keyOutline } from "ionicons/icons";
+import { AuthHeaderComponent } from "../../../shared/components/auth-header/auth-header.component";
+import { ForgotPasswordStore } from "./forgot-password.store";
+import { AuthService } from "@core/services/auth.service";
 
 @Component({
-  selector: 'app-forgot-password',
-  templateUrl: './forgot-password.page.html',
-  styleUrls: ['./forgot-password.page.css'],
+  selector: "app-forgot-password",
+  templateUrl: "./forgot-password.page.html",
+  styleUrls: ["./forgot-password.page.css"],
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     RouterModule,
     IonContent,
@@ -41,7 +45,7 @@ import { AuthService } from '@core/services/auth.service';
     IonText,
     IonIcon,
     IonLabel,
-    AuthHeaderComponent
+    AuthHeaderComponent,
   ],
   providers: [ForgotPasswordStore],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -59,7 +63,7 @@ export class ForgotPasswordPage {
     addIcons({ mailOutline, arrowBackOutline, keyOutline });
 
     this.recoveryForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]]
+      email: ["", [Validators.required, Validators.email]],
     });
   }
 

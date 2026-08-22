@@ -1,41 +1,47 @@
 // frontend/src/app/presentation/pages/layout/layout.page.ts
-import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { RouterModule } from '@angular/router';
-import { firstValueFrom } from 'rxjs';
-import { 
-  IonContent, 
-  IonHeader, 
-  IonToolbar, 
-  IonTitle, 
-  IonTabs, 
-  IonTabBar, 
-  IonTabButton, 
-  IonIcon, 
-  IonLabel, 
-  IonMenu, 
-  IonList, 
-  IonItem, 
-  IonAvatar, 
-  IonSelect, 
-  IonSelectOption, 
-  IonModal, 
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  inject,
+  signal,
+} from "@angular/core";
+
+import { HttpClient } from "@angular/common/http";
+import { RouterModule } from "@angular/router";
+import { firstValueFrom } from "rxjs";
+import {
+  IonContent,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonTabs,
+  IonTabBar,
+  IonTabButton,
+  IonIcon,
+  IonLabel,
+  IonMenu,
+  IonList,
+  IonItem,
+  IonAvatar,
+  IonSelect,
+  IonSelectOption,
+  IonModal,
   IonButton,
   IonButtons,
   MenuController,
   AlertController,
   IonCard,
-  IonCardContent
-} from '@ionic/angular/standalone';
-import { addIcons } from 'ionicons';
-import { 
-  homeOutline, 
-  barChartOutline, 
-  menuOutline, 
-  logOutOutline, 
-  settingsOutline, 
-  informationCircleOutline, 
+  IonCardContent,
+} from "@ionic/angular/standalone";
+import { addIcons } from "ionicons";
+import {
+  homeOutline,
+  barChartOutline,
+  menuOutline,
+  logOutOutline,
+  settingsOutline,
+  informationCircleOutline,
   peopleOutline,
   walletOutline,
   flashOutline,
@@ -48,20 +54,19 @@ import {
   moonOutline,
   rocketOutline,
   headsetOutline,
-  documentTextOutline
-} from 'ionicons/icons';
-import { AuthService } from '../../../core/services/auth.service';
-import { ThemeService } from '../../../core/services/theme.service';
-import { LayoutStore } from './layout.store';
-import { MenuOptionItemComponent } from '../../../shared/components/menu-option-item/menu-option-item.component';
+  documentTextOutline,
+} from "ionicons/icons";
+import { AuthService } from "../../../core/services/auth.service";
+import { ThemeService } from "../../../core/services/theme.service";
+import { LayoutStore } from "./layout.store";
+import { MenuOptionItemComponent } from "../../../shared/components/menu-option-item/menu-option-item.component";
 
 @Component({
-  selector: 'app-layout',
-  templateUrl: './layout.page.html',
-  styleUrls: ['./layout.page.css'],
+  selector: "app-layout",
+  templateUrl: "./layout.page.html",
+  styleUrls: ["./layout.page.css"],
   standalone: true,
   imports: [
-    CommonModule,
     RouterModule,
     IonContent,
     IonHeader,
@@ -83,7 +88,7 @@ import { MenuOptionItemComponent } from '../../../shared/components/menu-option-
     IonButtons,
     IonCard,
     IonCardContent,
-    MenuOptionItemComponent
+    MenuOptionItemComponent,
   ],
   providers: [LayoutStore],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -96,11 +101,11 @@ export class LayoutPage implements OnInit {
 
   // Mapeo de rutas a índices para el cutout
   private tabIndexMap: Record<string, number> = {
-    'inicio': 0,
-    'accounts': 1,
-    'expenses': 2,
-    'reports': 3,
-    'mas': 4 // The "Más" button doesn't route, but we handle its active state visually if needed, though it's usually just a trigger
+    inicio: 0,
+    accounts: 1,
+    expenses: 2,
+    reports: 3,
+    mas: 4, // The "Más" button doesn't route, but we handle its active state visually if needed, though it's usually just a trigger
   };
 
   constructor(
@@ -128,7 +133,7 @@ export class LayoutPage implements OnInit {
       moonOutline,
       rocketOutline,
       headsetOutline,
-      documentTextOutline
+      documentTextOutline,
     });
   }
 
@@ -144,15 +149,15 @@ export class LayoutPage implements OnInit {
    * Abre el menú lateral mediante el controlador.
    */
   async openMenu() {
-    await this.menuCtrl.enable(true, 'main-menu');
-    await this.menuCtrl.open('main-menu');
+    await this.menuCtrl.enable(true, "main-menu");
+    await this.menuCtrl.open("main-menu");
   }
 
   /**
    * Cierra el menú lateral.
    */
   async closeMenu() {
-    await this.menuCtrl.close('main-menu');
+    await this.menuCtrl.close("main-menu");
   }
 
   /**
@@ -204,10 +209,11 @@ export class LayoutPage implements OnInit {
   async triggerAccountSettingsAlert(): Promise<void> {
     await this.closeMenu();
     const alert = await this.alertController.create({
-      header: 'Ajustes de Cuenta',
-      message: 'La funcionalidad de actualización de perfil estará disponible en la próxima versión.',
-      buttons: ['Ok'],
-      cssClass: 'premium-alert'
+      header: "Ajustes de Cuenta",
+      message:
+        "La funcionalidad de actualización de perfil estará disponible en la próxima versión.",
+      buttons: ["Ok"],
+      cssClass: "premium-alert",
     });
     await alert.present();
   }

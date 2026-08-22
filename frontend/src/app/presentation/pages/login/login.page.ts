@@ -1,39 +1,49 @@
 // frontend/src/app/presentation/pages/login/login.page.ts
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
-import { 
-  IonContent, 
-  IonHeader, 
-  IonTitle, 
-  IonToolbar, 
-  IonCard, 
-  IonCardHeader, 
-  IonCardTitle, 
-  IonCardContent, 
-  IonButton, 
-  IonInput, 
-  IonItem, 
-  IonCheckbox, 
-  IonText, 
+import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
+
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from "@angular/forms";
+import { Router, RouterModule } from "@angular/router";
+import {
+  IonContent,
+  IonHeader,
+  IonTitle,
+  IonToolbar,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent,
+  IonButton,
+  IonInput,
+  IonItem,
+  IonCheckbox,
+  IonText,
   IonLabel,
   IonIcon,
-  ViewWillEnter
-} from '@ionic/angular/standalone';
-import { addIcons } from 'ionicons';
-import { logInOutline, personOutline, lockClosedOutline, eyeOutline, eyeOffOutline } from 'ionicons/icons';
-import { AuthHeaderComponent } from '../../../shared/components/auth-header/auth-header.component';
-import { PasswordInputComponent } from '../../../shared/components/password-input/password-input.component';
-import { LoginStore } from './login.store';
+  ViewWillEnter,
+} from "@ionic/angular/standalone";
+import { addIcons } from "ionicons";
+import {
+  logInOutline,
+  personOutline,
+  lockClosedOutline,
+  eyeOutline,
+  eyeOffOutline,
+} from "ionicons/icons";
+import { AuthHeaderComponent } from "../../../shared/components/auth-header/auth-header.component";
+import { PasswordInputComponent } from "../../../shared/components/password-input/password-input.component";
+import { LoginStore } from "./login.store";
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.page.html',
-  styleUrls: ['./login.page.css'],
+  selector: "app-login",
+  templateUrl: "./login.page.html",
+  styleUrls: ["./login.page.css"],
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     RouterModule,
     IonContent,
@@ -52,7 +62,7 @@ import { LoginStore } from './login.store';
     IonIcon,
     IonLabel,
     AuthHeaderComponent,
-    PasswordInputComponent
+    PasswordInputComponent,
   ],
   providers: [LoginStore],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -61,26 +71,33 @@ export class LoginPage implements ViewWillEnter {
   public loginForm!: FormGroup;
   public store = inject(LoginStore);
 
-  constructor(
-    private fb: FormBuilder,
-    private router: Router
-  ) {
+  constructor(private fb: FormBuilder, private router: Router) {
     // Si ya está autenticado, redirigir (se asume que AuthService u otro guard lo maneja globalmente, pero por seguridad temporal)
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem("access_token");
     if (token) {
-      this.router.navigate(['/dashboard']);
+      this.router.navigate(["/dashboard"]);
       return;
     }
 
-    addIcons({ logInOutline, personOutline, lockClosedOutline, eyeOutline, eyeOffOutline });
+    addIcons({
+      logInOutline,
+      personOutline,
+      lockClosedOutline,
+      eyeOutline,
+      eyeOffOutline,
+    });
 
     // Validate alphanumeric, dots, underscores, hyphens or email pattern for username/email
-    const userOrEmailPattern = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,4}$|^[a-zA-Z0-9._\-]+$/;
+    const userOrEmailPattern =
+      /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,4}$|^[a-zA-Z0-9._\-]+$/;
 
     this.loginForm = this.fb.group({
-      usernameOrEmail: ['', [Validators.required, Validators.pattern(userOrEmailPattern)]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      rememberMe: [false]
+      usernameOrEmail: [
+        "",
+        [Validators.required, Validators.pattern(userOrEmailPattern)],
+      ],
+      password: ["", [Validators.required, Validators.minLength(6)]],
+      rememberMe: [false],
     });
   }
 

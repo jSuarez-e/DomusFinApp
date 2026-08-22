@@ -1,14 +1,14 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { IonIcon } from '@ionic/angular/standalone';
+import { ChangeDetectionStrategy, Component, input } from "@angular/core";
+
+import { IonIcon } from "@ionic/angular/standalone";
 
 /**
  * Componente reutilizable para mostrar un estado vacío (Empty State)
  */
 @Component({
-  selector: 'app-empty-state',
+  selector: "app-empty-state",
   standalone: true,
-  imports: [CommonModule, IonIcon],
+  imports: [IonIcon],
   template: `
     <div class="empty-state">
       <ion-icon [name]="iconName()" class="empty-state__icon"></ion-icon>
@@ -16,8 +16,8 @@ import { IonIcon } from '@ionic/angular/standalone';
       <p class="empty-state__message">{{ message() }}</p>
     </div>
   `,
-  styleUrls: ['./app-empty-state.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ["./app-empty-state.component.css"],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppEmptyStateComponent {
   /** Nombre del icono de Ionicons */

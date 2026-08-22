@@ -1,25 +1,36 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { RouterModule, Router } from '@angular/router';
-import { 
-  IonContent, 
-  IonHeader, 
-  IonToolbar, 
-  IonTitle, 
-  IonButtons, 
-  IonButton, 
-  IonIcon, 
-  IonList, 
-  IonItem, 
-  IonLabel, 
-  IonInput, 
-  IonCard, 
-  IonCardHeader, 
-  IonCardTitle, 
-  IonCardContent, 
-  IonSegment, 
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  inject,
+} from "@angular/core";
+
+import { HttpClient } from "@angular/common/http";
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from "@angular/forms";
+import { RouterModule, Router } from "@angular/router";
+import {
+  IonContent,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonButtons,
+  IonButton,
+  IonIcon,
+  IonList,
+  IonItem,
+  IonLabel,
+  IonInput,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent,
+  IonSegment,
   IonSegmentButton,
   IonAlert,
   IonModal,
@@ -27,20 +38,20 @@ import {
   IonSelect,
   IonSelectOption,
   ToastController,
-  IonSearchbar
-} from '@ionic/angular/standalone';
-import { addIcons } from 'ionicons';
-import { 
-  trashOutline, 
-  addOutline, 
-  pencilOutline, 
-  walletOutline, 
-  listOutline, 
-  cardOutline, 
-  cashOutline, 
-  settingsOutline, 
-  closeOutline, 
-  lockClosedOutline, 
+  IonSearchbar,
+} from "@ionic/angular/standalone";
+import { addIcons } from "ionicons";
+import {
+  trashOutline,
+  addOutline,
+  pencilOutline,
+  walletOutline,
+  listOutline,
+  cardOutline,
+  cashOutline,
+  settingsOutline,
+  closeOutline,
+  lockClosedOutline,
   alertCircleOutline,
   arrowBackOutline,
   personOutline,
@@ -54,26 +65,25 @@ import {
   cameraOutline,
   helpCircleOutline,
   paperPlaneOutline,
-  saveOutline
-} from 'ionicons/icons';
+  saveOutline,
+} from "ionicons/icons";
 
-import { HouseholdService } from '../../../core/services/household.service';
-import { AuthService } from '../../../core/services/auth.service';
-import { Category, PaymentMethod, CategoryType } from '@shared/index';
-import { environment } from 'src/environments/environment'; // Import environment config for API URL
-import { MoneyMaskDirective } from '../../directives/money-mask.directive';
-import { AdminStore } from './admin.store';
-import { CategoryListItemComponent } from '../../../shared/components/category-list-item/category-list-item.component';
-import { PaymentItemComponent } from '../../../shared/components/payment-item/payment-item.component';
-import { MemberItemComponent } from '../../../shared/components/member-item/member-item.component';
+import { HouseholdService } from "../../../core/services/household.service";
+import { AuthService } from "../../../core/services/auth.service";
+import { Category, PaymentMethod, CategoryType } from "@shared/index";
+import { environment } from "src/environments/environment"; // Import environment config for API URL
+import { MoneyMaskDirective } from "../../directives/money-mask.directive";
+import { AdminStore } from "./admin.store";
+import { CategoryListItemComponent } from "../../../shared/components/category-list-item/category-list-item.component";
+import { PaymentItemComponent } from "../../../shared/components/payment-item/payment-item.component";
+import { MemberItemComponent } from "../../../shared/components/member-item/member-item.component";
 
 @Component({
-  selector: 'app-admin',
-  templateUrl: './admin.page.html',
-  styleUrls: ['./admin.page.css'],
+  selector: "app-admin",
+  templateUrl: "./admin.page.html",
+  styleUrls: ["./admin.page.css"],
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     RouterModule,
@@ -102,10 +112,10 @@ import { MemberItemComponent } from '../../../shared/components/member-item/memb
     IonSearchbar,
     CategoryListItemComponent,
     PaymentItemComponent,
-    MemberItemComponent
+    MemberItemComponent,
   ],
   providers: [AdminStore],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 /**
  * @class AdminPage
@@ -113,7 +123,7 @@ import { MemberItemComponent } from '../../../shared/components/member-item/memb
  */
 export class AdminPage implements OnInit {
   public store = inject(AdminStore);
-  
+
   public household = this.householdService.household;
   public currentUser = this.authService.currentUser;
 
@@ -133,15 +143,15 @@ export class AdminPage implements OnInit {
 
   // Custom available icons for categories selection
   public availableIcons = [
-    'fast-food-outline',
-    'flash-outline',
-    'car-outline',
-    'camera-outline',
-    'help-circle-outline',
-    'list-outline',
-    'wallet-outline',
-    'card-outline',
-    'cash-outline'
+    "fast-food-outline",
+    "flash-outline",
+    "car-outline",
+    "camera-outline",
+    "help-circle-outline",
+    "list-outline",
+    "wallet-outline",
+    "card-outline",
+    "cash-outline",
   ];
 
   constructor(
@@ -177,13 +187,13 @@ export class AdminPage implements OnInit {
       cameraOutline,
       helpCircleOutline,
       paperPlaneOutline,
-      saveOutline
+      saveOutline,
     });
   }
 
   ngOnInit() {
-    if (this.currentUser()?.role !== 'admin') {
-      this.router.navigate(['/dashboard/inicio']);
+    if (this.currentUser()?.role !== "admin") {
+      this.router.navigate(["/dashboard/inicio"]);
       return;
     }
     this.initForms();
@@ -195,25 +205,25 @@ export class AdminPage implements OnInit {
 
   private initForms() {
     this.categoryForm = this.fb.group({
-      name: ['', [Validators.required, Validators.maxLength(50)]],
-      icon: ['list-outline'],
-      type: [CategoryType.EXPENSE, Validators.required]
+      name: ["", [Validators.required, Validators.maxLength(50)]],
+      icon: ["list-outline"],
+      type: [CategoryType.EXPENSE, Validators.required],
     });
 
     this.paymentForm = this.fb.group({
-      name: ['', [Validators.required, Validators.maxLength(50)]]
+      name: ["", [Validators.required, Validators.maxLength(50)]],
     });
 
     this.budgetForm = this.fb.group({
-      monthlyBudget: [1000.00, [Validators.required, Validators.min(1)]]
+      monthlyBudget: [1000.0, [Validators.required, Validators.min(1)]],
     });
 
     this.suspendMemberForm = this.fb.group({
-      memberId: ['', [Validators.required]]
+      memberId: ["", [Validators.required]],
     });
 
     this.inviteForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]]
+      email: ["", [Validators.required, Validators.email]],
     });
   }
 
@@ -243,13 +253,17 @@ export class AdminPage implements OnInit {
   }
 
   public onSearch(event: any): void {
-    this.store.setSearchTerm(event.detail.value ?? '');
+    this.store.setSearchTerm(event.detail.value ?? "");
   }
 
   // --- Category Actions ---
   public openAddCategory(defaultType = CategoryType.EXPENSE): void {
     this.store.setCategoryEdit(false);
-    this.categoryForm.reset({ name: '', icon: 'list-outline', type: defaultType });
+    this.categoryForm.reset({
+      name: "",
+      icon: "list-outline",
+      type: defaultType,
+    });
     this.store.setCategoryModalOpen(true);
   }
 
@@ -258,8 +272,8 @@ export class AdminPage implements OnInit {
     this.currentEditingCategoryId = cat.id;
     this.categoryForm.setValue({
       name: cat.name,
-      icon: cat.icon || 'list-outline',
-      type: cat.type || CategoryType.EXPENSE
+      icon: cat.icon || "list-outline",
+      type: cat.type || CategoryType.EXPENSE,
     });
     this.store.setCategoryModalOpen(true);
   }
@@ -279,61 +293,70 @@ export class AdminPage implements OnInit {
     const val = this.categoryForm.value;
     if (this.store.isCategoryEdit()) {
       // Update to use environment.apiUrl for category updates
-      this.http.put(`${environment.apiUrl}/categories/${this.currentEditingCategoryId}`, val).subscribe({
-        next: () => {
-          this.triggerAlert('Éxito', 'Categoría actualizada con éxito.');
-          this.loadCategories();
-          this.closeCategoryModal();
-        },
-        error: (err) => {
-          console.error('Failed to update category:', err);
-          const msg = err?.error?.message || 'No se pudo actualizar la categoría.';
-          this.triggerAlert('Error', msg);
-        }
-      });
+      this.http
+        .put(
+          `${environment.apiUrl}/categories/${this.currentEditingCategoryId}`,
+          val
+        )
+        .subscribe({
+          next: () => {
+            this.triggerAlert("Éxito", "Categoría actualizada con éxito.");
+            this.loadCategories();
+            this.closeCategoryModal();
+          },
+          error: (err) => {
+            console.error("Failed to update category:", err);
+            const msg =
+              err?.error?.message || "No se pudo actualizar la categoría.";
+            this.triggerAlert("Error", msg);
+          },
+        });
     } else {
       // Update to use environment.apiUrl for category creation
       this.http.post(`${environment.apiUrl}/categories`, val).subscribe({
         next: () => {
-          this.triggerAlert('Éxito', 'Categoría creada con éxito.');
+          this.triggerAlert("Éxito", "Categoría creada con éxito.");
           this.loadCategories();
           this.closeCategoryModal();
         },
         error: (err) => {
-          console.error('Failed to create category:', err);
-          const msg = err?.error?.message || 'No se pudo crear la categoría.';
-          this.triggerAlert('Error', msg);
-        }
+          console.error("Failed to create category:", err);
+          const msg = err?.error?.message || "No se pudo crear la categoría.";
+          this.triggerAlert("Error", msg);
+        },
       });
     }
   }
 
   public async deleteCategory(cat: Category) {
     const confirmAlert = await this.alertController.create({
-      header: 'Confirmar Eliminación',
+      header: "Confirmar Eliminación",
       message: `¿Estás seguro de que deseas eliminar la categoría "${cat.name}"? Esta acción no se puede deshacer.`,
-      cssClass: 'premium-alert',
+      cssClass: "premium-alert",
       buttons: [
-        { text: 'Cancelar', role: 'cancel' },
+        { text: "Cancelar", role: "cancel" },
         {
-          text: 'Eliminar',
-          role: 'destructive',
+          text: "Eliminar",
+          role: "destructive",
           handler: () => {
             // Update to use environment.apiUrl for category deletion
-            this.http.delete(`${environment.apiUrl}/categories/${cat.id}`).subscribe({
-              next: () => {
-                this.triggerAlert('Éxito', 'Categoría eliminada con éxito.');
-                this.loadCategories();
-              },
-              error: (err) => {
-                console.error('Failed to delete category:', err);
-                const msg = err?.error?.message || 'No se pudo eliminar la categoría.';
-                this.triggerAlert('Error', msg);
-              }
-            });
-          }
-        }
-      ]
+            this.http
+              .delete(`${environment.apiUrl}/categories/${cat.id}`)
+              .subscribe({
+                next: () => {
+                  this.triggerAlert("Éxito", "Categoría eliminada con éxito.");
+                  this.loadCategories();
+                },
+                error: (err) => {
+                  console.error("Failed to delete category:", err);
+                  const msg =
+                    err?.error?.message || "No se pudo eliminar la categoría.";
+                  this.triggerAlert("Error", msg);
+                },
+              });
+          },
+        },
+      ],
     });
     await confirmAlert.present();
   }
@@ -341,7 +364,7 @@ export class AdminPage implements OnInit {
   // --- Payment Method Actions ---
   public openAddPayment(): void {
     this.store.setPaymentEdit(false);
-    this.paymentForm.reset({ name: '' });
+    this.paymentForm.reset({ name: "" });
     this.store.setPaymentModalOpen(true);
   }
 
@@ -362,61 +385,75 @@ export class AdminPage implements OnInit {
     const val = this.paymentForm.value;
     if (this.store.isPaymentEdit()) {
       // Update to use environment.apiUrl for payment method updates
-      this.http.put(`${environment.apiUrl}/payment-methods/${this.currentEditingPaymentId}`, val).subscribe({
-        next: () => {
-          this.triggerAlert('Éxito', 'Medio de pago actualizado con éxito.');
-          this.loadPaymentMethods();
-          this.closePaymentModal();
-        },
-        error: (err) => {
-          console.error('Failed to update payment method:', err);
-          const msg = err?.error?.message || 'No se pudo actualizar el medio de pago.';
-          this.triggerAlert('Error', msg);
-        }
-      });
+      this.http
+        .put(
+          `${environment.apiUrl}/payment-methods/${this.currentEditingPaymentId}`,
+          val
+        )
+        .subscribe({
+          next: () => {
+            this.triggerAlert("Éxito", "Medio de pago actualizado con éxito.");
+            this.loadPaymentMethods();
+            this.closePaymentModal();
+          },
+          error: (err) => {
+            console.error("Failed to update payment method:", err);
+            const msg =
+              err?.error?.message || "No se pudo actualizar el medio de pago.";
+            this.triggerAlert("Error", msg);
+          },
+        });
     } else {
       // Update to use environment.apiUrl for payment method creation
       this.http.post(`${environment.apiUrl}/payment-methods`, val).subscribe({
         next: () => {
-          this.triggerAlert('Éxito', 'Medio de pago creado con éxito.');
+          this.triggerAlert("Éxito", "Medio de pago creado con éxito.");
           this.loadPaymentMethods();
           this.closePaymentModal();
         },
         error: (err) => {
-          console.error('Failed to create payment method:', err);
-          const msg = err?.error?.message || 'No se pudo crear el medio de pago.';
-          this.triggerAlert('Error', msg);
-        }
+          console.error("Failed to create payment method:", err);
+          const msg =
+            err?.error?.message || "No se pudo crear el medio de pago.";
+          this.triggerAlert("Error", msg);
+        },
       });
     }
   }
 
   public async deletePayment(pm: PaymentMethod) {
     const confirmAlert = await this.alertController.create({
-      header: 'Confirmar Eliminación',
+      header: "Confirmar Eliminación",
       message: `¿Estás seguro de que deseas eliminar el medio de pago "${pm.name}"? Esta acción no se puede deshacer.`,
-      cssClass: 'premium-alert',
+      cssClass: "premium-alert",
       buttons: [
-        { text: 'Cancelar', role: 'cancel' },
+        { text: "Cancelar", role: "cancel" },
         {
-          text: 'Eliminar',
-          role: 'destructive',
+          text: "Eliminar",
+          role: "destructive",
           handler: () => {
             // Update to use environment.apiUrl for payment method deletion
-            this.http.delete(`${environment.apiUrl}/payment-methods/${pm.id}`).subscribe({
-              next: () => {
-                this.triggerAlert('Éxito', 'Medio de pago eliminado con éxito.');
-                this.loadPaymentMethods();
-              },
-              error: (err) => {
-                console.error('Failed to delete payment method:', err);
-                const msg = err?.error?.message || 'No se pudo eliminar el medio de pago.';
-                this.triggerAlert('Error', msg);
-              }
-            });
-          }
-        }
-      ]
+            this.http
+              .delete(`${environment.apiUrl}/payment-methods/${pm.id}`)
+              .subscribe({
+                next: () => {
+                  this.triggerAlert(
+                    "Éxito",
+                    "Medio de pago eliminado con éxito."
+                  );
+                  this.loadPaymentMethods();
+                },
+                error: (err) => {
+                  console.error("Failed to delete payment method:", err);
+                  const msg =
+                    err?.error?.message ||
+                    "No se pudo eliminar el medio de pago.";
+                  this.triggerAlert("Error", msg);
+                },
+              });
+          },
+        },
+      ],
     });
     await confirmAlert.present();
   }
@@ -429,15 +466,20 @@ export class AdminPage implements OnInit {
     try {
       await this.householdService.updateHouseholdBudget(val.monthlyBudget);
       this.loadHouseholdInfo();
-      this.triggerAlert('Éxito', 'Meta de presupuesto mensual actualizada correctamente.');
+      this.triggerAlert(
+        "Éxito",
+        "Meta de presupuesto mensual actualizada correctamente."
+      );
     } catch (err) {
-      console.error('Failed to update household budget goal:', err);
+      console.error("Failed to update household budget goal:", err);
     }
   }
 
   // --- Member Suspension Actions ---
   public getOtherMembers(): any[] {
-    return this.store.members().filter(m => m.id !== this.currentUser()?.id && m.isActive !== false);
+    return this.store
+      .members()
+      .filter((m) => m.id !== this.currentUser()?.id && m.isActive !== false);
   }
 
   /**
@@ -457,33 +499,39 @@ export class AdminPage implements OnInit {
     }
 
     const confirmAlert = await this.alertController.create({
-      header: 'Confirmar Suspensión',
+      header: "Confirmar Suspensión",
       message: `¿Está seguro de que desea suspender la cuenta del miembro ${member.name}? Perderá el acceso de forma inmediata.`,
-      cssClass: 'premium-alert',
+      cssClass: "premium-alert",
       buttons: [
         {
-          text: 'Cancelar',
-          role: 'cancel'
+          text: "Cancelar",
+          role: "cancel",
         },
         {
-          text: 'Suspender',
+          text: "Suspender",
           handler: () => {
             // Update to use environment.apiUrl for user suspension
-            this.http.delete(`${environment.apiUrl}/users/${member.id}`).subscribe({
-              next: () => {
-                this.triggerAlert('Éxito', `La cuenta de ${member.name} ha sido suspendida.`);
-                this.loadMembers();
-                this.suspendMemberForm.reset();
-              },
-              error: (err) => {
-                console.error('Suspension failed:', err);
-                const msg = err?.error?.message || 'No se pudo suspender la cuenta.';
-                this.triggerAlert('Error', msg);
-              }
-            });
-          }
-        }
-      ]
+            this.http
+              .delete(`${environment.apiUrl}/users/${member.id}`)
+              .subscribe({
+                next: () => {
+                  this.triggerAlert(
+                    "Éxito",
+                    `La cuenta de ${member.name} ha sido suspendida.`
+                  );
+                  this.loadMembers();
+                  this.suspendMemberForm.reset();
+                },
+                error: (err) => {
+                  console.error("Suspension failed:", err);
+                  const msg =
+                    err?.error?.message || "No se pudo suspender la cuenta.";
+                  this.triggerAlert("Error", msg);
+                },
+              });
+          },
+        },
+      ],
     });
 
     await confirmAlert.present();
@@ -498,16 +546,19 @@ export class AdminPage implements OnInit {
     try {
       await navigator.clipboard.writeText(text);
       const toast = await this.toastController.create({
-        message: '¡Enlace copiado al portapapeles!',
+        message: "¡Enlace copiado al portapapeles!",
         duration: 2000,
-        position: 'bottom',
-        color: 'success',
-        cssClass: 'premium-toast'
+        position: "bottom",
+        color: "success",
+        cssClass: "premium-toast",
       });
       await toast.present();
     } catch (err) {
-      console.error('Failed to copy to clipboard:', err);
-      this.triggerAlert('Error', 'No se pudo copiar el enlace al portapapeles.');
+      console.error("Failed to copy to clipboard:", err);
+      this.triggerAlert(
+        "Error",
+        "No se pudo copiar el enlace al portapapeles."
+      );
     }
   }
 
@@ -521,16 +572,16 @@ export class AdminPage implements OnInit {
     this.http.post(`${environment.apiUrl}/users/invite`, { email }).subscribe({
       next: (res: any) => {
         this.triggerAlert(
-          'Invitación Enviada (Simulado)',
+          "Invitación Enviada (Simulado)",
           `Se envió con éxito el enlace a ${email}.`
         );
         this.inviteForm.reset();
       },
       error: (err) => {
-        console.error('Failed to send invitation:', err);
-        const msg = err?.error?.message || 'No se pudo enviar la invitación.';
-        this.triggerAlert('Error', msg);
-      }
+        console.error("Failed to send invitation:", err);
+        const msg = err?.error?.message || "No se pudo enviar la invitación.";
+        this.triggerAlert("Error", msg);
+      },
     });
   }
 
@@ -539,8 +590,8 @@ export class AdminPage implements OnInit {
     const alert = await this.alertController.create({
       header,
       message,
-      buttons: ['Ok'],
-      cssClass: 'premium-alert'
+      buttons: ["Ok"],
+      cssClass: "premium-alert",
     });
     await alert.present();
   }
@@ -550,49 +601,61 @@ export class AdminPage implements OnInit {
   }
 
   public toggleMemberRole(member: any) {
-    const newRole = member.role === 'admin' ? 'user' : 'admin';
+    const newRole = member.role === "admin" ? "user" : "admin";
     // Update to use environment.apiUrl for updating member role
-    this.http.patch(`${environment.apiUrl}/users/${member.id}/role`, { role: newRole }).subscribe({
-      next: () => {
-        this.triggerAlert('Éxito', `Rol de ${member.name} cambiado a ${newRole}.`);
-        this.loadMembers();
-      },
-      error: (err) => {
-        console.error('Failed to change member role:', err);
-        const msg = err?.error?.message || 'No se pudo cambiar el rol del miembro.';
-        this.triggerAlert('Error', msg);
-      }
-    });
+    this.http
+      .patch(`${environment.apiUrl}/users/${member.id}/role`, { role: newRole })
+      .subscribe({
+        next: () => {
+          this.triggerAlert(
+            "Éxito",
+            `Rol de ${member.name} cambiado a ${newRole}.`
+          );
+          this.loadMembers();
+        },
+        error: (err) => {
+          console.error("Failed to change member role:", err);
+          const msg =
+            err?.error?.message || "No se pudo cambiar el rol del miembro.";
+          this.triggerAlert("Error", msg);
+        },
+      });
   }
 
   public async confirmDeleteMember(member: any) {
     const confirmAlert = await this.alertController.create({
-      header: 'Confirmar Eliminación',
+      header: "Confirmar Eliminación",
       message: `¿Estás seguro de que deseas eliminar (desactivar) de forma lógica al miembro ${member.name}? Esta acción no se puede deshacer de forma directa.`,
       buttons: [
         {
-          text: 'Cancelar',
-          role: 'cancel'
+          text: "Cancelar",
+          role: "cancel",
         },
         {
-          text: 'Eliminar Miembro',
+          text: "Eliminar Miembro",
           handler: () => {
             // Update to use environment.apiUrl for logical member deletion
-            this.http.delete(`${environment.apiUrl}/users/${member.id}`).subscribe({
-              next: () => {
-                this.triggerAlert('Éxito', `Miembro ${member.name} desactivado.`);
-                this.loadMembers();
-              },
-              error: (err) => {
-                console.error('Failed to deactivate member:', err);
-                const msg = err?.error?.message || 'No se pudo desactivar el miembro.';
-                this.triggerAlert('Error', msg);
-              }
-            });
-          }
-        }
+            this.http
+              .delete(`${environment.apiUrl}/users/${member.id}`)
+              .subscribe({
+                next: () => {
+                  this.triggerAlert(
+                    "Éxito",
+                    `Miembro ${member.name} desactivado.`
+                  );
+                  this.loadMembers();
+                },
+                error: (err) => {
+                  console.error("Failed to deactivate member:", err);
+                  const msg =
+                    err?.error?.message || "No se pudo desactivar el miembro.";
+                  this.triggerAlert("Error", msg);
+                },
+              });
+          },
+        },
       ],
-      cssClass: 'premium-alert'
+      cssClass: "premium-alert",
     });
 
     await confirmAlert.present();

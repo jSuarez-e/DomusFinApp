@@ -1,44 +1,48 @@
 // frontend/src/app/presentation/pages/capture-settings/capture-settings.page.ts
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { 
-  IonContent, 
-  IonHeader, 
-  IonTitle, 
-  IonToolbar, 
-  IonList, 
-  IonItem, 
-  IonLabel, 
-  IonToggle, 
-  IonIcon, 
-  IonCard, 
-  IonCardHeader, 
-  IonCardTitle, 
-  IonCardContent, 
-  IonButtons, 
-  IonMenuButton, 
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  inject,
+} from "@angular/core";
+
+import {
+  IonContent,
+  IonHeader,
+  IonTitle,
+  IonToolbar,
+  IonList,
+  IonItem,
+  IonLabel,
+  IonToggle,
+  IonIcon,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent,
+  IonButtons,
+  IonMenuButton,
   ToastController,
-  IonButton
-} from '@ionic/angular/standalone';
-import { addIcons } from 'ionicons';
-import { 
-  flashOutline, 
-  notificationsOutline, 
-  chatbubbleEllipsesOutline, 
+  IonButton,
+} from "@ionic/angular/standalone";
+import { addIcons } from "ionicons";
+import {
+  flashOutline,
+  notificationsOutline,
+  chatbubbleEllipsesOutline,
   shieldCheckmarkOutline,
-  settingsOutline
-} from 'ionicons/icons';
-import { AuthService } from '../../../core/services/auth.service';
-import { CaptureSettingsStore } from './capture-settings.store';
-import { CaptureChannelItemComponent } from '../../../shared/components/capture-channel-item/capture-channel-item.component';
+  settingsOutline,
+} from "ionicons/icons";
+import { AuthService } from "../../../core/services/auth.service";
+import { CaptureSettingsStore } from "./capture-settings.store";
+import { CaptureChannelItemComponent } from "../../../shared/components/capture-channel-item/capture-channel-item.component";
 
 @Component({
-  selector: 'app-capture-settings',
-  templateUrl: './capture-settings.page.html',
-  styleUrls: ['./capture-settings.page.css'],
+  selector: "app-capture-settings",
+  templateUrl: "./capture-settings.page.html",
+  styleUrls: ["./capture-settings.page.css"],
   standalone: true,
   imports: [
-    CommonModule,
     IonContent,
     IonHeader,
     IonTitle,
@@ -55,14 +59,14 @@ import { CaptureChannelItemComponent } from '../../../shared/components/capture-
     IonButtons,
     IonMenuButton,
     IonButton,
-    CaptureChannelItemComponent
+    CaptureChannelItemComponent,
   ],
   providers: [CaptureSettingsStore],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CaptureSettingsPage implements OnInit {
   public store = inject(CaptureSettingsStore);
-  
+
   public isSmsEnabled = this.store.isSmsEnabled;
   public isPushEnabled = this.store.isPushEnabled;
   public isBackgroundSyncEnabled = this.store.isBackgroundSyncEnabled;
@@ -76,7 +80,7 @@ export class CaptureSettingsPage implements OnInit {
       notificationsOutline,
       chatbubbleEllipsesOutline,
       shieldCheckmarkOutline,
-      settingsOutline
+      settingsOutline,
     });
   }
 
@@ -92,7 +96,9 @@ export class CaptureSettingsPage implements OnInit {
   public async toggleSms(event: any): Promise<void> {
     const val = event.detail.checked;
     this.store.toggleSms(val);
-    await this.showToast(val ? 'Lectura de SMS activada' : 'Lectura de SMS desactivada');
+    await this.showToast(
+      val ? "Lectura de SMS activada" : "Lectura de SMS desactivada"
+    );
   }
 
   /**
@@ -103,7 +109,11 @@ export class CaptureSettingsPage implements OnInit {
   public async togglePush(event: any): Promise<void> {
     const val = event.detail.checked;
     this.store.togglePush(val);
-    await this.showToast(val ? 'Escucha de Notificaciones activada' : 'Escucha de Notificaciones desactivada');
+    await this.showToast(
+      val
+        ? "Escucha de Notificaciones activada"
+        : "Escucha de Notificaciones desactivada"
+    );
   }
 
   /**
@@ -114,7 +124,11 @@ export class CaptureSettingsPage implements OnInit {
   public async toggleBgSync(event: any): Promise<void> {
     const val = event.detail.checked;
     this.store.toggleBgSync(val);
-    await this.showToast(val ? 'Sincronización en segundo plano activada' : 'Sincronización en segundo plano desactivada');
+    await this.showToast(
+      val
+        ? "Sincronización en segundo plano activada"
+        : "Sincronización en segundo plano desactivada"
+    );
   }
 
   /**
@@ -124,16 +138,21 @@ export class CaptureSettingsPage implements OnInit {
    */
   public async requestNotificationPermission(): Promise<void> {
     try {
-      const { registerPlugin } = await import('@capacitor/core');
+      const { registerPlugin } = await import("@capacitor/core");
       interface AndroidSettingsPlugin {
         openNotificationSettings(): Promise<{ success: boolean }>;
       }
-      const AndroidSettings = registerPlugin<AndroidSettingsPlugin>('AndroidSettings');
+      const AndroidSettings =
+        registerPlugin<AndroidSettingsPlugin>("AndroidSettings");
       await AndroidSettings.openNotificationSettings();
-      await this.showToast('Abriendo configuración de lectura de notificaciones');
+      await this.showToast(
+        "Abriendo configuración de lectura de notificaciones"
+      );
     } catch (err) {
-      console.error('Failed to open settings:', err);
-      await this.showToast('La función de permisos solo está disponible en Android nativo.');
+      console.error("Failed to open settings:", err);
+      await this.showToast(
+        "La función de permisos solo está disponible en Android nativo."
+      );
     }
   }
 
@@ -146,8 +165,8 @@ export class CaptureSettingsPage implements OnInit {
     const toast = await this.toastController.create({
       message,
       duration: 2000,
-      position: 'bottom',
-      color: 'success'
+      position: "bottom",
+      color: "success",
     });
     await toast.present();
   }
