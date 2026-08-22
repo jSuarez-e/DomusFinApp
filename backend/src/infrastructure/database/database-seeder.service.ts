@@ -37,7 +37,7 @@ export class DatabaseSeederService implements OnApplicationBootstrap {
    * @returns {Promise<void>} Promesa vacía tras completar las operaciones.
    */
   async onApplicationBootstrap(): Promise<void> {
-    // await this.clearFinancialData(); Habilitar para limpieza de datos
+    // await this.clearFinancialData(); Habilitar para limpieza de datos si se quiere borrar toda la BD
     await this.seedGlobalCategories();
     await this.seedGlobalPaymentMethods();
     await this.ensureHouseholdAdmins();
