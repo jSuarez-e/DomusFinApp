@@ -1,5 +1,5 @@
 // backend/src/infrastructure/http/dtos/create-credit-card.dto.ts
-import { IsInt, IsNotEmpty, IsNumber, IsString, Length, Max, Min, IsBoolean, IsOptional } from 'class-validator';
+import { IsInt, IsNotEmpty, IsNumber, IsString, Length, Max, Min, IsBoolean, IsOptional, IsArray } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { CreateCreditCardDto as ICreateCreditCardDto } from '@shared/index';
 
@@ -58,4 +58,15 @@ export class CreateCreditCardDto implements ICreateCreditCardDto {
   @Max(31)
   @IsNotEmpty()
   paymentDueDate: number;
+
+  @ApiProperty({ description: 'Indica si la tarjeta es privada (solo visible para el dueño)', example: true, required: false })
+  @IsBoolean()
+  @IsOptional()
+  isPrivate?: boolean;
+
+  @ApiProperty({ description: 'IDs de usuarios con los que se comparte la tarjeta', type: [Number], required: false })
+  @IsArray()
+  @IsNumber({}, { each: true })
+  @IsOptional()
+  participantIds?: number[];
 }

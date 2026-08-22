@@ -76,12 +76,31 @@
               <ion-card-content>
                 <div class="cc-detail-row cc-detail-row--privacy">
                   <span class="cc-detail-label cc-detail-label--highlight">
-                    <ion-icon name="lock-closed-outline"></ion-icon> Privacidad de Tarjeta
+                    @if (card.isPrivate) {
+                      <ion-icon name="lock-closed-outline"></ion-icon> Privacidad de Tarjeta
+                    } @else {
+                      <ion-icon name="people-outline"></ion-icon> Tarjeta Compartida
+                    }
                   </span>
                   <span class="cc-detail-val cc-detail-val--badge">
-                    Privada y Segura
+                    @if (card.isPrivate) {
+                      Privada y Segura
+                    } @else {
+                      Visibilidad para el Hogar
+                    }
                   </span>
                 </div>
+                
+                @if (!card.isPrivate && card.participants && card.participants.length > 0) {
+                  <div class="cc-detail-row cc-detail-row--participants">
+                    <span class="cc-detail-label">Participantes:</span>
+                    <div class="cc-participants-list">
+                      @for (p of card.participants; track p.id) {
+                        <ion-badge color="medium" class="cc-participant-badge">👤 {{ p.name }}</ion-badge>
+                      }
+                    </div>
+                  </div>
+                }
 
                 <div class="cc-detail-row">
                   <span class="cc-detail-label">Tasa de Interés Mensual</span>
@@ -304,6 +323,31 @@
               </div>
             </div>
           </div>
+
+          <div class="cc-form__field cc-form__field--toggle">
+            <div class="cc-form__toggle-wrapper">
+              <div class="cc-form__toggle-info">
+                <span class="cc-form__toggle-title">Tarjeta Privada</span>
+                <span class="cc-form__toggle-desc">Solo tú podrás ver y gestionar esta tarjeta.</span>
+              </div>
+              <ion-toggle formControlName="isPrivate" color="primary"></ion-toggle>
+            </div>
+          </div>
+
+          @if (!cardForm.get('isPrivate')?.value) {
+            <div class="cc-form__field">
+              <label class="cc-form__label">Participantes (Hogar)</label>
+              <div class="cc-form__input-wrapper">
+                <ion-icon name="people-outline" class="cc-form__icon"></ion-icon>
+                <ion-select interface="popover" placeholder="Seleccionar Participantes" formControlName="participantIds" multiple="true" class="cc-form__select">
+                  @for (member of householdMembers(); track member.id) {
+                    <ion-select-option [value]="member.id">{{ member.name }}</ion-select-option>
+                  }
+                </ion-select>
+              </div>
+              <p class="cc-form__help-text">Selecciona quién podrá ver los movimientos de esta tarjeta.</p>
+            </div>
+          }
 
           <ion-button type="submit" expand="block" class="cc-form__submit" [disabled]="cardForm.invalid || isSubmitting()">
             <ion-icon name="checkmark-outline" slot="start"></ion-icon>

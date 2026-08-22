@@ -65,6 +65,7 @@ export class DatabaseSeederService implements OnApplicationBootstrap {
         await manager.query('DELETE FROM payment_methods;');
         await manager.query('DELETE FROM loan_participants;');
         await manager.query('DELETE FROM savings_participants;');
+        await manager.query('DELETE FROM credit_card_participants;');
         await manager.query('DELETE FROM users;');
         
         await manager.query('SET FOREIGN_KEY_CHECKS = 1;');

@@ -8,6 +8,7 @@ import { AccountDbEntity } from '../../database/entities/account.entity';
 import { MovementDbEntity } from '../../database/entities/movement.entity';
 import { CategoryDbEntity } from '../../database/entities/category.entity';
 import { PaymentMethodDbEntity } from '../../database/entities/payment-method.entity';
+import { UserDbEntity } from '../../database/entities/user.entity';
 import { CreateCreditCardDto } from '../dtos/create-credit-card.dto';
 import { PayCreditCardDto } from '../dtos/pay-credit-card.dto';
 import { User, AmortizationPeriod, TransactionType } from '@shared/index';
@@ -25,6 +26,8 @@ export class CreditCardsService {
     private readonly categoryRepository: Repository<CategoryDbEntity>,
     @InjectRepository(PaymentMethodDbEntity)
     private readonly paymentMethodRepository: Repository<PaymentMethodDbEntity>,
+    @InjectRepository(UserDbEntity)
+    private readonly userRepository: Repository<UserDbEntity>,
     private readonly dataSource: DataSource,
   ) {}
 
@@ -43,6 +46,16 @@ export class CreditCardsService {
     if (existing) {
       throw new ConflictException(`Ya existe una tarjeta con el alias "${dto.aliasName}" en este hogar.`);
     }
+    const isPrivate = dto.isPrivate ?? true;
+
+    let participants: UserDbEntity[] = [];
+    if (dto.participantIds && dto.participantIds.length > 0) {
+      participants = await this.userRepository.createQueryBuilder('user')
+        .where('user.id IN (:...ids)', { ids: dto.participantIds })
+        .andWhere('user.householdId = :householdId', { householdId: user.householdId })
+        .getMany();
+    }
+
     const card = this.creditCardRepository.create({
       aliasName: dto.aliasName,
       lastFourDigits: dto.lastFourDigits,
@@ -54,7 +67,8 @@ export class CreditCardsService {
       currentDebt: 0,
       householdId: user.householdId,
       userId: user.id,
-      isPrivate: true,
+      isPrivate,
+      participants,
     });
 
     return this.creditCardRepository.save(card);
@@ -65,8 +79,9 @@ export class CreditCardsService {
    */
   async findAllForHousehold(householdId: number, user: User): Promise<CreditCardDbEntity[]> {
     return await this.creditCardRepository.createQueryBuilder('tc')
+      .leftJoinAndSelect('tc.participants', 'participant')
       .where('tc.householdId = :householdId', { householdId })
-      .andWhere('tc.userId = :userId', { userId: user.id })
+      .andWhere('(tc.userId = :userId OR tc.isPrivate = false OR participant.id = :userId)', { userId: user.id })
       .orderBy('tc.createdAt', 'DESC')
       .getMany();
   }
@@ -75,9 +90,12 @@ export class CreditCardsService {
    * Obtiene una tarjeta de crédito por ID (Estrictamente filtrado por usuario).
    */
   async findOne(id: number, householdId: number, user: User): Promise<CreditCardDbEntity> {
-    const card = await this.creditCardRepository.findOne({
-      where: { id, userId: user.id },
-    });
+    const card = await this.creditCardRepository.createQueryBuilder('tc')
+      .leftJoinAndSelect('tc.participants', 'participant')
+      .where('tc.id = :id', { id })
+      .andWhere('tc.householdId = :householdId', { householdId })
+      .andWhere('(tc.userId = :userId OR tc.isPrivate = false OR participant.id = :userId)', { userId: user.id })
+      .getOne();
 
     if (!card) {
       throw new NotFoundException(`Tarjeta de crédito con ID ${id} no encontrada en este hogar.`);

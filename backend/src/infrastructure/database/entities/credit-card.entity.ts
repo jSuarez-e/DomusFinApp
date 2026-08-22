@@ -1,5 +1,5 @@
 // backend/src/infrastructure/database/entities/credit-card.entity.ts
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn, Unique } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn, Unique, ManyToMany, JoinTable } from 'typeorm';
 import { UserDbEntity } from './user.entity';
 import { HouseholdDbEntity } from './household.entity';
 
@@ -58,4 +58,12 @@ export class CreditCardDbEntity {
 
   @Column({ name: 'is_private', type: 'boolean', default: true })
   isPrivate: boolean;
+
+  @ManyToMany(() => UserDbEntity, { onDelete: 'CASCADE' })
+  @JoinTable({
+    name: 'credit_card_participants',
+    joinColumn: { name: 'credit_card_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'user_id', referencedColumnName: 'id' },
+  })
+  participants: UserDbEntity[];
 }

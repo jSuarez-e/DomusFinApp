@@ -1,4 +1,5 @@
 // shared/models/credit-card.model.ts
+import { User } from './user.model';
 
 export interface CreditCard {
   id: number;
@@ -15,5 +16,6 @@ export interface CreditCard {
   isPrivate: boolean;
   householdId: number;
   userId: number;
+  participants?: User[];
   createdAt: Date;
 }

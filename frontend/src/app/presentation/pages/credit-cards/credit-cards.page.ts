@@ -3,6 +3,9 @@ import { ChangeDetectionStrategy, Component, OnInit, signal, effect, inject } fr
 import { TransactionEventService } from '../../../core/services/transaction-event.service';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import {
   IonContent,
   IonHeader,
@@ -43,11 +46,13 @@ import {
   trendingUpOutline,
   swapHorizontalOutline,
   informationCircleOutline,
-  lockClosedOutline
+  lockClosedOutline,
+  peopleOutline
 } from 'ionicons/icons';
 
 import { CreditCardService } from '../../../core/services/credit-card.service';
 import { AccountService } from '../../../core/services/account.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { CreditCard, Account, AmortizationPeriod } from '@shared/index';
 import { MoneyMaskDirective } from '../../directives/money-mask.directive';
 import { BlockScientificNotationDirective } from '../../directives/block-scientific-notation.directive';
@@ -104,7 +109,9 @@ export class CreditCardsPage implements OnInit {
 
   // Signals state
   public accounts = inject(AccountService).accounts;
+  public currentUser = inject(AuthService).currentUser;
   public selectedCard = signal<CreditCard | null>(null);
+  public householdMembers = signal<any[]>([]);
 
   // Modals state
   public isCreateModalOpen = signal(false);
@@ -123,6 +130,7 @@ export class CreditCardsPage implements OnInit {
   constructor(
     private accountService: AccountService,
     private fb: FormBuilder,
+    private http: HttpClient,
     private alertCtrl: AlertController,
     private toastCtrl: ToastController
   ) {
@@ -138,7 +146,8 @@ export class CreditCardsPage implements OnInit {
       trendingUpOutline,
       swapHorizontalOutline,
       informationCircleOutline,
-      lockClosedOutline
+      lockClosedOutline,
+      peopleOutline
     });
 
     this.cardForm = this.fb.group({
@@ -150,7 +159,20 @@ export class CreditCardsPage implements OnInit {
       lifeInsurance: [null, [Validators.min(0)]],
       otherCharges: [null, [Validators.min(0)]],
       cutDate: [null, [Validators.required, Validators.min(1), Validators.max(31)]],
-      paymentDueDate: [null, [Validators.required, Validators.min(1), Validators.max(31)]]
+      paymentDueDate: [null, [Validators.required, Validators.min(1), Validators.max(31)]],
+      isPrivate: [true],
+      participantIds: [[]]
+    });
+
+    this.cardForm.get('isPrivate')?.valueChanges.subscribe((isPrivate) => {
+      const parts = this.cardForm.get('participantIds');
+      if (isPrivate) {
+        parts?.setValue([]);
+        parts?.clearValidators();
+      } else {
+        parts?.setValidators([Validators.required]);
+      }
+      parts?.updateValueAndValidity();
     });
 
     this.payForm = this.fb.group({
@@ -180,6 +202,7 @@ export class CreditCardsPage implements OnInit {
   async ngOnInit() {
     await this.store.loadCreditCards(true);
     await this.accountService.loadAccounts(true);
+    await this.loadMembers();
 
     // Select first card by default if available
     const cards = this.creditCards();
@@ -193,6 +216,16 @@ export class CreditCardsPage implements OnInit {
     this.runSimulation();
   }
 
+  private async loadMembers() {
+    try {
+      const members = await firstValueFrom(this.http.get<any[]>(`${environment.apiUrl}/users/members`));
+      const currentUserId = this.currentUser()?.id;
+      this.householdMembers.set(members.filter((m) => m.id !== currentUserId));
+    } catch (err) {
+      console.warn('Could not load household members:', err);
+    }
+  }
+
   // Card creation modals
   openCreateModal() {
     this.cardForm.reset({
@@ -204,7 +237,9 @@ export class CreditCardsPage implements OnInit {
       lifeInsurance: 0,
       otherCharges: 0,
       cutDate: 15,
-      paymentDueDate: 5
+      paymentDueDate: 5,
+      isPrivate: true,
+      participantIds: []
     });
     this.isCreateModalOpen.set(true);
   }
@@ -230,7 +265,9 @@ export class CreditCardsPage implements OnInit {
         lifeInsurance: val.lifeInsurance ? Number(val.lifeInsurance) : 0,
         otherCharges: val.otherCharges ? Number(val.otherCharges) : 0,
         cutDate: Number(val.cutDate),
-        paymentDueDate: Number(val.paymentDueDate)
+        paymentDueDate: Number(val.paymentDueDate),
+        isPrivate: val.isPrivate,
+        participantIds: val.isPrivate ? [] : val.participantIds
       });
       this.selectCard(newCard);
       this.closeCreateModal();

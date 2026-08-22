@@ -7,6 +7,7 @@ import { AccountDbEntity } from '../../database/entities/account.entity';
 import { MovementDbEntity } from '../../database/entities/movement.entity';
 import { CategoryDbEntity } from '../../database/entities/category.entity';
 import { PaymentMethodDbEntity } from '../../database/entities/payment-method.entity';
+import { UserDbEntity } from '../../database/entities/user.entity';
 import { CreditCardsService } from '../services/credit-cards.service';
 import { CreditCardsController } from '../controllers/credit-cards.controller';
 
@@ -18,6 +19,7 @@ import { CreditCardsController } from '../controllers/credit-cards.controller';
       MovementDbEntity,
       CategoryDbEntity,
       PaymentMethodDbEntity,
+      UserDbEntity,
     ]),
   ],
   controllers: [CreditCardsController],

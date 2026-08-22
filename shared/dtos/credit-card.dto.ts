@@ -10,6 +10,8 @@ export interface CreateCreditCardDto {
   otherCharges?: number;
   cutDate: number;
   paymentDueDate: number;
+  isPrivate?: boolean;
+  participantIds?: number[];
 }
 
 export interface SimulateInstallmentsDto {
