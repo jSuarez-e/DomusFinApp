@@ -211,11 +211,11 @@
 <!-- Modal: Create credit card -->
 <ion-modal [isOpen]="isCreateModalOpen()" (didDismiss)="closeCreateModal()" class="dashboard-modal">
   <ng-template>
-    <ion-header class="ion-no-border">
+    <ion-header>
       <ion-toolbar class="dashboard-modal__toolbar">
         <ion-title>Nueva Tarjeta</ion-title>
         <ion-buttons slot="end">
-          <ion-button (click)="closeCreateModal()">
+          <ion-button (click)="closeCreateModal()" class="modal-close-btn">
             <ion-icon name="close-outline" slot="icon-only"></ion-icon>
           </ion-button>
         </ion-buttons>
@@ -318,11 +318,11 @@
 <!-- Modal: Pay Credit Card -->
 <ion-modal [isOpen]="isPayModalOpen()" (didDismiss)="closePayModal()" class="dashboard-modal">
   <ng-template>
-    <ion-header class="ion-no-border">
+    <ion-header>
       <ion-toolbar class="dashboard-modal__toolbar">
         <ion-title>Pagar Tarjeta</ion-title>
         <ion-buttons slot="end">
-          <ion-button (click)="closePayModal()">
+          <ion-button (click)="closePayModal()" class="modal-close-btn">
             <ion-icon name="close-outline" slot="icon-only"></ion-icon>
           </ion-button>
         </ion-buttons>

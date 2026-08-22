@@ -375,11 +375,11 @@
   <!-- MODAL: ADD/EDIT CATEGORY -->
   <ion-modal [isOpen]="isCategoryModalOpen()" (didDismiss)="closeCategoryModal()" class="admin-modal">
     <ng-template>
-      <ion-header class="ion-no-border">
+      <ion-header>
         <ion-toolbar class="modal-toolbar">
           <ion-title>{{ isCategoryEdit() ? 'Editar Categoría' : 'Nueva Categoría' }}</ion-title>
           <ion-buttons slot="end">
-            <ion-button (click)="closeCategoryModal()">
+            <ion-button (click)="closeCategoryModal()" class="modal-close-btn">
               <ion-icon name="close-outline" slot="icon-only"></ion-icon>
             </ion-button>
           </ion-buttons>

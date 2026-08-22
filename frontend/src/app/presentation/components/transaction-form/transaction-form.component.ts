@@ -16,6 +16,7 @@ import {
   IonToolbar,
   IonTitle,
   IonButtons,
+  IonTextarea,
   ModalController,
   ToastController
 } from '@ionic/angular/standalone';
@@ -74,6 +75,7 @@ export const TRANSACTION_OPTIONS = [
     IonToolbar,
     IonTitle,
     IonButtons,
+    IonTextarea,
     MoneyMaskDirective,
     BlockScientificNotationDirective,
     FormFieldComponent

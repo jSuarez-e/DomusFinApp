@@ -1,110 +1,134 @@
 /* frontend/src/app/presentation/components/transaction-form/transaction-form.component.css */
 
-.form-toolbar {
-  --background: #121212;
-  --border-color: rgba(255, 255, 255, 0.08);
-  color: #ffffff;
+/* --- Modal Form --- */
+.transaction-modal__toolbar {
+  --background: var(--ion-toolbar-background);
+  --border-color: var(--ion-border-color);
+  --color: var(--ion-text-color);
 }
 
-.form-content {
-  --background: #000000;
-  color: #ffffff;
+.transaction-modal__content {
+  --background: var(--ion-background-color);
+  color: var(--ion-text-color);
 }
 
-.form-container {
+.transaction-modal__form-container {
   padding: 24px 16px;
   max-width: 500px;
   margin: 0 auto;
 }
 
-.premium-input {
-  --background: transparent;
-  --color: #ffffff;
-  --placeholder-color: #595959;
-  --padding-start: 0;
-  font-size: 0.95rem;
-  width: 100%;
-  max-width: 100%;
-  flex: 1;
+.transaction-form__field {
+  margin-bottom: 20px;
 }
 
-.premium-select {
-  --placeholder-color: #595959;
-  --padding-start: 0;
-  --padding-end: 0;
-  color: #ffffff;
-  font-size: 0.95rem;
-  width: 100%;
-  max-width: 100%;
-  flex: 1;
-  min-width: 0;
+.transaction-form__label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.premium-select::part(button),
-.premium-select::part(container) {
-  width: 100%;
-  max-width: 100%;
-}
-
-.premium-select::part(text) {
-  flex: 1;
-  text-align: left;
-}
-
-.btn-close {
-  width: 40px !important;
-  height: 30px !important;
-  border-radius: 1px !important;
-  font-size: 1rem !important;
-  margin-right: 10px !important;
-}
-
-/* Toggle item */
-.toggle-item {
-  --background: #121212;
-  --border-color: rgba(255, 255, 255, 0.06);
-  --padding-start: 16px;
-  --inner-padding-end: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+.transaction-form__input-wrapper {
+  display: flex;
+  align-items: center;
+  background: var(--ion-card-background);
+  border: 1px solid var(--ion-border-color);
   border-radius: 12px;
-  margin-bottom: 24px;
+  padding: 0 16px;
+  height: 48px;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
-.toggle-icon {
-  font-size: 1.3rem;
-  color: #4C6793;
+.transaction-form__input-wrapper:focus-within {
+  border-color: var(--ion-color-primary);
+  box-shadow: 0 0 8px rgba(136, 220, 204, 0.2);
+}
+
+.transaction-form__icon {
+  font-size: 1.2rem;
+  color: var(--ion-color-medium, #92949c);
   margin-right: 12px;
 }
 
-.toggle-label h3 {
+.transaction-form__input,
+.transaction-form__textarea {
+  --background: transparent;
+  --color: var(--ion-text-color);
+  --padding-start: 0;
   font-size: 0.95rem;
-  font-weight: 600;
-  color: #ffffff;
-  margin: 0 0 2px 0;
+  width: 100%;
 }
 
-.toggle-label p {
+.transaction-form__select {
+  --padding-start: 0;
+  --padding-end: 0;
+  color: var(--ion-text-color);
+  font-size: 0.95rem;
+  width: 100%;
+}
+
+.transaction-form__error {
+  color: var(--ion-color-danger, #eb445a);
   font-size: 0.75rem;
-  color: #a6a6a6;
-  margin: 0;
+  margin-top: 6px;
+  font-weight: 500;
 }
 
-.premium-toggle {
-  --background: #333333;
-  --background-checked: #88DCCC;
-  --handle-background: #ffffff;
-  --handle-background-checked: #ffffff;
-}
-
-/* Button */
-.submit-button {
-  --background: #88DCCC;
-  --background-hover: #78c2b4;
-  --background-activated: #78c2b4;
-  --color: #121212;
-  font-weight: 700;
+.transaction-form__submit {
   --border-radius: 12px;
   margin-top: 32px;
-  box-shadow: 0 6px 20px rgba(136, 220, 204, 0.25);
   height: 48px;
+}
+
+.transaction-form__field--toggle {
+  background: var(--ion-card-background);
+  border: 1px solid var(--ion-border-color);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 20px;
+}
+
+.transaction-form__toggle-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.transaction-form__toggle-texts {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-right: 12px;
+}
+
+.transaction-form__toggle-title {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.transaction-form__toggle-desc {
+  font-size: 11px;
+  color: var(--text-secondary, #64748b);
+  line-height: 1.3;
+}
+
+.transaction-form__textarea-wrapper {
+  height: auto;
+  min-height: 48px;
+  align-items: flex-start;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.transaction-form__textarea-wrapper .transaction-form__icon {
+  margin-top: 0;
+}
+
+.transaction-form__textarea-wrapper .transaction-form__input {
+  --padding-top: 0;
+  --padding-bottom: 0;
+  margin: 0;
 }

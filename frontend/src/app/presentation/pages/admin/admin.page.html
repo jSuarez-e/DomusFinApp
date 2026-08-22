@@ -305,11 +305,11 @@
   <!-- MODAL: ADD/EDIT CATEGORY -->
   <ion-modal [isOpen]="store.isCategoryModalOpen()" (didDismiss)="closeCategoryModal()" class="admin-modal">
     <ng-template>
-      <ion-header class="ion-no-border">
+      <ion-header>
         <ion-toolbar class="modal-toolbar">
           <ion-title>{{ store.isCategoryEdit() ? 'Editar Categoría' : 'Nueva Categoría' }}</ion-title>
           <ion-buttons slot="end">
-            <ion-button (click)="closeCategoryModal()">
+            <ion-button (click)="closeCategoryModal()" class="modal-close-btn">
               <ion-icon name="close-outline" slot="icon-only"></ion-icon>
             </ion-button>
           </ion-buttons>
@@ -364,11 +364,11 @@
   <!-- MODAL: ADD/EDIT PAYMENT METHOD -->
   <ion-modal [isOpen]="store.isPaymentModalOpen()" (didDismiss)="closePaymentModal()" class="admin-modal">
     <ng-template>
-      <ion-header class="ion-no-border">
+      <ion-header>
         <ion-toolbar class="modal-toolbar">
           <ion-title>{{ store.isPaymentEdit() ? 'Editar Medio' : 'Nuevo Medio de Pago' }}</ion-title>
           <ion-buttons slot="end">
-            <ion-button (click)="closePaymentModal()">
+            <ion-button (click)="closePaymentModal()" class="modal-close-btn">
               <ion-icon name="close-outline" slot="icon-only"></ion-icon>
             </ion-button>
           </ion-buttons>

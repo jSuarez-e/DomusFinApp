@@ -137,6 +137,24 @@
   margin-bottom: env(safe-area-inset-bottom);
 }
 
+/* --- Modals Layout --- */
+.cdts-modal__toolbar {
+  --background: var(--ion-card-background);
+  --border-color: rgba(0, 0, 0, 0.05);
+  --color: var(--ion-text-color);
+}
+
+.cdts-modal__content {
+  --background: var(--ion-background-color);
+  color: var(--ion-text-color);
+}
+
+.cdts-modal__form-container {
+  padding: 24px 16px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
 /* --- Forms & Modals --- */
 .cdts-form__field {
   margin-bottom: 20px;
@@ -148,29 +166,42 @@
 
 .cdts-form__label {
   display: block;
-  font-size: 0.9rem;
+  font-size: 0.78rem;
   font-weight: 600;
-  color: var(--ion-color-dark);
   margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .cdts-form__input-wrapper {
   display: flex;
   align-items: center;
-  background: var(--ion-color-light);
+  background: var(--ion-card-background);
+  border: 1px solid var(--ion-border-color);
   border-radius: 12px;
   padding: 0 16px;
-  height: 52px;
+  height: 48px;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.cdts-form__input-wrapper:focus-within {
+  border-color: var(--ion-color-primary);
+  box-shadow: 0 0 8px rgba(var(--ion-color-primary-rgb), 0.2);
 }
 
 .cdts-form__icon {
-  font-size: 20px;
-  color: var(--ion-color-medium);
+  font-size: 1.2rem;
+  color: var(--ion-color-medium, #92949c);
   margin-right: 12px;
 }
 
 .cdts-form__input, .cdts-form__select {
+  --background: transparent;
+  --color: var(--ion-text-color);
   --padding-start: 0;
+  --padding-end: 0;
+  font-size: 0.95rem;
+  width: 100%;
   flex: 1;
 }
 
@@ -178,7 +209,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: var(--ion-color-light);
+  background: var(--ion-card-background);
+  border: 1px solid var(--ion-border-color);
   padding: 16px;
   border-radius: 12px;
 }

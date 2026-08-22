@@ -157,3 +157,20 @@
 .admin-modal {
   --background: var(--ion-background-color);
 }
+
+.modal-toolbar {
+  --background: var(--ion-card-background);
+  --border-color: rgba(0, 0, 0, 0.05);
+  --color: var(--ion-text-color);
+}
+
+.modal-content {
+  --background: var(--ion-background-color);
+  color: var(--ion-text-color);
+}
+
+.settings-modal__form-container {
+  padding: 24px 16px;
+  max-width: 500px;
+  margin: 0 auto;
+}

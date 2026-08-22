@@ -407,39 +407,42 @@
 
 .cc-form__label {
   display: block;
-  font-size: 0.8rem;
-  color: var(--ion-color-step-600, #666);
+  font-size: 0.78rem;
   font-weight: 600;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .cc-form__input-wrapper {
   display: flex;
   align-items: center;
-  background: var(--ion-color-step-50, #f8f9fa);
-  border: 1px solid var(--ion-color-step-150, #e0e0e0);
-  border-radius: 10px;
-  padding: 0 14px;
+  background: var(--ion-card-background);
+  border: 1px solid var(--ion-border-color);
+  border-radius: 12px;
+  padding: 0 16px;
   height: 48px;
-  transition: all 0.2s ease;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
 .cc-form__input-wrapper:focus-within {
   border-color: var(--ion-color-primary);
-  box-shadow: 0 0 0 3px rgba(var(--ion-color-primary-rgb), 0.1);
+  box-shadow: 0 0 8px rgba(var(--ion-color-primary-rgb), 0.2);
 }
 
 .cc-form__icon {
   font-size: 1.2rem;
-  color: var(--ion-color-step-500, #888);
+  color: var(--ion-color-medium, #92949c);
   margin-right: 12px;
 }
 
 .cc-form__input,
 .cc-form__select {
   --background: transparent;
+  --color: var(--ion-text-color);
   --padding-start: 0;
   --padding-end: 0;
+  font-size: 0.95rem;
   width: 100%;
 }
 

@@ -188,11 +188,11 @@
   <!-- Modal: Create Savings Goal -->
   <ion-modal [isOpen]="isCreateModalOpen()" (didDismiss)="closeCreateModal()">
     <ng-template>
-      <ion-header class="ion-no-border">
+      <ion-header>
         <ion-toolbar class="savings-modal__toolbar">
           <ion-title>Nueva Meta</ion-title>
           <ion-buttons slot="end">
-            <ion-button (click)="closeCreateModal()">
+            <ion-button (click)="closeCreateModal()" class="modal-close-btn">
               <ion-icon name="close-outline" slot="icon-only"></ion-icon>
             </ion-button>
           </ion-buttons>
@@ -270,11 +270,11 @@
   <!-- Modal: Deposit funds -->
   <ion-modal [isOpen]="isDepositModalOpen()" (didDismiss)="closeDepositModal()">
     <ng-template>
-      <ion-header class="ion-no-border">
+      <ion-header>
         <ion-toolbar class="savings-modal__toolbar">
           <ion-title>Aportar a Meta</ion-title>
           <ion-buttons slot="end">
-            <ion-button (click)="closeDepositModal()">
+            <ion-button (click)="closeDepositModal()" class="modal-close-btn">
               <ion-icon name="close-outline" slot="icon-only"></ion-icon>
             </ion-button>
           </ion-buttons>

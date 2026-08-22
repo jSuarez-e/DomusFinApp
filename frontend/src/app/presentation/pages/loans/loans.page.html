@@ -232,11 +232,11 @@
   <!-- Modal: Create Loan/Debt -->
   <ion-modal [isOpen]="isCreateModalOpen()" (didDismiss)="closeCreateModal()" class="loans-modal">
     <ng-template>
-      <ion-header class="ion-no-border">
+      <ion-header>
         <ion-toolbar class="loans-modal__toolbar">
           <ion-title>Registrar Crédito / Deuda</ion-title>
           <ion-buttons slot="end">
-            <ion-button (click)="closeCreateModal()">
+            <ion-button (click)="closeCreateModal()" class="modal-close-btn">
               <ion-icon name="close-outline" slot="icon-only"></ion-icon>
             </ion-button>
           </ion-buttons>
@@ -354,11 +354,11 @@
   <!-- Modal: Pay portion of Loan -->
   <ion-modal [isOpen]="isPayModalOpen()" (didDismiss)="closePayModal()" class="loans-modal">
     <ng-template>
-      <ion-header class="ion-no-border">
+      <ion-header>
         <ion-toolbar class="loans-modal__toolbar">
           <ion-title>Registrar Pago a Crédito</ion-title>
           <ion-buttons slot="end">
-            <ion-button (click)="closePayModal()">
+            <ion-button (click)="closePayModal()" class="modal-close-btn">
               <ion-icon name="close-outline" slot="icon-only"></ion-icon>
             </ion-button>
           </ion-buttons>
@@ -415,11 +415,11 @@
   <!-- Modal: View specific loan simulation -->
   <ion-modal [isOpen]="isLoanSimModalOpen()" (didDismiss)="closeLoanSimModal()" class="loans-modal">
     <ng-template>
-      <ion-header class="ion-no-border">
+      <ion-header>
         <ion-toolbar class="loans-modal__toolbar">
           <ion-title>Simulación de Crédito</ion-title>
           <ion-buttons slot="end">
-            <ion-button (click)="closeLoanSimModal()">
+            <ion-button (click)="closeLoanSimModal()" class="modal-close-btn">
               <ion-icon name="close-outline" slot="icon-only"></ion-icon>
             </ion-button>
           </ion-buttons>
