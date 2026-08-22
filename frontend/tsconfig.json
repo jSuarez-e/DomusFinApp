@@ -7,19 +7,30 @@
     "declaration": false,
     "downlevelIteration": true,
     "experimentalDecorators": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "importHelpers": true,
     "target": "ES2022",
     "module": "ES2022",
     "useDefineForClassFields": false,
-    "lib": ["es2022", "dom"],
+    "lib": [
+      "es2022",
+      "dom"
+    ],
     "skipLibCheck": true,
     "strict": true,
     "paths": {
-      "@shared/*": ["../shared/*"],
-      "@core/*": ["src/app/core/*"],
-      "@infrastructure/*": ["src/app/infrastructure/*"],
-      "@presentation/*": ["src/app/presentation/*"]
+      "@shared/*": [
+        "../shared/*"
+      ],
+      "@core/*": [
+        "src/app/core/*"
+      ],
+      "@infrastructure/*": [
+        "src/app/infrastructure/*"
+      ],
+      "@presentation/*": [
+        "src/app/presentation/*"
+      ]
     }
   },
   "angularCompilerOptions": {
