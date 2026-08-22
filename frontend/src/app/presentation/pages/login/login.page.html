@@ -14,7 +14,7 @@
 
     <ion-card class="auth-card">
       <ion-card-content>
-        <form [formGroup]="loginForm" (ngSubmit)="handleLogin()">
+        <form [formGroup]="loginForm" (ngSubmit)="handleLogin()" autocomplete="off">
           <!-- Username / Email Input -->
           <div class="input-wrapper">
             <label class="input-label">Usuario o Correo</label>
@@ -24,7 +24,8 @@
                 type="text"
                 placeholder="Ingresa tu correo o usuario"
                 formControlName="usernameOrEmail"
-                class="premium-input">
+                class="premium-input"
+                autocomplete="off">
               </ion-input>
             </div>
             @if (loginForm.get('usernameOrEmail')?.invalid && loginForm.get('usernameOrEmail')?.touched) {

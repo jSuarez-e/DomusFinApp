@@ -17,9 +17,9 @@ import {
   IonItem, 
   IonCheckbox, 
   IonText, 
-  IonIcon, 
   IonLabel,
-  AlertController
+  IonIcon,
+  ViewWillEnter
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { logInOutline, personOutline, lockClosedOutline, eyeOutline, eyeOffOutline } from 'ionicons/icons';
@@ -57,7 +57,7 @@ import { LoginStore } from './login.store';
   providers: [LoginStore],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginPage {
+export class LoginPage implements ViewWillEnter {
   public loginForm!: FormGroup;
   public store = inject(LoginStore);
 
@@ -82,6 +82,12 @@ export class LoginPage {
       password: ['', [Validators.required, Validators.minLength(6)]],
       rememberMe: [false]
     });
+  }
+
+  ionViewWillEnter(): void {
+    if (this.loginForm) {
+      this.loginForm.reset({ rememberMe: false });
+    }
   }
 
   /**

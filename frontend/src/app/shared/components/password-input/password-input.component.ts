@@ -21,7 +21,8 @@ import { lockClosedOutline, eyeOutline, eyeOffOutline } from 'ionicons/icons';
           [type]="showPassword() ? 'text' : 'password'"
           [placeholder]="placeholder()"
           [formControlName]="controlName()"
-          class="premium-input">
+          class="premium-input"
+          autocomplete="new-password">
         </ion-input>
         <ion-button 
           fill="clear" 

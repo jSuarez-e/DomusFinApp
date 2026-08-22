@@ -11,7 +11,7 @@
 
     <ion-card class="auth-card">
       <ion-card-content>
-        <form [formGroup]="registerForm" (ngSubmit)="handleRegister()">
+        <form [formGroup]="registerForm" (ngSubmit)="handleRegister()" autocomplete="off">
           <!-- Username Input -->
           <div class="input-wrapper">
             <label class="input-label">Usuario</label>
@@ -21,7 +21,8 @@
                 type="text"
                 placeholder="Ej. NombreUsuario"
                 formControlName="username"
-                class="premium-input">
+                class="premium-input"
+                autocomplete="off">
               </ion-input>
             </div>
             @if (registerForm.get('username')?.invalid && registerForm.get('username')?.touched) {
@@ -40,7 +41,8 @@
                 type="email"
                 placeholder="correo@ejemplo.com"
                 formControlName="email"
-                class="premium-input">
+                class="premium-input"
+                autocomplete="off">
               </ion-input>
             </div>
             @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
